@@ -1,5 +1,4 @@
-const CACHE_NAME = 'ClientWorkerCache';
-let cachelist = ['/'];
+const CACHE_NAME = 'ClientWorkerCache';let cachelist = ['/'];
 self.addEventListener('install', function (installEvent) {
     installEvent.waitUntil(
         caches.open(CACHE_NAME)
@@ -24,7 +23,7 @@ const handle = async (req) => {
     const pathname = urlObj.href.substr(urlObj.origin.length)
     const domain = (urlStr.split('/'))[2]
     if (domain === "blog-jsdelivr.cyfan.top") {
-        let path = pathname.split("?")[0]
+        let path = pathname.split('#')[0].split("?")[0]
         if (path.endsWith('/')) { path += "index.html" }
 
         if (path.endsWith('.html')) {
