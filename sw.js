@@ -23,7 +23,7 @@ const handle = async (req) => {
     const urlObj = new URL(urlStr)
     const pathname = urlObj.href.substr(urlObj.origin.length)
     const domain = (urlStr.split('/'))[2]
-    if (domain === "worktest.cyfan.top") {
+    if (domain === "blog-jsdelivr.cyfan.top") {
         let path = pathname.split("?")[0]
         if (path.endsWith('/')) { path += "index.html" }
 
