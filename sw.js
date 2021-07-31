@@ -18,6 +18,7 @@ const website = true
 const handle_error = true
 
 self.addEventListener('install', function (installEvent) {
+    self.skipWaiting();
     installEvent.waitUntil(
         caches.open(CACHE_NAME)
             .then(function (cache) {
