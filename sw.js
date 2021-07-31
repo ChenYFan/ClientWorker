@@ -2,7 +2,8 @@ const CACHE_NAME = 'ClientWorkerCache';
 let cachelist = [];
 
 const selfdomain = [
-    "127.0.0.1:44412"
+    "127.0.0.1:44412",
+    "blog-jsdelivr.cyfan.top"
 ]
 
 self.addEventListener('install', function (installEvent) {
