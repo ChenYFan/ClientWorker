@@ -42,7 +42,7 @@
                         window.location.search = `?time=${ranN(1, 88888888888888888888)}`
                        
                     }).catch(err => {
-                        document.getElementById('msg').innerText = "注册失败..."
+                        document.getElementById('msg').innerText = `注册失败...错误原因:${err}`
                     })
             });
         } else {
