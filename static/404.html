@@ -1,0 +1,12 @@
+<script>
+    //注册ServiceWorker 
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/cw.js',{scope:"/"}).then(function(registration) {
+           setTimeout(() => {
+            window.location.reload();
+           }, 20);
+        }).catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+    }
+</script>

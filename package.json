@@ -1,0 +1,31 @@
+{
+  "name": "clientworker",
+  "version": "0.0.0-beta-1",
+  "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
+  "main": "./dist/cw.js",
+  "scripts": {
+    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist "
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChenYFan/ClientWorker.git"
+  },
+  "keywords": [
+    "ServiceWorker",
+    "ClientWorker"
+  ],
+  "author": "ChenYFan",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ChenYFan/ClientWorker/issues"
+  },
+  "homepage": "https://github.com/ChenYFan/ClientWorker#readme",
+  "dependencies": {
+    "@chenyfan/cache-db": "^0.0.4",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.5.0"
+  }
+}

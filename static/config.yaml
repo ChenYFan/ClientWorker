@@ -1,0 +1,73 @@
+name: ChenYFan's ClientWorker
+catch_rules: #转换规则
+    - rule: ^https\:\/\/blog\.cyfan\.top #匹配所有域名为blog.cyfan.top的请求
+      transform_rules: #转换规则，最上面的优先最高
+            - search: \#.+ #在发送请求时匹配#后内容并移除
+              type: url #支持url status statusCode，默认url
+              replace: ''
+            - search: \?.+ #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
+              replace: '' 
+            - search: \/([^\/.]+)\/$ #匹配/path/，转为/path/index.html
+              replace: /$1/index.html
+              #search: /\/([^\/.]+)\/?$/g #匹配/path /path/，转为/path/index.html
+              #replace: /$1/index.html
+            - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
+              redirect: /$1.html
+            - search: _ #ClientWorker语法糖，匹配当前catch rule
+              header: #在action作用前的header处理，将作用于Request
+                User-Agent: ChenYFanYYDS
+            - search: _ 
+              replace:
+                - https://npm.elemecdn.com/chenyfan-blog
+                - https://cdn.jsdelivr.net/npm/chenyfan-blog                
+              # 关于引擎
+              # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
+              # 1. classic
+              # 为传统重生成Response，同时并发直到任意一个下载完毕，并且状态码为2XX时才打断其他请求
+              # 可能会造成流量冗余，但可以极大幅度避免假快响应，达到一定会时最快的效果
+              # 2. parallel
+              # 基于响应StatusCode，使用Event函数避免打断自身，其只要满足任意一个请求返回2XX时才打断其他请求（无论是否下载完毕）
+              # 如果部分请求在较快的响应2XX，而提供下载速度很慢时，这会严重拖慢速度
+              
+
+              
+              action: fetch
+              
+              fetch:
+                status: 200
+                engine: parallel #classic
+                cors: true #true false omit
+              #action: fetch-engine-status
+
+              #header: #与action相同级别的header修改将无效
+              #  - fetcher-engine: classic #无效
+              
+              
+            - search: \.html$ #匹配后缀为.html的请求，修复content-type为text/html
+              header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
+                content-type: text/html;charset=utf-8;ClientWorker
+                ServerProvide: ClientWorker
+              
+    - rule: ^https\:\/\/((cdn|fastly)\.jsdelivr.net\/npm|unpkg\.com\/) #修复垃圾Jsdelivr（仅npm）
+      transform_rules:
+          - search: _
+            replace:
+              - https://npm.elemecdn.com/npm
+              - https://unpkg.zhimg.com
+            header:
+              ServerProvide: ClientWorker
+            action: fetch
+            fetch:
+              engine: classic
+          
+    - rule: .
+      transform_rules:
+        - search: .
+          action: fetch
+          fetch:
+            engine: fetch
+        
+        - search: (^4|^5)
+          type: status
+          return: 'Error!'
+          
