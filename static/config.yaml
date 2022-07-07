@@ -1,6 +1,6 @@
 name: ChenYFan's ClientWorker
 catch_rules: #转换规则
-    - rule: ^https\:\/\/blog\.cyfan\.top #匹配所有域名为blog.cyfan.top的请求
+    - rule: ^https\:\/\/cworker\.pages\.dev #匹配所有域名为blog.cyfan.top的请求
       transform_rules: #转换规则，最上面的优先最高
             - search: \#.+ #在发送请求时匹配#后内容并移除
               type: url #支持url status statusCode，默认url
@@ -18,8 +18,8 @@ catch_rules: #转换规则
                 User-Agent: ChenYFanYYDS
             - search: _ 
               replace:
-                - https://npm.elemecdn.com/chenyfan-blog
-                - https://cdn.jsdelivr.net/npm/chenyfan-blog                
+                - https://npm.elemecdn.com/chenyfan-blog@1.1.9
+                - https://cdn.jsdelivr.net/npm/chenyfan-blog@1.1.9              
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
