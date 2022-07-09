@@ -1,25 +1,38 @@
 name: ChenYFan's ClientWorker
 catch_rules: #转换规则
-    - rule: ^https\:\/\/cworker\.pages\.dev #匹配所有域名为blog.cyfan.top的请求
+    - rule: ^https\:\/\/(cworker\.pages\.dev|beverage\-researchers\-toolbox\-affiliate\.trycloudflare\.com) #匹配所有域名为blog.cyfan.top的请求
       transform_rules: #转换规则，最上面的优先最高
             - search: \#.+ #在发送请求时匹配#后内容并移除
               type: url #支持url status statusCode，默认url
               replace: ''
             - search: \?.+ #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
               replace: '' 
-            - search: \/([^\/.]+)\/$ #匹配/path/，转为/path/index.html
-              replace: /$1/index.html
+
+            - search: ([^\/.]+)\/index(|\.html)$ #匹配/path/index.html或/path/index，跳为/path/
+              action: redirect
+              redirect: 
+                to: $1/
+
+            - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
+              action: redirect
+              redirect: 
+                to: /$1.html
+                status: 301
+            
+            - search: ([^\/.]+)\/$ #匹配/path/，转为/path/index.html
+              replace: $1/index.html
               #search: /\/([^\/.]+)\/?$/g #匹配/path /path/，转为/path/index.html
               #replace: /$1/index.html
-            - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
-              redirect: /$1.html
-            - search: _ #ClientWorker语法糖，匹配当前catch rule
-              header: #在action作用前的header处理，将作用于Request
-                User-Agent: ChenYFanYYDS
+            - search: \/google$
+              action: redirect
+              redirect: 
+                url: https://google.com #不替换直接跳转，默认优先级url > to
+                status: 301
+
             - search: _ 
               replace:
-                - https://npm.elemecdn.com/chenyfan-blog@1.1.9
-                - https://cdn.jsdelivr.net/npm/chenyfan-blog@1.1.9              
+                - https://npm.elemecdn.com/chenyfan-blog@1.1.9/public
+                - https://cdn.jsdelivr.net/npm/chenyfan-blog@1.1.9/public           
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
@@ -35,8 +48,10 @@ catch_rules: #转换规则
               
               fetch:
                 status: 200
-                engine: parallel #classic
-                cors: true #true false omit
+                engine: parallel
+                prelight: false
+                timeout: 5
+                 #classic
               #action: fetch-engine-status
 
               #header: #与action相同级别的header修改将无效
@@ -48,17 +63,18 @@ catch_rules: #转换规则
                 content-type: text/html;charset=utf-8;ClientWorker
                 ServerProvide: ClientWorker
               
-    - rule: ^https\:\/\/((cdn|fastly)\.jsdelivr.net\/npm|unpkg\.com\/) #修复垃圾Jsdelivr（仅npm）
+    - rule: ^https\:\/\/((cdn|fastly)\.jsdelivr.net\/npm\/|unpkg\.com\/) #修复垃圾Jsdelivr（仅npm）
       transform_rules:
           - search: _
             replace:
-              - https://npm.elemecdn.com/npm
-              - https://unpkg.zhimg.com
+              - https://npm.elemecdn.com/
+              - https://unpkg.zhimg.com/
             header:
               ServerProvide: ClientWorker
             action: fetch
             fetch:
               engine: classic
+              prelight: false
           
     - rule: .
       transform_rules:
@@ -69,5 +85,10 @@ catch_rules: #转换规则
         
         - search: (^4|^5)
           type: status
-          return: 'Error!'
-          
+          action: return
+          return: 
+            body: Error!
+            header:
+              content-type: text/plain;charset=utf-8
+              ServerProvide: ClientWorker
+            status: 503

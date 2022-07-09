@@ -4,7 +4,10 @@
   "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
   "main": "./dist/cw.js",
   "scripts": {
-    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist "
+    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist ",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "type": "module",
   "repository": {
@@ -23,9 +26,12 @@
   "homepage": "https://github.com/ChenYFan/ClientWorker#readme",
   "dependencies": {
     "@chenyfan/cache-db": "^0.0.4",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "vitepress": "^1.0.0-alpha.4",
+    "vue": "^3.2.37"
   },
   "devDependencies": {
+    "terser-webpack-plugin": "^5.3.3",
     "webpack-bundle-analyzer": "^4.5.0"
   }
 }

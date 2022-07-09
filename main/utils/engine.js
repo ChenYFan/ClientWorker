@@ -2,7 +2,7 @@ import cons from './cons.js'
 
 const FetchEngine = {
     fetch: async (req, config) => {
-        config = config || { status: 200, mode: "cors", credential: "include", redirect: "follow", cache: "default" }
+        config = config || { status: 200}
         return new Promise((resolve, reject) => {
             const reqtype = Object.prototype.toString.call(req)
             if (reqtype !== '[object String]' && reqtype !== '[object Request]') {
@@ -21,7 +21,7 @@ const FetchEngine = {
     },
     classic: async (reqs, config) => {
         return new Promise((resolve, reject) => {
-            config = config || { status: 200, mode: "cors", credential: "include", redirect: "follow", cache: "default" }
+            config = config || { status: 200}
             const reqtype = Object.prototype.toString.call(reqs)
             if (reqtype === '[object String]' || reqtype === '[object Request]') {
                 cons.w(`FetchEngine.classic: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
@@ -50,25 +50,26 @@ const FetchEngine = {
                 })
                     .then(PauseProgress)
                     .then(res => {
-                        if (res.status == config.status || 200) {
+                        if (res.status == (config.status || 200)) {
                             controller.abort();
                             resolve(res)
                         }
                     }).catch(err => {
-                        if (err == 'DOMException: The user aborted a request.') console.log()//To diable the warning:DOMException: The user aborted a request.
-                        reject(err)
+                        if (err == 'DOMException: The user aborted a request.') console.log()//To disable the warning:DOMException: The user aborted a request.
                     })
             }))
 
 
-
+            setTimeout(() => {
+                resolve(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Classic', { status: 504, statusText: '504 All Gateways Timeout' }))
+            }, config.timeout || 5000);
 
         })
     },
     parallel: async (reqs, config) => {
         return new Promise((resolve, reject) => {
-            config = config || { status: 200, mode: "cors", credential: "include", redirect: "follow", cache: "default" }
-        
+            config = config || { status: 200 }
+            console.log(config)
             const reqtype = Object.prototype.toString.call(reqs)
             if (reqtype === '[object String]' || reqtype === '[object Request]') {
                 cons.w(`FetchEngine.parallel: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
@@ -96,17 +97,19 @@ const FetchEngine = {
                     redirect: config.redirect,
                     cache: config.cache
                 }).then(res => {
-                    if (res.status == config.status || 200) {
+                    if (res.status == (config.status || 200)) {
                         tagged = true;
                         eventTarget.dispatchEvent(abortEvent)
                         resolve(res)
                     }
                 }).catch(err => {
-                    if (err == 'DOMException: The user aborted a request.') console.log()//To diable the warning:DOMException: The user aborted a request.
-                    reject(err)
+                    if (err == 'DOMException: The user aborted a request.') console.log()//To disable the warning:DOMException: The user aborted a request.
                 })
             }))
-
+                
+            setTimeout(() => {
+                resolve(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Parallel', { status: 504, statusText: '504 All Gateways Timeout' }))
+            }, config.timeout || 5000);
 
 
 

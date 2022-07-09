@@ -5,14 +5,33 @@ const router_cgi = async (request) => {
     const urlStr = request.url.toString()
     const urlObj = new URL(urlStr)
     const pathname = urlObj.pathname
+    const q = (s) => { return urlObj.searchParams.get(s) }
     switch (pathname.split('/')[2]) {
-        case '':
-            return new Response('Hello, Client Worker!')
-        case 'update_config':
-            const config = await fetch('/config.yaml').then(res => res.text()).then(text => yaml.load(text))
-            await db.write('config', JSON.stringify(config), { type: "json" })
-            console.log(await db.read('config', { type: "json" }))
-            return new Response(JSON.stringify(config))
+        case 'page':
+            switch (q('type')) {
+                case 'install':
+                    return fetch('/404.html')
+                default:
+                    return new Response('Error, page type not found')
+            }
+        case 'api':
+
+            switch (q('type')) {
+                case 'config':
+                    return fetch('/config.yaml')
+                        .then(res => res.text())
+                        .then(text => yaml.load(text))
+                        .then(async config => {
+                            await db.write('config', JSON.stringify(config), { type: "json" })
+                            return new Response('ok')
+                        })
+                        .catch(async err => {
+                            await db.write('config', '')
+                            return new Response(err)
+                        })
+                default:
+                    return new Response('Error, api type not found')
+            }
         default:
             return new Response('Not Found!, Client Worker!')
     }
