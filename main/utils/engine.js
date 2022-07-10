@@ -11,7 +11,7 @@ const FetchEngine = {
             fetch(req, {
                 mode: config.mode,
                 credentials: config.credential,
-                redirect: config.redirect,
+                redirect: config.redirect || "follow",
                 cache: config.cache
             }).then(res => {
                 resolve(res)
@@ -45,7 +45,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect,
+                    redirect: config.redirect || "follow",
                     cache: config.cache
                 })
                     .then(PauseProgress)
@@ -94,7 +94,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect,
+                    redirect: config.redirect || "follow",
                     cache: config.cache
                 }).then(res => {
                     if (res.status == (config.status || 200)) {

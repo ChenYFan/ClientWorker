@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://unpkg.com/chenyfan-os@0.0.0-r22/ClientWorker.png" alt="ClientWorker" width="100%">
+<img src="https://unpkg.com/chenyfan-os@0.0.0-r22/ClientWorker.png" alt="ClientWorker" width="20%">
 </p>
 
 # ClientWorker
