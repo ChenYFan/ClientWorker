@@ -3,6 +3,8 @@ import CacheDB from '@chenyfan/cache-db'
 import cons from './../utils/cons.js'
 import FetchEngine from '../utils/engine.js'
 const mainhandle = async (request) => {
+    //当前域 new Request('').url
+    const domain = new URL(new Request('').url).host
     const db = new CacheDB()
 
     let tReq = new Request(request.url, {
@@ -31,6 +33,7 @@ const mainhandle = async (request) => {
     let EngineFetch = false
     let tRes = new Response()
     for (var catch_rule of config.catch_rules) {
+        if (catch_rule.rule === '_') catch_rule.rule = domain
         if (!tReq.url.match(new RegExp(catch_rule.rule))) continue;
         let EngineFetchList = []
         for (var transform_rule of catch_rule.transform_rules) {
@@ -49,10 +52,15 @@ const mainhandle = async (request) => {
                         } else {
                             if (EngineFetch) { cons.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
                             transform_rule.replace.forEach(replacement => {
+                                if(replacement === '_') {
+                                    EngineFetchList.push(tReq)
+                                    return;
+                                }
                                 EngineFetchList.push(
                                     new Request(tReq.url.replace(new RegExp(transform_rule.search), replacement), tReq)
                                 )
                             });
+                            
                             EngineFetch = true
                         }
                     }

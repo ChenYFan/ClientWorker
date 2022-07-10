@@ -1,18 +1,24 @@
-name: ChenYFan's ClientWorker
+name: ClientWorker Docs Config
 catch_rules: #转换规则
-    - rule: ^https\:\/\/(cworker\.pages\.dev|beverage\-researchers\-toolbox\-affiliate\.trycloudflare\.com) #匹配所有域名为blog.cyfan.top的请求
+    - rule: _ #ClientWorker语法糖，匹配当前域，返回一个域名带端口
       transform_rules: #转换规则，最上面的优先最高
-            - search: \#.+ #在发送请求时匹配#后内容并移除
+            - search: \#.* #在发送请求时匹配#后内容并移除
               type: url #支持url status statusCode，默认url
               replace: ''
-            - search: \?.+ #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
+            - search: \?.* #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
               replace: '' 
+
 
             - search: ([^\/.]+)\/index(|\.html)$ #匹配/path/index.html或/path/index，跳为/path/
               action: redirect
               redirect: 
                 to: $1/
-
+            - search: \/google$
+              action: redirect
+              redirect: 
+                url: https://google.com #不替换直接跳转，默认优先级url > to
+                status: 301
+                
             - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
               action: redirect
               redirect: 
@@ -23,16 +29,12 @@ catch_rules: #转换规则
               replace: $1/index.html
               #search: /\/([^\/.]+)\/?$/g #匹配/path /path/，转为/path/index.html
               #replace: /$1/index.html
-            - search: \/google$
-              action: redirect
-              redirect: 
-                url: https://google.com #不替换直接跳转，默认优先级url > to
-                status: 301
-
-            - search: _ 
+            
+            
+            - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
               replace:
-                - https://npm.elemecdn.com/chenyfan-blog@1.1.9/public
-                - https://cdn.jsdelivr.net/npm/chenyfan-blog@1.1.9/public           
+                - npm.elemecdn.com/clientworker@0.0.0-beta-3/doc/docs/.vitepress/dist
+                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-3/doc/docs/.vitepress/dist         
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
@@ -48,9 +50,9 @@ catch_rules: #转换规则
               
               fetch:
                 status: 200
-                engine: parallel
+                engine: classic
                 prelight: false
-                timeout: 5
+                timeout: 5000
                  #classic
               #action: fetch-engine-status
 
@@ -60,21 +62,8 @@ catch_rules: #转换规则
               
             - search: \.html$ #匹配后缀为.html的请求，修复content-type为text/html
               header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
-                content-type: text/html;charset=utf-8;ClientWorker
+                content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
-              
-    - rule: ^https\:\/\/((cdn|fastly)\.jsdelivr.net\/npm\/|unpkg\.com\/) #修复垃圾Jsdelivr（仅npm）
-      transform_rules:
-          - search: _
-            replace:
-              - https://npm.elemecdn.com/
-              - https://unpkg.zhimg.com/
-            header:
-              ServerProvide: ClientWorker
-            action: fetch
-            fetch:
-              engine: classic
-              prelight: false
           
     - rule: .
       transform_rules:

@@ -1,13 +1,10 @@
 {
   "name": "clientworker",
-  "version": "0.0.0-beta-1",
+  "version": "0.0.0-beta-5",
   "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
   "main": "./dist/cw.js",
   "scripts": {
-    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist ",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist "
   },
   "type": "module",
   "repository": {
