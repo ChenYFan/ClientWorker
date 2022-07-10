@@ -3984,11 +3984,7 @@ const router_cgi = async (request) => {
         case 'page':
             switch (q('type')) {
                 case 'install':
-                    return fetch('/404.html',{
-                        redirect: 'follow'
-                    }).catch(e=>{
-                        return fetch(`https://npm.elemecdn.com/clientworker@${package_namespaceObject.i8}/dist/404.html`)
-                    })
+                    return fetch(`https://npm.elemecdn.com/clientworker@${package_namespaceObject.i8}/dist/404.html`)
                 default:
                     return new Response('Error, page type not found')
             }
