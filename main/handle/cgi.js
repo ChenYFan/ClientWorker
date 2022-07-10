@@ -1,5 +1,6 @@
 import yaml from 'js-yaml'
 import CacheDB from '@chenyfan/cache-db'
+import cwpkgjson from './../../package.json'
 const router_cgi = async (request) => {
     const db = new CacheDB()
     const urlStr = request.url.toString()
@@ -12,6 +13,8 @@ const router_cgi = async (request) => {
                 case 'install':
                     return fetch('/404.html',{
                         redirect: 'follow'
+                    }).catch(e=>{
+                        return fetch(`https://npm.elemecdn.com/clientworker@${cwpkgjson.version}/dist/404.html`)
                     })
                 default:
                     return new Response('Error, page type not found')
