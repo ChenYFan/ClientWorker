@@ -24,13 +24,15 @@ jobs:
 
           npm run build
 
+          echo "clientworker.js.org" > ./dist/CNAME
+
           cd doc
 
           npm add --dev vitepress vue
 
           npm run "docs:build"
 
-          echo "clientworker.js.org" > ./dist/CNAME
+
 
       - name: Deploy to GithubPage
         uses: peaceiris/actions-gh-pages@v3
