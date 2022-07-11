@@ -29,8 +29,6 @@ jobs:
           github_token: ${{ secrets.TOKEN }}
           publish_dir: ./dist
 
-      
-
       - name: Publish to NPM
         uses: JS-DevTools/npm-publish@v1
         with:
