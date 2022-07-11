@@ -24,6 +24,8 @@ jobs:
 
           cd doc
 
+          npm add --dev vitepress vue
+
           npm run "docs:build"
 
       - name: Deploy to GithubPage
