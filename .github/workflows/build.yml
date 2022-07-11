@@ -20,6 +20,8 @@ jobs:
         run: >
           npm i -D
 
+          npm install -D webpack-cli webpack
+
           npm run build
 
           cd doc
