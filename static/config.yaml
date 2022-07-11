@@ -71,6 +71,7 @@ catch_rules: #转换规则
           action: fetch
           fetch:
             engine: fetch
+            preflight: false
         
         - search: (^4|^5)
           type: status
