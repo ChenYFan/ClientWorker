@@ -17,11 +17,14 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install & Build
-        run: |
+        run: >
           npm i -D
+
           npm run build
+
           cd doc
-          npm run docs:build
+
+          npm run "docs:build"
 
       - name: Deploy to GithubPage
         uses: peaceiris/actions-gh-pages@v3
