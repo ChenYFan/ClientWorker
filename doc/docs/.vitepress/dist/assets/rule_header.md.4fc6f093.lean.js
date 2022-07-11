@@ -1,0 +1,1 @@
+import{_ as e,c as o,o as a,a as s}from"./app.930c653c.js";const f=JSON.parse('{"title":"\u66F4\u6539\u6807\u5934 header","description":"","frontmatter":{},"headers":[],"relativePath":"rule/header.md","lastUpdated":null}'),c={name:"rule/header.md"},t=s("",6),n=[t];function l(d,p,r,h,i,_){return a(),o("div",null,n)}var C=e(c,[["render",l]]);export{f as __pageData,C as default};

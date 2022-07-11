@@ -52,7 +52,7 @@ const mainhandle = async (request) => {
                         } else {
                             if (EngineFetch) { cons.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
                             transform_rule.replace.forEach(replacement => {
-                                if(replacement === '_') {
+                                if (replacement === '_') {
                                     EngineFetchList.push(tReq)
                                     return;
                                 }
@@ -60,7 +60,7 @@ const mainhandle = async (request) => {
                                     new Request(tReq.url.replace(new RegExp(transform_rule.search), replacement), tReq)
                                 )
                             });
-                            
+
                             EngineFetch = true
                         }
                     }
@@ -104,8 +104,26 @@ const mainhandle = async (request) => {
                             cache: transform_rule.fetch.cache,
                             timeout: transform_rule.fetch.timeout
                         }
-                        if (!transform_rule.fetch.prelight) {
-                            tReq = new Request(tReq.url) //https://segmentfault.com/a/1190000006095018
+                        if (!transform_rule.fetch.preflight) {
+                            tReq = new Request(tReq.url, {
+                                method: ((method) => {
+                                    if (method === "GET" || method === "HEAD" || method === "POST") return method;
+                                    return "GET"
+                                })(tReq.method),
+                                body: ((body) => {
+                                    if (tReq.method === "POST") return body;
+                                    return null
+                                })(tReq.body),
+                                headers: {
+                                    Accept: tReq.headers.get('Accept'),
+                                    "Accept-Language": tReq.headers.get('Accept-Language'),
+                                    "Content-Language": tReq.headers.get('Content-Language'),
+                                    "Content-Type": ((ctype) => {
+                                        if (ctype === 'application/x-www-form-urlencoded' || ctype === 'multipart/form-data' || ctype === 'text/plain') return ctype
+                                        return undefined
+                                    })(tReq.headers.get('Content-Type'))
+                                }
+                            }) //https://segmentfault.com/a/1190000006095018
                             delete fetchConfig.credentials
                             fetchConfig.mode = "cors"
                             for (var eReq in EngineFetchList) {

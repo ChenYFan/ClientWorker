@@ -1,6 +1,7 @@
-# URL重定向
+# URL重定向 `redirect`
 
 > 你要找的是在外部观察url不跳转的[URL重写](/rule/replace)吗？
+`redirect`可以直接返回一个跳转，无视`fetch`状态，对接下来的规则也将不执行。
 
 ## `to`
 

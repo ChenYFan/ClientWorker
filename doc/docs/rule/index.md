@@ -1,12 +1,12 @@
-# 捕捉与搜索
+# 捕捉与搜索 `rule` && `search`
 
 > 你需要学会yaml...如果不会的话，菜鸟教程可以帮你快速入门
 
 在ClientWorker中，规则被分为`catch_rules`和`transform_rules`。
 `catch_rules`是匹配规则，只能匹配路由。
 `transform_rules`只会在`catch_rules`起作用时才会捕获，可以捕获`url` `statusText` `statusCode`，未来将支持`header` 和 `body`.
-
-# `catch_rules`
+# `catch_rules` 
+## `rule`
 
 作为路由匹配入口，`catch_rule`在匹配`rule`成功后才会将整个`Request`移交给`transform_rules`。
 
@@ -30,9 +30,9 @@ catch_rules:
 
 `catch_rule`必须是`正则`，如果不是，将会抛出错误。
 
-## 语法糖
+### 语法糖
 
-# _
+#### _
 
 在`catch_rule`中 `_` 将会匹配当前网站的主域名(包括端口)，例如：
 
@@ -45,7 +45,7 @@ catch_rules:
 > 如果你要捕获所有请求，请使用`.*`。
 
 # `transform_rules`
-
+## `search`
 作为转换入口，`transform_rules`在匹配`search`成功后才会进行处理，格式如下：
 
 ```yaml
@@ -66,12 +66,19 @@ catch_rules:
 
 同样的，`transform_rules`也是一个数组，`ClientWorker`会从上到下依次匹配，即越靠前的优先级越高。
 
-## 语法糖
+### 语法糖
 
-# _
+#### _
 
 在`transform_rules`中`_`的作用是使用与`catch_rule`相同的规则，而不是匹配当前域名。
 
 - `catch_rule`是`_`，那么`transform_rules`中的`_`就会同时匹配当前网站的主域名，而不是当前请求的域名。
 
 - `catch_rule`是`.*`，那么`transform_rules`中的`_`也会同时匹配整条网址，即捕获全部请求。
+
+## `searchin`
+
+指定`search`的搜索内容，可以为：
+- `url`：匹配当前请求的url[默认]
+- `status`：匹配当前请求的状态码
+- `statusText`：匹配当前请求的状态文本

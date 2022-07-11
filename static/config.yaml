@@ -51,7 +51,7 @@ catch_rules: #转换规则
               fetch:
                 status: 200
                 engine: classic
-                prelight: false
+                preflight: false
                 timeout: 5000
                  #classic
               #action: fetch-engine-status
