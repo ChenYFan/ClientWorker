@@ -127,7 +127,7 @@ const mainhandle = async (request) => {
                             delete fetchConfig.credentials
                             fetchConfig.mode = "cors"
                             for (var eReq in EngineFetchList) {
-                                EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url)
+                                EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url, tReq)
                             }
                         }
                         if (!EngineFetch) {
@@ -171,7 +171,7 @@ const mainhandle = async (request) => {
     }
     if (!tFetched) {
         if (EngineFetch) {
-            tRes = await FetchEngine.classic(EngineFetchList, { status: 200 })
+            tRes = await FetchEngine.classic(EngineFetchList, fetchConfig || { status: 200 })
         } else {
             tRes = await fetch(tReq)
         }
