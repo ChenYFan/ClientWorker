@@ -1,6 +1,5 @@
 import yaml from 'js-yaml'
 import CacheDB from '@chenyfan/cache-db'
-import cwpkgjson from './../../package.json'
 const router_cgi = async (request) => {
     const db = new CacheDB()
     const urlStr = request.url.toString()
@@ -11,7 +10,7 @@ const router_cgi = async (request) => {
         case 'page':
             switch (q('type')) {
                 case 'install':
-                    return fetch(`https://npm.elemecdn.com/clientworker@${cwpkgjson.version}/dist/404.html`)
+                    return fetch('/404')
                 default:
                     return new Response('Error, page type not found')
             }
