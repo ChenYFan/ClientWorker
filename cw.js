@@ -3968,10 +3968,7 @@ var jsYaml = {
 
 // EXTERNAL MODULE: ./node_modules/@chenyfan/cache-db/index.js
 var cache_db = __webpack_require__(385);
-;// CONCATENATED MODULE: ./package.json
-const package_namespaceObject = JSON.parse('{"i8":"0.0.0-beta-6"}');
 ;// CONCATENATED MODULE: ./main/handle/cgi.js
-
 
 
 const router_cgi = async (request) => {
@@ -3984,7 +3981,7 @@ const router_cgi = async (request) => {
         case 'page':
             switch (q('type')) {
                 case 'install':
-                    return fetch(`https://npm.elemecdn.com/clientworker@${package_namespaceObject.i8}/dist/404.html`)
+                    return fetch('/404')
                 default:
                     return new Response('Error, page type not found')
             }
