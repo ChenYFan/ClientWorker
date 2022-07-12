@@ -67,8 +67,27 @@ catch_rules: #转换规则
               header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
                 content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
+
+    - rule: ^https\:\/\/npmm\/
+      transform_rules:
+        - search: .*
+          replace:
+          - https://npm.elemecdn.com/
+          - https://cdn.jsdelivr.net/npm/
+          - https://unpkg.com/
+          - https://cdn1.tianli0.top/
+          - https://jsd.onmicrosoft.cn/npm/
+          - https://unpkg.onmicrosoft.cn/
+        - search: .*
+          action: fetch
+          fetch:
+            status: 200
+            engine: classic
+            preflight: false
+            timeout: 5000
+        
           
-    - rule: .
+    - rule: .*
       transform_rules:
         - search: .*
           action: fetch
