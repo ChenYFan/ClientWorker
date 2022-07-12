@@ -18,6 +18,8 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: Install & Build
         run: >
+          rm -rf .gitignore
+          
           npm i -D
 
           npm install -D webpack-cli webpack

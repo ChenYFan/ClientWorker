@@ -33,10 +33,11 @@ catch_rules: #转换规则
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
               replace:
-                - npm.elemecdn.com/clientworker@0.0.0-beta-8/doc/docs/.vitepress/dist
-                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-8/doc/docs/.vitepress/dist
-                - cdn1.tianli0.top/npm/clientworker@0.0.0-beta-8/doc/docs/.vitepress/dist
-                - jsd.onmicrosoft.cn/npm/clientworker@0.0.0-beta-8/doc/docs/.vitepress/dist
+                - npm.elemecdn.com/clientworker@0.0.0-beta-9/doc/docs/.vitepress/dist
+                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-9/doc/docs/.vitepress/dist
+                - cdn1.tianli0.top/npm/clientworker@0.0.0-beta-9/doc/docs/.vitepress/dist
+                - jsd.onmicrosoft.cn/npm/clientworker@0.0.0-beta-9/doc/docs/.vitepress/dist
+                - unpkg.onmicrosoft.cn/clientworker@0.0.0-beta-9/doc/docs/.vitepress/dist
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
