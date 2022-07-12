@@ -20,6 +20,9 @@ jobs:
         run: >
           rm -rf .gitignore
           
+          echo "node_modules" >> .gitignore
+          echo "doc/node_modules"  >> .gitignore
+
           npm i -D
 
           npm install -D webpack-cli webpack
