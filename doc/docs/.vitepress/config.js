@@ -7,9 +7,9 @@ export default {
     head: [
       //['link', { rel: 'icon', href: '/favicon.png' }],
       ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi' }],
-      ['link', { href: 'https://npm.elemecdn.com/lightgallery@2.3.0/css/lightgallery.css', rel: 'stylesheet' }],
-      ['script', { src: 'https://npm.elemecdn.com/lightgallery@2.3.0/lightgallery.min.js' }],
-      ['script', { src: `https://npm.elemecdn.com/clientworker@${cwpkgjson.version}/dist/autoupdate.js` }]
+      ['link', { href: 'https://npmm/lightgallery@2.3.0/css/lightgallery.css', rel: 'stylesheet' }],
+      ['script', { src: 'https://npmm/lightgallery@2.3.0/lightgallery.min.js' }],
+      ['script', { src: `https://npmm/clientworker@${cwpkgjson.version}/dist/autoupdate.js` }]
     ],
   
     lastUpdated: true,
