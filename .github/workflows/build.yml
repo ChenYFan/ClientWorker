@@ -21,7 +21,8 @@ jobs:
           rm -rf .gitignore
           
           echo "node_modules" >> .gitignore
-          echo "doc/node_modules"  >> .gitignore
+          
+          echo "doc/node_modules" >> .gitignore
 
           npm i -D
 
