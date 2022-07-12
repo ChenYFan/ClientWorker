@@ -33,11 +33,11 @@ catch_rules: #转换规则
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
               replace:
-                - npm.elemecdn.com/clientworker@0.0.0-beta-10/doc/docs/.vitepress/dist
-                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-10/doc/docs/.vitepress/dist
-                - cdn1.tianli0.top/npm/clientworker@0.0.0-beta-10/doc/docs/.vitepress/dist
-                - jsd.onmicrosoft.cn/npm/clientworker@0.0.0-beta-10/doc/docs/.vitepress/dist
-                - unpkg.onmicrosoft.cn/clientworker@0.0.0-beta-10/doc/docs/.vitepress/dist
+                - npm.elemecdn.com/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
+                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
+                - cdn1.tianli0.top/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
+                - jsd.onmicrosoft.cn/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
+                - unpkg.onmicrosoft.cn/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
@@ -70,7 +70,7 @@ catch_rules: #转换规则
 
     - rule: ^https\:\/\/npmm\/
       transform_rules:
-        - search: .*
+        - search: _
           replace:
           - https://npm.elemecdn.com/
           - https://cdn.jsdelivr.net/npm/
@@ -78,7 +78,7 @@ catch_rules: #转换规则
           - https://cdn1.tianli0.top/
           - https://jsd.onmicrosoft.cn/npm/
           - https://unpkg.onmicrosoft.cn/
-        - search: .*
+        - search: _
           action: fetch
           fetch:
             status: 200
