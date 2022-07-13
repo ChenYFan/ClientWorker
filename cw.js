@@ -79,39 +79,17 @@
 
 
 
-/***/ })
+/***/ }),
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
+/***/ 152:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
 "use strict";
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "Z": () => (/* binding */ cgi)
+});
 
 ;// CONCATENATED MODULE: ./node_modules/js-yaml/dist/js-yaml.mjs
 
@@ -4000,6 +3978,15 @@ const router_cgi = async (request) => {
                             await db.write('config', '')
                             return new Response(err)
                         })
+                case 'clear':
+                    return caches.open('ClientWorker_ResponseCache').then(async cache => {
+                        return cache.keys().then(async keys => {
+                            await Promise.all(keys.map(key => {
+                                cache.delete(key)
+                            }))
+                            return new Response('ok')
+                        })
+                    })
                 default:
                     return new Response('Error, api type not found')
             }
@@ -4008,7 +3995,247 @@ const router_cgi = async (request) => {
     }
 }
 /* harmony default export */ const cgi = (router_cgi);
-;// CONCATENATED MODULE: ./main/utils/cons.js
+
+/***/ }),
+
+/***/ 755:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cgi_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(152);
+/* harmony import */ var _chenyfan_cache_db__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(385);
+/* harmony import */ var _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(70);
+/* harmony import */ var _utils_engine_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(671);
+/* harmony import */ var _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(431);
+
+
+
+
+
+const mainhandle = async (request) => {
+    //当前域 new Request('').url
+    const domain = new URL(new Request('').url).host
+    const db = new _chenyfan_cache_db__WEBPACK_IMPORTED_MODULE_1__()
+
+    let tReq = new Request(request.url, {
+        method: request.method,
+        headers: request.headers,
+        body: request.body,
+        mode: request.mode === 'navigate' ? 'same-origin' : request.mode,
+        credentials: request.credentials,
+        redirect: request.redirect,
+        cache: request.cache
+    })
+    const urlStr = tReq.url.toString()
+    const urlObj = new URL(urlStr)
+    const pathname = urlObj.pathname
+    if (pathname.split('/')[1] === 'cw-cgi') {
+        return (0,_cgi_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z)(request)
+    }
+    const config = await db.read('config', { type: "json" })
+    if (!config) return fetch(request)
+
+
+
+
+
+    let tFetched = false
+    let tHeaders = new Headers()
+    let EngineFetch = false
+    let tRes = new Response()
+    for (let catch_rule of config.catch_rules) {
+        if (catch_rule.rule === '_') catch_rule.rule = domain
+        if (!tReq.url.match(new RegExp(catch_rule.rule))) continue;
+        let EngineFetchList = []
+        for (let transform_rule of catch_rule.transform_rules) {
+            let tSearched = false
+
+            if (transform_rule.search === '_') transform_rule.search = catch_rule.rule
+            switch (transform_rule.type || "url") {
+                case 'url':
+                    if (tReq.url.match(new RegExp(transform_rule.search))) tSearched = true;
+                    if (tFetched && tSearched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is already fetched,the url transform rule:${transform_rule.search} are ignored`); break }
+                    if (typeof transform_rule.replace !== 'undefined' && tSearched) {
+                        if (typeof transform_rule.replace === 'string') {
+                            if (EngineFetch) _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`EngineFetch Disabled for ${tReq.url},the request will downgrade to normal fetch`)
+                            tReq = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), transform_rule.replace) })
+                            EngineFetch = false
+                        } else {
+                            if (EngineFetch) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
+                            transform_rule.replace.forEach(replacement => {
+                                if (replacement === '_') {
+                                    EngineFetchList.push(tReq)
+                                    return;
+                                }
+                                EngineFetchList.push(
+                                    _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), replacement) })
+                                )
+                            });
+
+                            EngineFetch = true
+                        }
+                    }
+                    break
+                case 'status':
+                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the status rule are ignored`); break }
+                    if (String(tRes.status).match(new RegExp(transform_rule.search))) tSearched = true;
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { status: transform_rule.replace })
+                    break
+                case 'statusText':
+                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the statusText rule are ignored`); break }
+                    if (tRes.statusText.match(new RegExp(transform_rule.search))) tSearched = true;
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { statusText: tRes.statusText.replace(new RegExp(transform_rule.search), transform_rule.replace) })
+                    break
+                default:
+                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} the ${transform_rule.type} rule are not supported`);
+                    break
+            }
+            if (!tSearched) continue
+            if (typeof transform_rule.header === 'object') {
+                for (var header in transform_rule.header) {
+                    if (tFetched) {
+
+                        tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { headers: { [header]: transform_rule.header[header] } })
+                    } else {
+                        tReq = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { headers: { [header]: transform_rule.header[header] } })
+                    }
+                }
+            }
+
+            if (typeof transform_rule.action !== 'undefined') {
+                switch (transform_rule.action) {
+                    case 'fetch':
+                        if (tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is already fetched,the fetch action are ignored`); break }
+                        if (typeof transform_rule.fetch === 'undefined') { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`Fetch Config is not defined for ${tReq.url}`); break }
+
+                        let fetchConfig = {
+                            status: transform_rule.fetch.status,
+                            mode: transform_rule.fetch.mode,
+                            credentials: transform_rule.fetch.credentials,
+                            redirect: transform_rule.fetch.redirect,
+                            timeout: transform_rule.fetch.timeout
+                        }
+                        if (!transform_rule.fetch.preflight) {
+                            tReq = new Request(tReq.url, {
+                                method: ((method) => {
+                                    if (method === "GET" || method === "HEAD" || method === "POST") return method;
+                                    return "GET"
+                                })(tReq.method),
+                                body: ((body) => {
+                                    if (tReq.method === "POST") return body;
+                                    return null
+                                })(tReq.body)
+                            }) //https://segmentfault.com/a/1190000006095018
+                            delete fetchConfig.credentials
+                            fetchConfig.mode = "cors"
+                            for (var eReq in EngineFetchList) {
+                                EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url, tReq)
+                            }
+                        }
+                        tRes = await Promise.any([
+                            new Promise(async (resolve, reject) => {
+                                let cRes
+                                if (!EngineFetch) {
+                                    cRes = await _utils_engine_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].fetch */ .Z.fetch(tReq, fetchConfig)
+                                } else {
+                                    switch (transform_rule.fetch.engine) {
+                                        case 'classic':
+                                            cRes = await _utils_engine_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].classic */ .Z.classic(EngineFetchList, fetchConfig)
+                                            break;
+                                        case 'parallel':
+                                            cRes = await _utils_engine_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].parallel */ .Z.parallel(EngineFetchList, fetchConfig)
+                                            cRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(cRes, { url: '' })
+                                            break;
+                                        default:
+                                            _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`Fetch Engine ${transform_rule.fetch.engine} is not supported`)
+                                            break;
+                                    }
+
+                                }
+                                if (typeof transform_rule.fetch.cache === "object") {
+                                    cRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(cRes, { headers: { "ClientWorker_CacheTime": new Date().getTime() } })
+                                    caches.open("ClientWorker_ResponseCache").then(cache => {
+                                        cache.put(tReq, cRes.clone())
+                                            .then(() => { resolve(cRes) })
+                                    })
+                                }
+                                else { resolve(cRes) }
+                            })
+                        ],
+                            new Promise(async (resolve, reject) => {
+                                if (typeof transform_rule.fetch.cache === "object") {
+                                    setTimeout(() => {
+
+                                        caches.open("ClientWorker_ResponseCache").then(cache => {
+                                            cache.match(tReq).then(cRes => {
+                                                if (!!cRes) {
+                                                    if (Number(cRes.headers.get('ClientWorker_CacheTime')) + eval(transform_rule.fetch.cache.expire || '0') > new Date().getTime()) {
+                                                        _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].s */ .Z.s(`${tReq.url} is timeout for delay ${transform_rule.fetch.cache.delay},so return by cache`)
+                                                        resolve(cRes)
+                                                    } else {
+                                                        setTimeout(() => {
+                                                            _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} is too late to fetch,even though the cache has expired,so return by cache`)
+                                                        }, transform_rule.fetch.cache.expired_delay || 2800);
+                                                    }
+                                                } else {
+                                                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not cached!And it is too late to fetch!`)
+                                                }
+                                            })
+                                        })
+
+                                    }, transform_rule.fetch.cache.delay || 200);
+                                }
+                            })
+
+                        )
+                        tFetched = true
+                        break
+                    case 'redirect':
+                        if (typeof transform_rule.redirect === 'undefined') continue
+                        if (typeof transform_rule.redirect.url === 'string') return Response.redirect(transform_rule.redirect.url, transform_rule.redirect.status || 301)
+                        return Response.redirect(
+                            tReq.url.replace(new RegExp(transform_rule.search), transform_rule.redirect.to),
+                            transform_rule.redirect.status || 301
+                        )
+                    case 'return':
+                        if (typeof transform_rule.return === 'undefined') transform_rule.return = {}
+                        return new Response(transform_rule.return.body || "Error!", {
+                            status: transform_rule.return.status || 503,
+                            headers: transform_rule.return.headers || {}
+                        })
+                    default:
+                        _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`This Action:${transform_rule.action} is not supported yet`)
+                        break
+                }
+            }
+        }
+
+
+    }
+    if (!tFetched) {
+        if (EngineFetch) {
+            tRes = await _utils_engine_js__WEBPACK_IMPORTED_MODULE_3__/* ["default"].classic */ .Z.classic(EngineFetchList, fetchConfig || { status: 200 })
+        } else {
+            tRes = await fetch(tReq)
+        }
+    }
+    return tRes
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mainhandle);
+
+/***/ }),
+
+/***/ 70:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 const cons = {
     s: (m) => {
         console.log(`%c[SUCCESS]%c ${m}`, 'color:white;background:green;', '')
@@ -4026,8 +4253,18 @@ const cons = {
         console.log(`%c[DEBUG]%c ${m}`, 'color:white;background:black;', '')
     }
 }
-/* harmony default export */ const utils_cons = (cons);
-;// CONCATENATED MODULE: ./main/utils/engine.js
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (cons);
+
+/***/ }),
+
+/***/ 671:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _cons_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(70);
 
 if (!Promise.any) {
     Promise.any = function (promises) {
@@ -4061,8 +4298,7 @@ const FetchEngine = {
             fetch(req, {
                 mode: config.mode,
                 credentials: config.credential,
-                redirect: config.redirect || "follow",
-                cache: config.cache
+                redirect: config.redirect || "follow"
             }).then(res => {
                 resolve(res)
             }).catch(err => { reject(err) })
@@ -4074,14 +4310,14 @@ const FetchEngine = {
             config = config || { status: 200}
             const reqtype = Object.prototype.toString.call(reqs)
             if (reqtype === '[object String]' || reqtype === '[object Request]') {
-                utils_cons.w(`FetchEngine.classic: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
+                _cons_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].w */ .Z.w(`FetchEngine.classic: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
                 resolve(FetchEngine.fetch(reqs, config))
             } else if (reqtype !== '[object Array]') {
                 reject(`FetchEngine.classic: reqs must be a string , Request or Array object,but got ${reqtype}`)
             } else if (reqtype === '[object Array]') {
                 if (reqtype.length === 0) reject(`FetchEngine.classic: reqs array is empty`)
                 if (reqtype.length === 1) {
-                    utils_cons.w(`FetchEngine.classic: reqs array is only one element,this request will downgrade to normal fetch`)
+                    _cons_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].w */ .Z.w(`FetchEngine.classic: reqs array is only one element,this request will downgrade to normal fetch`)
                     resolve(FetchEngine.fetch(reqs[0], config))
                 }
             }
@@ -4095,8 +4331,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect || "follow",
-                    cache: config.cache
+                    redirect: config.redirect || "follow"
                 })
                     .then(PauseProgress)
                     .then(res => {
@@ -4119,17 +4354,16 @@ const FetchEngine = {
     parallel: async (reqs, config) => {
         return new Promise((resolve, reject) => {
             config = config || { status: 200 }
-            console.log(config)
             const reqtype = Object.prototype.toString.call(reqs)
             if (reqtype === '[object String]' || reqtype === '[object Request]') {
-                utils_cons.w(`FetchEngine.parallel: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
+                _cons_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].w */ .Z.w(`FetchEngine.parallel: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
                 resolve(FetchEngine.fetch(reqs, config))
             } else if (reqtype !== '[object Array]') {
                 reject(`FetchEngine.parallel: reqs must be a string , Request or Array object,but got ${reqtype}`)
             } else if (reqtype === '[object Array]') {
                 if (reqtype.length === 0) reject(`FetchEngine.parallel: reqs array is empty`)
                 if (reqtype.length === 1) {
-                    utils_cons.w(`FetchEngine.parallel: reqs array is only one element,this request will downgrade to normal fetch`)
+                    _cons_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"].w */ .Z.w(`FetchEngine.parallel: reqs array is only one element,this request will downgrade to normal fetch`)
                     resolve(FetchEngine.fetch(reqs[0], config))
                 }
             }
@@ -4144,8 +4378,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect || "follow",
-                    cache: config.cache
+                    redirect: config.redirect || "follow"
                 }).then(res => {
                     if (res.status == (config.status || 200)) {
                         tagged = true;
@@ -4167,185 +4400,110 @@ const FetchEngine = {
     }
 }
 
-/* harmony default export */ const engine = (FetchEngine);
-;// CONCATENATED MODULE: ./main/handle/main.js
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FetchEngine);
 
+/***/ }),
 
+/***/ 431:
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-
-const mainhandle = async (request) => {
-    //当前域 new Request('').url
-    const domain = new URL(new Request('').url).host
-    const db = new cache_db()
-
-    let tReq = new Request(request.url, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        mode: request.mode === 'navigate' ? 'same-origin' : request.mode,
-        credentials: request.credentials,
-        redirect: request.redirect,
-        cache: request.cache
-    })
-    const urlStr = tReq.url.toString()
-    const urlObj = new URL(urlStr)
-    const pathname = urlObj.pathname
-    if (pathname.split('/')[1] === 'cw-cgi') {
-        return cgi(request)
+"use strict";
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Z": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const rebuild = {
+    request: (req, init) => {
+        let nReq =  new Request(req.body, {
+            headers: rebuildheaders(req, init.headers),
+            method: init.method || req.method,
+            mode: init.mode || req.mode,
+            credentials: init.credentials || req.credentials,
+            redirect: init.redirect || req.redirect
+        })
+        if(!!init.url)nReq = new Request(init.url, nReq)
+        return nReq
+    },
+    response: (res, init) => {
+       let nRes = new Response(res.body, {
+            headers: rebuildheaders(res, init.headers),
+            status: init.status || res.status,
+            statusText: init.statusText || res.statusText
+        })
+        if(!!init.url && init.url !== " ")nRes = new Response(init.url, nRes)
+        return nRes
     }
-    const config = await db.read('config', { type: "json" })
-    if (!config) return fetch(request)
-
-
-
-
-
-    let tFetched = false
-    let EngineFetch = false
-    let tRes = new Response()
-    for (var catch_rule of config.catch_rules) {
-        if (catch_rule.rule === '_') catch_rule.rule = domain
-        if (!tReq.url.match(new RegExp(catch_rule.rule))) continue;
-        let EngineFetchList = []
-        for (var transform_rule of catch_rule.transform_rules) {
-            let tSearched = false
-
-            if (transform_rule.search === '_') transform_rule.search = catch_rule.rule
-            switch (transform_rule.type || "url") {
-                case 'url':
-                    if (tReq.url.match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (tFetched && tSearched) { utils_cons.w(`${tReq.url} is already fetched,the url transform rule:${transform_rule.search} are ignored`); break }
-                    if (typeof transform_rule.replace !== 'undefined' && tSearched) {
-                        if (typeof transform_rule.replace === 'string') {
-                            if (EngineFetch) utils_cons.w(`EngineFetch Disabled for ${tReq.url},the request will downgrade to normal fetch`)
-                            tReq = new Request(tReq.url.replace(new RegExp(transform_rule.search), transform_rule.replace), tReq)
-                            EngineFetch = false
-                        } else {
-                            if (EngineFetch) { utils_cons.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
-                            transform_rule.replace.forEach(replacement => {
-                                if (replacement === '_') {
-                                    EngineFetchList.push(tReq)
-                                    return;
-                                }
-                                EngineFetchList.push(
-                                    new Request(tReq.url.replace(new RegExp(transform_rule.search), replacement), tReq)
-                                )
-                            });
-
-                            EngineFetch = true
-                        }
-                    }
-                    break
-                case 'status':
-                    if (!tFetched) { utils_cons.w(`${tReq.url} is not fetched yet,the status rule are ignored`); break }
-                    if (String(tRes.status).match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = new Response(tRes, { status: tRes.status.replace(new RegExp(transform_rule.search), transform_rule.replace), statusText: tRes.statusText, headers: tRes.headers })
-                    break
-                case 'statusText':
-                    if (!tFetched) { utils_cons.w(`${tReq.url} is not fetched yet,the statusText rule are ignored`); break }
-                    if (tRes.statusText.match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = new Response(tRes, { status: tRes.status, statusText: tRes.statusText.replace(new RegExp(transform_rule.search), transform_rule.replace), headers: tRes.headers })
-                    break
-                default:
-                    utils_cons.e(`${tReq.url} the ${transform_rule.type} rule are not supported`);
-                    break
-            }
-            if (!tSearched) continue
-            if (typeof transform_rule.header === 'object') {
-                for (var header in transform_rule.header) {
-                    if (tFetched) {
-                        tRes = new Response(tRes.body, { ...tRes, headers: { ...tRes.headers, [header]: transform_rule.header[header] } })
-                    } else {
-                        tReq = new Request(tReq.body, { ...tReq, headers: { ...tReq.headers, [header]: transform_rule.header[header] } })
-                    }
-                }
-            }
-
-            if (typeof transform_rule.action !== 'undefined') {
-                switch (transform_rule.action) {
-                    case 'fetch':
-                        if (tFetched) { utils_cons.w(`${tReq.url} is already fetched,the fetch action are ignored`); break }
-                        if (typeof transform_rule.fetch === 'undefined') { utils_cons.e(`Fetch Config is not defined for ${tReq.url}`); break }
-
-                        let fetchConfig = {
-                            status: transform_rule.fetch.status,
-                            mode: transform_rule.fetch.mode,
-                            credentials: transform_rule.fetch.credentials,
-                            redirect: transform_rule.fetch.redirect,
-                            cache: transform_rule.fetch.cache,
-                            timeout: transform_rule.fetch.timeout
-                        }
-                        if (!transform_rule.fetch.preflight) {
-                            tReq = new Request(tReq.url, {
-                                method: ((method) => {
-                                    if (method === "GET" || method === "HEAD" || method === "POST") return method;
-                                    return "GET"
-                                })(tReq.method),
-                                body: ((body) => {
-                                    if (tReq.method === "POST") return body;
-                                    return null
-                                })(tReq.body)
-                            }) //https://segmentfault.com/a/1190000006095018
-                            delete fetchConfig.credentials
-                            fetchConfig.mode = "cors"
-                            for (var eReq in EngineFetchList) {
-                                EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url, tReq)
-                            }
-                        }
-                        if (!EngineFetch) {
-                            tRes = await engine.fetch(tReq, fetchConfig)
-                        } else {
-                            switch (transform_rule.fetch.engine) {
-                                case 'classic':
-                                    tRes = await engine.classic(EngineFetchList, fetchConfig)
-                                    break;
-                                case 'parallel':
-                                    tRes = await engine.parallel(EngineFetchList, fetchConfig)
-                                    break;
-                                default:
-                                    utils_cons.e(`Fetch Engine ${transform_rule.fetch.engine} is not supported`)
-                                    break;
-                            }
-                        }
-                        tFetched = true
-                        break
-                    case 'redirect':
-                        if (typeof transform_rule.redirect === 'undefined') continue
-                        if (typeof transform_rule.redirect.url === 'string') return Response.redirect(transform_rule.redirect.url, transform_rule.redirect.status || 301)
-                        return Response.redirect(
-                            tReq.url.replace(new RegExp(transform_rule.search), transform_rule.redirect.to),
-                            transform_rule.redirect.status || 301
-                        )
-                    case 'return':
-                        if (typeof transform_rule.return === 'undefined') transform_rule.return = {}
-                        return new Response(transform_rule.return.body || "Error!", {
-                            status: transform_rule.return.status || 503,
-                            headers: transform_rule.return.headers || {}
-                        })
-                    default:
-                        utils_cons.w(`This Action:${transform_rule.action} is not supported yet`)
-                        break
-                }
-            }
-        }
-
-
-    }
-    if (!tFetched) {
-        if (EngineFetch) {
-            tRes = await engine.classic(EngineFetchList, fetchConfig || { status: 200 })
-        } else {
-            tRes = await fetch(tReq)
-        }
-    }
-    return tRes
 }
 
-/* harmony default export */ const main = (mainhandle);
-;// CONCATENATED MODULE: ./main/entry.js
+const rebuildheaders = (re, headers) => {
+    if (!!headers) {
+        const nHeaders = new Headers(re.headers)
+        for (let key in headers) {
+            if (headers[key] !== undefined) {
+                nHeaders.set(key, headers[key])
+            } else {
+                nHeaders.delete(key)
+            }
+        }
+        return nHeaders
+    }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rebuild);
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/* harmony import */ var _handle_main_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(755);
 
 addEventListener('fetch', event => {
-    event.respondWith(main(event.request))
+    event.respondWith((0,_handle_main_js__WEBPACK_IMPORTED_MODULE_0__/* ["default"] */ .Z)(event.request))
 })
 addEventListener('install', function() {
     self.skipWaiting();
