@@ -4276,7 +4276,6 @@ const mainhandle = async (request) => {
                             timeout: transform_rule.fetch.timeout
                         }
                         if (!transform_rule.fetch.preflight) {
-                            console.log(tReq.headers.get('Accept'))
                             tReq = new Request(tReq.url, {
                                 method: ((method) => {
                                     if (method === "GET" || method === "HEAD" || method === "POST") return method;
