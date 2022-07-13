@@ -46,8 +46,8 @@
     setInterval(async () => {
         await updateSW();
         await updateConfig();
-    }, updateConfigDelay);
-    setInterval(async () => {
-        await updateSW();
     }, updateSWDelay);
+    setInterval(async () => {
+        await updateConfig()
+    }, updateConfigDelay);
 })(1000 * 60 * 60 * 12, 1000 * 60);

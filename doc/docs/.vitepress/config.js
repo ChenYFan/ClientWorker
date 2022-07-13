@@ -69,7 +69,8 @@ export default {
             {
                 text: '拓展',
                 items: [
-                    { text: '关于引擎', link: '/ext/engine' }
+                    { text: '关于引擎', link: '/ext/engine' },
+                    { text: "内置API接口", link: "/ext/api" }
                 ]
             }
         ]

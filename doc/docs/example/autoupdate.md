@@ -7,7 +7,6 @@ async function updateConfig() {
         await fetch('/cw-cgi/api?type=config').then(res => res.text()).then(res => {
             if (res === 'ok') {
                 console.log(`Config updated`);
-                LSDB.write('cw_time_config', new Date().getTime());
             } else {
                 console.log(`Config update failed`);
             }

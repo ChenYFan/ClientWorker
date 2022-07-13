@@ -2,6 +2,7 @@ import router_cgi from './cgi.js'
 import CacheDB from '@chenyfan/cache-db'
 import cons from './../utils/cons.js'
 import FetchEngine from '../utils/engine.js'
+import rebuild from '../utils/rebuild.js'
 const mainhandle = async (request) => {
     //当前域 new Request('').url
     const domain = new URL(new Request('').url).host
@@ -30,13 +31,14 @@ const mainhandle = async (request) => {
 
 
     let tFetched = false
+    let tHeaders = new Headers()
     let EngineFetch = false
     let tRes = new Response()
-    for (var catch_rule of config.catch_rules) {
+    for (let catch_rule of config.catch_rules) {
         if (catch_rule.rule === '_') catch_rule.rule = domain
         if (!tReq.url.match(new RegExp(catch_rule.rule))) continue;
         let EngineFetchList = []
-        for (var transform_rule of catch_rule.transform_rules) {
+        for (let transform_rule of catch_rule.transform_rules) {
             let tSearched = false
 
             if (transform_rule.search === '_') transform_rule.search = catch_rule.rule
@@ -47,7 +49,7 @@ const mainhandle = async (request) => {
                     if (typeof transform_rule.replace !== 'undefined' && tSearched) {
                         if (typeof transform_rule.replace === 'string') {
                             if (EngineFetch) cons.w(`EngineFetch Disabled for ${tReq.url},the request will downgrade to normal fetch`)
-                            tReq = new Request(tReq.url.replace(new RegExp(transform_rule.search), transform_rule.replace), tReq)
+                            tReq = rebuild.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), transform_rule.replace) })
                             EngineFetch = false
                         } else {
                             if (EngineFetch) { cons.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
@@ -57,7 +59,7 @@ const mainhandle = async (request) => {
                                     return;
                                 }
                                 EngineFetchList.push(
-                                    new Request(tReq.url.replace(new RegExp(transform_rule.search), replacement), tReq)
+                                    rebuild.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), replacement) })
                                 )
                             });
 
@@ -68,12 +70,12 @@ const mainhandle = async (request) => {
                 case 'status':
                     if (!tFetched) { cons.w(`${tReq.url} is not fetched yet,the status rule are ignored`); break }
                     if (String(tRes.status).match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = new Response(tRes, { status: tRes.status.replace(new RegExp(transform_rule.search), transform_rule.replace), statusText: tRes.statusText, headers: tRes.headers })
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = rebuild.response(tRes, { status: transform_rule.replace })
                     break
                 case 'statusText':
                     if (!tFetched) { cons.w(`${tReq.url} is not fetched yet,the statusText rule are ignored`); break }
                     if (tRes.statusText.match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = new Response(tRes, { status: tRes.status, statusText: tRes.statusText.replace(new RegExp(transform_rule.search), transform_rule.replace), headers: tRes.headers })
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = rebuild.response(tRes, { statusText: tRes.statusText.replace(new RegExp(transform_rule.search), transform_rule.replace) })
                     break
                 default:
                     cons.e(`${tReq.url} the ${transform_rule.type} rule are not supported`);
@@ -83,9 +85,10 @@ const mainhandle = async (request) => {
             if (typeof transform_rule.header === 'object') {
                 for (var header in transform_rule.header) {
                     if (tFetched) {
-                        tRes = new Response(tRes.body, { ...tRes, headers: { ...tRes.headers, [header]: transform_rule.header[header] } })
+
+                        tRes = rebuild.response(tRes, { headers: { [header]: transform_rule.header[header] } })
                     } else {
-                        tReq = new Request(tReq.body, { ...tReq, headers: { ...tReq.headers, [header]: transform_rule.header[header] } })
+                        tReq = rebuild.request(tReq, { headers: { [header]: transform_rule.header[header] } })
                     }
                 }
             }
@@ -101,7 +104,6 @@ const mainhandle = async (request) => {
                             mode: transform_rule.fetch.mode,
                             credentials: transform_rule.fetch.credentials,
                             redirect: transform_rule.fetch.redirect,
-                            cache: transform_rule.fetch.cache,
                             timeout: transform_rule.fetch.timeout
                         }
                         if (!transform_rule.fetch.preflight) {
@@ -121,21 +123,62 @@ const mainhandle = async (request) => {
                                 EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url, tReq)
                             }
                         }
-                        if (!EngineFetch) {
-                            tRes = await FetchEngine.fetch(tReq, fetchConfig)
-                        } else {
-                            switch (transform_rule.fetch.engine) {
-                                case 'classic':
-                                    tRes = await FetchEngine.classic(EngineFetchList, fetchConfig)
-                                    break;
-                                case 'parallel':
-                                    tRes = await FetchEngine.parallel(EngineFetchList, fetchConfig)
-                                    break;
-                                default:
-                                    cons.e(`Fetch Engine ${transform_rule.fetch.engine} is not supported`)
-                                    break;
-                            }
-                        }
+                        tRes = await Promise.any([
+                            new Promise(async (resolve, reject) => {
+                                let cRes
+                                if (!EngineFetch) {
+                                    cRes = await FetchEngine.fetch(tReq, fetchConfig)
+                                } else {
+                                    switch (transform_rule.fetch.engine) {
+                                        case 'classic':
+                                            cRes = await FetchEngine.classic(EngineFetchList, fetchConfig)
+                                            break;
+                                        case 'parallel':
+                                            cRes = await FetchEngine.parallel(EngineFetchList, fetchConfig)
+                                            cRes = rebuild.response(cRes, { url: '' })
+                                            break;
+                                        default:
+                                            cons.e(`Fetch Engine ${transform_rule.fetch.engine} is not supported`)
+                                            break;
+                                    }
+
+                                }
+                                if (typeof transform_rule.fetch.cache === "object") {
+                                    cRes = rebuild.response(cRes, { headers: { "ClientWorker_CacheTime": new Date().getTime() } })
+                                    caches.open("ClientWorker_ResponseCache").then(cache => {
+                                        cache.put(tReq, cRes.clone())
+                                            .then(() => { resolve(cRes) })
+                                    })
+                                }
+                                else { resolve(cRes) }
+                            })
+                        ],
+                            new Promise(async (resolve, reject) => {
+                                if (typeof transform_rule.fetch.cache === "object") {
+                                    setTimeout(() => {
+
+                                        caches.open("ClientWorker_ResponseCache").then(cache => {
+                                            cache.match(tReq).then(cRes => {
+                                                if (!!cRes) {
+                                                    if (Number(cRes.headers.get('ClientWorker_CacheTime')) + eval(transform_rule.fetch.cache.expire || '0') > new Date().getTime()) {
+                                                        cons.s(`${tReq.url} is timeout for delay ${transform_rule.fetch.cache.delay},so return by cache`)
+                                                        resolve(cRes)
+                                                    } else {
+                                                        setTimeout(() => {
+                                                            cons.e(`${tReq.url} is too late to fetch,even though the cache has expired,so return by cache`)
+                                                        }, transform_rule.fetch.cache.expired_delay || 2800);
+                                                    }
+                                                } else {
+                                                    cons.w(`${tReq.url} is not cached!And it is too late to fetch!`)
+                                                }
+                                            })
+                                        })
+
+                                    }, transform_rule.fetch.cache.delay || 200);
+                                }
+                            })
+
+                        )
                         tFetched = true
                         break
                     case 'redirect':

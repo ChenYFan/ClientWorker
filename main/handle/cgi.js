@@ -29,6 +29,15 @@ const router_cgi = async (request) => {
                             await db.write('config', '')
                             return new Response(err)
                         })
+                case 'clear':
+                    return caches.open('ClientWorker_ResponseCache').then(async cache => {
+                        return cache.keys().then(async keys => {
+                            await Promise.all(keys.map(key => {
+                                cache.delete(key)
+                            }))
+                            return new Response('ok')
+                        })
+                    })
                 default:
                     return new Response('Error, api type not found')
             }

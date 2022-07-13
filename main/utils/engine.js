@@ -31,8 +31,7 @@ const FetchEngine = {
             fetch(req, {
                 mode: config.mode,
                 credentials: config.credential,
-                redirect: config.redirect || "follow",
-                cache: config.cache
+                redirect: config.redirect || "follow"
             }).then(res => {
                 resolve(res)
             }).catch(err => { reject(err) })
@@ -65,8 +64,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect || "follow",
-                    cache: config.cache
+                    redirect: config.redirect || "follow"
                 })
                     .then(PauseProgress)
                     .then(res => {
@@ -89,7 +87,6 @@ const FetchEngine = {
     parallel: async (reqs, config) => {
         return new Promise((resolve, reject) => {
             config = config || { status: 200 }
-            console.log(config)
             const reqtype = Object.prototype.toString.call(reqs)
             if (reqtype === '[object String]' || reqtype === '[object Request]') {
                 cons.w(`FetchEngine.parallel: reqs should be an array,but got ${reqtype},this request will downgrade to normal fetch`)
@@ -114,8 +111,7 @@ const FetchEngine = {
                     signal: controller.signal,
                     mode: config.mode,
                     credentials: config.credential,
-                    redirect: config.redirect || "follow",
-                    cache: config.cache
+                    redirect: config.redirect || "follow"
                 }).then(res => {
                     if (res.status == (config.status || 200)) {
                         tagged = true;
