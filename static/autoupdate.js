@@ -11,7 +11,7 @@
         if (navigator.serviceWorker) {
             navigator.serviceWorker.getRegistrations().then(async registrations => {
                 for (let registration of registrations) {
-                    await registration.update();
+                    await registration.unregister();
                 }
                 console.log(`Unregistered service workers`);
             }).then(() => {

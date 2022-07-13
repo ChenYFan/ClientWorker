@@ -32,12 +32,18 @@ catch_rules: #转换规则
             
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
+              replace: docroot/clientworker@2.0.0/doc/docs/.vitepress/dist
+
+
+            - search: ^https\:\/\/docroot
               replace:
-                - npm.elemecdn.com/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
-                - cdn.jsdelivr.net/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
-                - cdn1.tianli0.top/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
-                - jsd.onmicrosoft.cn/npm/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
-                - unpkg.onmicrosoft.cn/clientworker@0.0.0-beta-11/doc/docs/.vitepress/dist
+                - https://cdn.jsdelivr.net/npm
+                - https://cdn1.tianli0.top/npm
+                - https://jsd.onmicrosoft.cn/npm
+                - https://unpkg.onmicrosoft.cn
+                - https://unpkg.com
+                - https://npm.sourcegcdn.com
+
               # 关于引擎
               # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
               # 1. classic
@@ -78,6 +84,7 @@ catch_rules: #转换规则
           - https://cdn1.tianli0.top/
           - https://jsd.onmicrosoft.cn/npm/
           - https://unpkg.onmicrosoft.cn/
+          - https://npm.sourcegcdn.com/
         - search: _
           action: fetch
           fetch:

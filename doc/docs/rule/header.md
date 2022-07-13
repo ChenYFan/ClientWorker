@@ -13,4 +13,4 @@
 然而需要注意的是：
 
 1. `header`的修改作用与`fetch`状态有关，如果`fetch`前修改，作用将于`请求 Request tReq`；如果已经`fetch`操作后修改，作用将于`响应 Response tRes`。
-2. 对于`header`在`fetch`前的修改，如果`fetch`参数`preflight`不为`true`，`header`仅会保留以下内容`Accept`，`Accept-Language`，`Content-Language`和`Content-Type`。这其中，`Content-Type`只能为`application/x-www-form-urlencoded`，`multipart/form-data`或`text/plain`。对于指定`preflight`为`false`的请求，ClientWorker将会移除除以上之外的所有header。**大小写敏感** [MDN链接](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests)
+2. 对于`header`在`fetch`前的修改，如果`fetch`参数`preflight`不为`true`，~~`header`仅会保留以下内容`Accept`，`Accept-Language`，`Content-Language`和`Content-Type`。这其中，`Content-Type`只能为`application/x-www-form-urlencoded`，`multipart/form-data`或`text/plain`。对于指定`preflight`为`false`的请求，ClientWorker将会移除除以上之外的所有header。**大小写敏感**~~  [MDN Simple Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests)提到上述头是不受影响的，但是`WebKit`内核有着额外的限制，为了方便配置和统一内核，ClientWorker将会直接移除头。

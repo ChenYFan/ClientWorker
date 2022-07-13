@@ -9,6 +9,8 @@
 
 ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将会自动执行`fetch`，单线程为`fetch`引擎，多线程为`classic`
 
+> 动态网站如果对多个服务器并发，需要做好防重放准备
+
 # 参数
 
 ## `engine`
@@ -40,6 +42,7 @@ ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将�
 - `classic` 基于响应内容判断的引擎，它会并发所有请求，直到任意一个请求返回正确的`status`**以及完整的响应内容**，核心是重构响应，在请求速度差异不大时**会造成少许流量浪费**。对于流式下载无法支持或异常缓慢。
 - `parallel` 基于响应状态的引擎，它会并发所有请求，直到任意一个请求返回正确的`status`，核心是`Event`调度，几乎没有流量浪费，支持流式下载。**但其相对路径处理会有问题，JS脚本会将其识别为外部加载，Vue等应用因无法正确处理相对路径而无法使用此引擎**
 
+这是[完整的两者引擎差异比较](/ext/engine)
 
 ## `status`
 
@@ -58,7 +61,7 @@ ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将�
 
 - 如果请求方式是`GET` `POST` `HEAD`，则不变请求方式，否则转化为`GET`
 - 如果请求方式是`POST`，则不变`body`，否则移除`body`
-- 对于`header`，ClientWorker将会移除除了`Accept`，`Accept-Language`，`Content-Language`和`Content-Type`的内容。在这其中，如果`Content-Type`为`application/x-www-form-urlencoded`，`multipart/form-data`或`text/plain`，则不变，否则移除`Content-Type`。
+- 对于`header`，ClientWorker将会直接移除所有头，详情请见[header](/rule/header)
 
 此配置适用于外部cdn请求，大部分公共cdn是不会对`OPTIONS`请求做CORS，这会造成意外的错误。而关闭`preflight`则可以避免。
 

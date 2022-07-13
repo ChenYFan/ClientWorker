@@ -35,8 +35,9 @@ export default {
             {
                 text: '例子',
                 items: [
-                    { text: '开始部署一个托管在npm上的播客吧', link: '/example/npmblog' },
+                    { text: '如何解决JSDelivr等cdn在境内加载缓慢问题', link: '/example/parallelcdn' },
                     { text: '如何自动更新配置和ClientWorker', link: '/example/autoupdate' },
+                    { text: '转发、并发、绕备', link: '/example/forward' }
                 ]
             },
             {
