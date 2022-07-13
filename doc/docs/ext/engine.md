@@ -78,4 +78,4 @@ https://example.com
 - 对于`css`样式，由于用到了相对路径，一般也建议`classic`
 - 对于图片、视频等较大的单文件，一般建议`parallel`
 - 对于`flv`直播，则必须使用`parallel`
-- 对于`vue` `react`等前端应用，必须使用`parallel`
+- 对于`vue` `react`等前端应用，必须使用`classic`

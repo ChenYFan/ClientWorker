@@ -5,15 +5,41 @@ export default {
     lang: 'zh-CN',
 
     head: [
-      //['link', { rel: 'icon', href: '/favicon.png' }],
-      ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi' }],
-      ['link', { href: 'https://npmm/lightgallery@2.3.0/css/lightgallery.css', rel: 'stylesheet' }],
-      ['script', { src: 'https://npmm/lightgallery@2.3.0/lightgallery.min.js' }],
-      ['script', { src: `https://npmm/clientworker@${cwpkgjson.version}/dist/autoupdate.js` }]
+        //['link', { rel: 'icon', href: '/favicon.png' }],
+        ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi' }],
+        ['link', { href: 'https://npmm/lightgallery@2.3.0/css/lightgallery.css', rel: 'stylesheet' }],
+        ['script', { src: 'https://npmm/lightgallery@2.3.0/lightgallery.min.js' }],
+        ['script', { src: `https://npmm/clientworker@${cwpkgjson.version}/dist/autoupdate.js` }]
     ],
-  
+
     lastUpdated: true,
     themeConfig: {
+        socialLinks: [
+            { icon: 'github', link: 'https://github.com/ChenYFan/ClientWorker' }
+        ],
+        nav: [
+            // NavbarItem
+            {
+                text: '首页',
+                link: '/',
+            },
+            {
+                text: '规则',
+                link: '/rule/',
+            },
+            {
+                text: '例子',
+                link: '/example/parallelcdn',
+            },
+            {
+                text: '拓展',
+                link: '/ext/engine',
+            },
+            {
+                text: 'Q群',
+                link: 'https://jq.qq.com/?_wv=1027&k=rAcnhzqK',
+            }
+        ],
         sidebar: [
             {
                 text: '上手',
