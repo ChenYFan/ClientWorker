@@ -4446,6 +4446,7 @@ const rebuildheaders = (re, headers) => {
         }
         return nHeaders
     }
+    return new Headers(re.headers)
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (rebuild);
 
