@@ -1,4 +1,4 @@
-((updateSWDelay, updateConfigDelay) => {
+;(async (updateSWDelay, updateConfigDelay) => {
     const LSDB = {
         read: (key) => {
             return localStorage.getItem(key);
