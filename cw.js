@@ -4029,7 +4029,27 @@ const cons = {
 /* harmony default export */ const utils_cons = (cons);
 ;// CONCATENATED MODULE: ./main/utils/engine.js
 
-
+if (!Promise.any) {
+    Promise.any = function (promises) {
+        return new Promise((resolve, reject) => {
+            promises = Array.isArray(promises) ? promises : []
+            let len = promises.length
+            let errs = []
+            if (len === 0) return reject(new AggregateError('All promises were rejected'))
+            promises.forEach((promise) => {
+                promise.then(value => {
+                    resolve(value)
+                }, err => {
+                    len--
+                    errs.push(err)
+                    if (len === 0) {
+                        reject(new AggregateError(errs))
+                    }
+                })
+            })
+        })
+    }
+}
 const FetchEngine = {
     fetch: async (req, config) => {
         config = config || { status: 200}
@@ -4256,6 +4276,7 @@ const mainhandle = async (request) => {
                             timeout: transform_rule.fetch.timeout
                         }
                         if (!transform_rule.fetch.preflight) {
+                            console.log(tReq.headers.get('Accept'))
                             tReq = new Request(tReq.url, {
                                 method: ((method) => {
                                     if (method === "GET" || method === "HEAD" || method === "POST") return method;
@@ -4264,16 +4285,7 @@ const mainhandle = async (request) => {
                                 body: ((body) => {
                                     if (tReq.method === "POST") return body;
                                     return null
-                                })(tReq.body),
-                                headers: {
-                                    Accept: tReq.headers.get('Accept'),
-                                    "Accept-Language": tReq.headers.get('Accept-Language'),
-                                    "Content-Language": tReq.headers.get('Content-Language'),
-                                    "Content-Type": ((ctype) => {
-                                        if (ctype === 'application/x-www-form-urlencoded' || ctype === 'multipart/form-data' || ctype === 'text/plain') return ctype
-                                        return undefined
-                                    })(tReq.headers.get('Content-Type'))
-                                }
+                                })(tReq.body)
                             }) //https://segmentfault.com/a/1190000006095018
                             delete fetchConfig.credentials
                             fetchConfig.mode = "cors"
