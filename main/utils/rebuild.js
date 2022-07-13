@@ -33,5 +33,6 @@ const rebuildheaders = (re, headers) => {
         }
         return nHeaders
     }
+    return new Headers(re.headers)
 }
 export default rebuild
