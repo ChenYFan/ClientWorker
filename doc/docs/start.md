@@ -26,7 +26,7 @@ ClientWorker能干什么？
 ## PlanA - 全域安装
 
 1. 进入[ClientWorker Github Release发布页](https://github.com/ChenYFan/ClientWorker/releases)，下载最新版本内容。
-2. 解压，将`/dist/`文件夹中`404.html`和`cw.js`拷出，放在网页服务器下
+2. 解压，将文件夹中`404.html`和`cw.js`拷出，放在网页服务器下
 
 > 你要确保当前路径下没有index.html，即用户无论访问哪个网页，第一次请求的一定是404.html。我们更建议将两个文件单独放在一个文件夹
 
@@ -61,7 +61,7 @@ catch_rules: #转换规则
 ## PlanB - 自定义安装
 
 1. 进入[ClientWorker Github Release发布页](https://github.com/ChenYFan/ClientWorker/releases)，下载最新版本内容。
-2. 解压，将`/dist/`文件夹中`cw.js`拷出，放在网页服务器下
+2. 解压，将文件夹中`cw.js`拷出，放在网页服务器下
 3. 修改你网页的模板，添加一段html
 
 > 用户每次访问时都应该能运行接下来的脚本，如果你使用hexo等其他博客系统，可以在body或footer模板中添加这一段。
