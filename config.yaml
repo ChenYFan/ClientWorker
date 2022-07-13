@@ -32,7 +32,7 @@ catch_rules: #转换规则
             
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
-              replace: docroot/clientworker@2.0.1/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.0.2/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
