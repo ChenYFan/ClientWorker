@@ -1,6 +1,6 @@
 import mainhandle from './handle/main.js'
 import pkgjson from '../package.json'
-import cons from './handle/cons.js'
+import cons from './utils/cons.js'
 addEventListener('fetch', event => {
     event.respondWith(mainhandle(event.request))
 })
