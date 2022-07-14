@@ -3,7 +3,7 @@ catch_rules: #转换规则
     - rule: _ #ClientWorker语法糖，匹配当前域，返回一个域名带端口
       transform_rules: #转换规则，最上面的优先最高
             - search: \#.* #在发送请求时匹配#后内容并移除
-              type: url #支持url status statusCode，默认url
+              searchin: url #支持url status statusCode，默认url
               replace: ''
             - search: \?.* #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
               replace: '' 
@@ -78,6 +78,20 @@ catch_rules: #转换规则
               header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
                 content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
+      #匹配webp结尾
+    - rule: (?<=^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*))\.jpg$
+      transform_rules:
+        - search: image\/webp
+          searchin: header
+          searchkey: Accept
+          replace: .webp
+          replacein: url
+          replacekey: .jpg
+  
+
+
+
+
 
     - rule: ^https\:\/\/npmm\/
       transform_rules:
@@ -102,6 +116,15 @@ catch_rules: #转换规则
               expired_delay: 500
               expire: 1000*60*60*24*7
               delay: 150
+
+    - rule: ^https\:\/\/npmm\/jquery\@3\.6\.0\/package\.json$
+      transform_rules:
+        - search: jquery
+          searchin: body
+          searchflags: g 
+          replace: fakejquery
+          replacein: body
+          replaceflags: g
         
           
     - rule: .*
@@ -114,7 +137,7 @@ catch_rules: #转换规则
             preflight: false
         
         - search: (^4|^5)
-          type: status
+          searchin: status
           action: return
           return: 
             body: Error!

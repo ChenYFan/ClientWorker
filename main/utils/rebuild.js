@@ -1,6 +1,6 @@
 const rebuild = {
     request: (req, init) => {
-        let nReq =  new Request(req.body, {
+        let nReq =  new Request(init.body || req.body, {
             headers: rebuildheaders(req, init.headers),
             method: init.method || req.method,
             mode: init.mode || req.mode,
@@ -11,7 +11,7 @@ const rebuild = {
         return nReq
     },
     response: (res, init) => {
-       let nRes = new Response(res.body, {
+       let nRes = new Response(init.body || res.body, {
             headers: rebuildheaders(res, init.headers),
             status: init.status || res.status,
             statusText: init.statusText || res.statusText
