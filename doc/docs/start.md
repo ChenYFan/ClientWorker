@@ -20,7 +20,7 @@ ClientWorker能干什么？
 ## 在开始之前...
 
 1. ServiceWorker是一个注册在指定源和路径下的事件驱动worker。而ClientWorker是利用规则全局驱动sw的插件。
-2. ClientWorker目前只涵盖了ServiceWorker的 路由拦截、路由劫持、请求/响应（头、状态）修改，未来将支持缓存控制、请求/响应（内容）修改。
+2. ClientWorker目前涵盖了ServiceWorker的 路由拦截、路由劫持、请求/响应（标头、状态、响应主体）修改、缓存调控，允许用户并发（双引擎），并且有一个自定义规则系统，可以自定义规则，拦截请求，修改响应，缓存颗粒化等功能。
 3. ClientWorker目前不兼容原有的ServiceWorker，请通过修改Scope绕开相互的作用域。
 4. **ClientWorker需要在`HTTPS`环境下工作，`HTTP`将直接安装失败**
 
