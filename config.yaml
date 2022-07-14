@@ -72,7 +72,7 @@ catch_rules: #转换规则
                 content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
 
-    - rule: (?<=^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*))\.jpg$
+    - rule: ^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*)\.jpg$
       transform_rules:
         - search: image\/webp
           searchin: header
