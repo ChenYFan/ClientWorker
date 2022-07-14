@@ -4077,6 +4077,7 @@ const mainhandle = async (request) => {
                 default:
                     _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} the ${transform_rule.searchin} search rule are not supported`);
                     break
+                
             }
 
             switch (transform_rule.replacein || 'url') {
