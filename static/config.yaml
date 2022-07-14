@@ -32,7 +32,7 @@ catch_rules: #转换规则
             
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
-              replace: docroot/clientworker@2.1.1/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.2.0/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
@@ -66,19 +66,12 @@ catch_rules: #转换规则
                   expire: 1000*60
                   delay: 200
                   expired_delay: 500
-
-                 #classic
-              #action: fetch-engine-status
-
-              #header: #与action相同级别的header修改将无效
-              #  - fetcher-engine: classic #无效
-              
               
             - search: \.html$ #匹配后缀为.html的请求，修复content-type为text/html
               header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
                 content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
-      #匹配webp结尾
+
     - rule: (?<=^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*))\.jpg$
       transform_rules:
         - search: image\/webp

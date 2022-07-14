@@ -87,11 +87,12 @@ ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将�
 
 > 请注意`cache`不再是原生`fetch init`，缓存由ClientWorker控制
 
-在`fetch`时，ClientWorker会在当前规则处理下的响应给予一个`clientworker_cachetime`标头，为缓存填充时的时间
+在`fetch`时，ClientWorker会在当前规则处理下的响应给予一个`clientworker_cachetime`标头，为缓存填充时的时间。
 
 只要存在`cache`这个选项，则会开启缓存。
 
-> 无论缓存是否响应，原请求会一直进行并且在后台自动更新缓存。
+> 无论缓存是否响应，原请求会一直进行并且在后台自动更新缓存。这种更新方式能够保证缓存的有效性。(虽然这会导致缓存的更新频率增加，但是这是一种比较好更新方式)
+
 
 ### `expire`
 

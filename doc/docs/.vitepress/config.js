@@ -62,6 +62,7 @@ export default {
                 text: '例子',
                 items: [
                     { text: '如何解决JSDelivr等cdn在境内加载缓慢问题', link: '/example/parallelcdn' },
+                    { text: 'WEBP兼容计划', link: '/example/autowebp' },
                     { text: '如何自动更新配置和ClientWorker', link: '/example/autoupdate' },
                     { text: '转发、并发、绕备', link: '/example/forward' }
                 ]

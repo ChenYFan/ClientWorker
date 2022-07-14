@@ -34,7 +34,7 @@
 - search: \/error$
   action: return
   redirect: 
-    body: error
+    body: <h1>error</h1>
     header: 
       Content-Type: text/html
       X-Custom-Header: custom

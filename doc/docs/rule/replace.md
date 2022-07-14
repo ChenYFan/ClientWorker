@@ -46,6 +46,21 @@
 
 `replace`只会将`url`重写，对于其它内容将不会修改。
 
-> 需要注意的是，如果你已经将url重写为并发，那么接下来重写功能将失效
+> 需要注意的是，如果你已经将url重写为并发，那么接下来重写功能将失效；如果上述规则已经`fetch`过，那么`tReq`将会转化为`tRes`，之后重写功能也会失效。但是重写依旧会对原url（尽管不在用于请求）造成影响，可能会被接下来的规则捕捉。
 
-> 如果上述规则已经`fetch`过，那么`tReq`将会转化为`tRes`，之后重写功能也会失效
+
+
+# 参数
+
+- `search`: 搜索规则，在`searchin`的范围内（默认是`url`）搜索匹配的内容，正则语法。
+- `searchin`: 搜索范围，可以是`url`、`header`、`body`、`status`、`statusText`，默认是`url`。
+- `searchkey`: **在搜索`header`时，必须要指定`searchkey`为搜索键。**
+- `searchflags`: 搜索正则修饰，可以是`i`、`g`、`m`、`s，默认为空。**`search`的修饰**
+- `replace`: 重写规则，在`replacein`的范围内（默认是`url`）搜索匹配的内容，正则语法。
+- `replacein`: 重写范围，可以是`url`、`header`、`body`、`status`、`statusText`，默认是`url`。
+- `replacekey`: **优先重写`replacekey`作为待替换词，如果没有，则回退到`search`**，避免`search`无法替换不同范围内的内容，正则语法。
+- `replaceflags`: 重写正则修饰，可以是`i`、`g`、`m`、`s`，默认为空。 **对`replacekey`或`search`的修饰**
+
+> 目前对于body的搜索仅支持文本搜索，请不要用于搜索二进制数据，否则将会导致返回数据异常。
+
+> 对于header的搜索，`headerkey`是不敏感大小写的

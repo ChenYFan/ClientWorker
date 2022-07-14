@@ -65,6 +65,7 @@ const mainhandle = async (request) => {
                 default:
                     cons.e(`${tReq.url} the ${transform_rule.searchin} search rule are not supported`);
                     break
+                
             }
 
             switch (transform_rule.replacein || 'url') {
