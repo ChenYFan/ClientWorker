@@ -2,3 +2,4 @@ node_modules
 doc/node_modules
 dist
 doc/docs/.vitepress/dist
+package-lock.json
