@@ -26,12 +26,7 @@ const mainhandle = async (request) => {
     const config = await db.read('config', { type: "json" })
     if (!config) return fetch(request)
 
-
-
-
-
     let tFetched = false
-    let tHeaders = new Headers()
     let EngineFetch = false
     let tRes = new Response()
     for (let catch_rule of config.catch_rules) {
@@ -65,7 +60,7 @@ const mainhandle = async (request) => {
                 default:
                     cons.e(`${tReq.url} the ${transform_rule.searchin} search rule are not supported`);
                     break
-                
+
             }
 
             switch (transform_rule.replacein || 'url') {
