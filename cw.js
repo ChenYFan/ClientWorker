@@ -4054,14 +4054,38 @@ const mainhandle = async (request) => {
             let tSearched = false
 
             if (transform_rule.search === '_') transform_rule.search = catch_rule.rule
-            switch (transform_rule.type || "url") {
+            switch (transform_rule.searchin || "url") {
                 case 'url':
-                    if (tReq.url.match(new RegExp(transform_rule.search))) tSearched = true;
+                    if (tReq.url.match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
+                    break
+                case 'header':
+                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].d */ .Z.d(tReq.headers.get(transform_rule.searchkey))
+                    if (tReq.headers.get(transform_rule.searchkey).match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
+                    break;
+                case 'status':
+                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the status rule are ignored`); break }
+                    if (String(tRes.status).match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
+                    break
+                case 'statusText':
+                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the statusText rule are ignored`); break }
+                    if (tRes.statusText.match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
+                    break
+                case 'body':
+                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the body rule are ignored`); break }
+                    if ((await tRes.clone().text()).match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
+                    break;
+                default:
+                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} the ${transform_rule.searchin} search rule are not supported`);
+                    break
+            }
+
+            switch (transform_rule.replacein || 'url') {
+                case 'url':
                     if (tFetched && tSearched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is already fetched,the url transform rule:${transform_rule.search} are ignored`); break }
                     if (typeof transform_rule.replace !== 'undefined' && tSearched) {
                         if (typeof transform_rule.replace === 'string') {
                             if (EngineFetch) _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`EngineFetch Disabled for ${tReq.url},the request will downgrade to normal fetch`)
-                            tReq = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), transform_rule.replace) })
+                            tReq = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), transform_rule.replace) })
                             EngineFetch = false
                         } else {
                             if (EngineFetch) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`Replacement cannot be used for ${tReq.url},the request is already powered by fetch-engine `); break }
@@ -4071,7 +4095,7 @@ const mainhandle = async (request) => {
                                     return;
                                 }
                                 EngineFetchList.push(
-                                    _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.search), replacement) })
+                                    _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { url: tReq.url.replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), replacement) })
                                 )
                             });
 
@@ -4079,19 +4103,25 @@ const mainhandle = async (request) => {
                         }
                     }
                     break
+                case 'body':
+                    if (tSearched) {
+                        if (tFetched) {
+                            tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { body: (await tRes.clone().text()).replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), transform_rule.replace) })
+
+                        } else {
+                            tReq = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].request */ .Z.request(tReq, { body: (await tReq.clone().text()).replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), transform_rule.replace) })
+                        }
+                    }
+                    break;
+
                 case 'status':
-                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the status rule are ignored`); break }
-                    if (String(tRes.status).match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { status: transform_rule.replace })
-                    break
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { status: tRes.status.replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), transform_rule.replace) })
+                    break;
                 case 'statusText':
-                    if (!tFetched) { _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].w */ .Z.w(`${tReq.url} is not fetched yet,the statusText rule are ignored`); break }
-                    if (tRes.statusText.match(new RegExp(transform_rule.search))) tSearched = true;
-                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { statusText: tRes.statusText.replace(new RegExp(transform_rule.search), transform_rule.replace) })
-                    break
+                    if (typeof transform_rule.replace === 'string' && tSearched) tRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(tRes, { statusText: tRes.statusText.replace(new RegExp(transform_rule.replacekey || transform_rule.search, transform_rule.replaceflags), transform_rule.replace) })
+                    break;
                 default:
-                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} the ${transform_rule.type} rule are not supported`);
-                    break
+                    _utils_cons_js__WEBPACK_IMPORTED_MODULE_2__/* ["default"].e */ .Z.e(`${tReq.url} the ${transform_rule.replacein} replace rule are not supported`);
             }
             if (!tSearched) continue
             if (typeof transform_rule.header === 'object') {
@@ -4155,7 +4185,7 @@ const mainhandle = async (request) => {
                                     }
 
                                 }
-                                if (typeof transform_rule.fetch.cache === "object") {
+                                if (typeof transform_rule.fetch.cache === "object" && cRes.status === (transform_rule.fetch.status || 200)) {
                                     cRes = _utils_rebuild_js__WEBPACK_IMPORTED_MODULE_4__/* ["default"].response */ .Z.response(cRes, { headers: { "ClientWorker_CacheTime": new Date().getTime() } })
                                     caches.open("ClientWorker_ResponseCache").then(cache => {
                                         cache.put(tReq, cRes.clone())
@@ -4413,7 +4443,7 @@ const FetchEngine = {
 /* harmony export */ });
 const rebuild = {
     request: (req, init) => {
-        let nReq =  new Request(req.body, {
+        let nReq =  new Request(init.body || req.body, {
             headers: rebuildheaders(req, init.headers),
             method: init.method || req.method,
             mode: init.mode || req.mode,
@@ -4424,7 +4454,7 @@ const rebuild = {
         return nReq
     },
     response: (res, init) => {
-       let nRes = new Response(res.body, {
+       let nRes = new Response(init.body || res.body, {
             headers: rebuildheaders(res, init.headers),
             status: init.status || res.status,
             statusText: init.statusText || res.statusText
