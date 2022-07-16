@@ -16,11 +16,8 @@ hero:
 
 features:
   - icon: 🖖
-    title: 轻松接入
-    details: PlanA、PlanB、PlanC，从头到尾满足各种接入需求，你可以直接傻瓜式覆盖接入、自定义接入，也可以保留原先的ServiceWorker完成共生。
-  - icon: 🤣
-    title: 0成本上手
-    details: 基于yaml语法，正则规则，无需学习JavaScript即可上手ClientWorker。稍作修改，你就可以毫无负担地使用ClientWorker，不用担心再将ServiceWorker写坏了。
+    title: 轻松接入，0成本上手
+    details: PlanA、PlanB、PlanC，从头到尾满足各种接入需求，你可以直接傻瓜式覆盖接入、自定义接入，也可以保留原先的ServiceWorker完成共生。基于yaml语法，正则规则，无需学习JavaScript即可上手ClientWorker。稍作修改，你就可以毫无负担地使用ClientWorker，不用担心再将ServiceWorker写坏了。
   - icon: 🛠️
     title: 功能强大，易于配置
     details: 通过URL路由匹配，你可以根据规则匹配指定的请求，可以修改Header，Status，Body，直接返回数据，或者将请求转移到其他服务器。你也可以修改响应，直接返回应该返回的内容。
