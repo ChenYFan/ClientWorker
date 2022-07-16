@@ -210,88 +210,6 @@
     <div id="extensionIframes"></div>
 </body>
 <script>
-    (function (factory) {
-        if (typeof exports === 'object') {
-            module.exports = factory();
-        } else if (typeof define === 'function' && define.amd) {
-            define(factory);
-        } else if (typeof window === 'object') {
-            window.CacheDB = factory();
-        } else {
-            self.CacheDB = factory();
-        }
-
-    })(function () {
-        function CacheDB(namespace, prefix) {
-            this.namespace = namespace || "CacheDBDefaultNameSpace";
-            this.prefix = prefix || "CacheDBDefaultPrefix";
-            this.read = async function (key, config) {
-                config = config || { type: "text" };
-                return new Promise((resolve, reject) => {
-                    caches.open(this.namespace).then(cache => {
-                        cache.match(new Request(`https://${this.prefix}/${encodeURIComponent(key)}`))
-                            .then(response => {
-                                switch (config.type) {
-                                    case "json":
-                                        resolve(response.json());
-                                        return;
-                                    case "arrayBuffer":
-                                        resolve(response.arrayBuffer());
-                                        return;
-                                    case 'blob':
-                                        resolve(response.blob());
-                                        return;
-                                    default:
-                                        resolve(response.text());
-                                        return;
-                                }
-                            }).catch(err => { resolve(null); });
-                    })
-                })
-            }
-            this.write = async function (key, value, config) {
-                config = config || { type: "text" };
-                return new Promise((resolve, reject) => {
-                    caches.open(this.namespace).then(cache => {
-                        cache.put(
-                            new Request(`https://${this.prefix}/${encodeURIComponent(key)}`),
-                            new Response(value, {
-                                headers: {
-                                    'Content-Type': (() => {
-                                        switch (config.type) {
-                                            case "json":
-                                                return 'application/json';
-                                            case "arrayBuffer":
-                                                return 'application/octet-stream';
-                                            case 'blob':
-                                                return 'application/octet-stream';
-                                            default:
-                                                return 'text/plain';
-                                        }
-                                    })()
-                                }
-                            }))
-                            .then(resolve(true))
-                            .catch(err => { resolve(false) });
-                    })
-                })
-            }
-            this.delete = async function (key) {
-                return new Promise((resolve, reject) => {
-                    caches.open(this.namespace).then(cache => {
-                        cache.delete(new Request(`https://${this.prefix}/${encodeURIComponent(key)}`))
-                            .then(resolve(true))
-                            .catch(err => { resolve(false) });
-                    })
-                })
-            }
-        }
-        return CacheDB;
-    })
-
-
-</script>
-<script>
 
     const $ = document.querySelector.bind(document);
     const changeType = (type) => {
@@ -310,53 +228,40 @@
                 break;
         }
     }
-    const db = new CacheDB();
-    const q = (key) => { return (new URL(window.location.href)).searchParams.get(key); }
     changeType('ring');
-    switch (q('step')) {
-        case 'installed':
-            $('#info').innerText = 'ClientWorker第一轮已安装，正在第二轮安装拉取配置...';
-            setTimeout(async () => {
-                await fetch('/cw-cgi/api?type=config').then(res => res.text())
-                    .then(res => {
-                        if (res === 'ok') {
-                            $('#info').innerText = 'ClientWorker安装并配置完成，一秒后正式返回入口页面...';
-                            changeType('success');
-                            setTimeout(() => {
-                                window.location.href = q('redirect') || '/'
-                            }, 1000);
-                        } else {
-                            changeType('error');
-                            $('#info').innerText = 'ClientWorker安装并配置失败！错误信息：' + res;
-                        }
-                    })
-            }, 20);
-            break;
-        default:
-
-
-            window.addEventListener('load', async () => {
-
-                $('#info').innerText = '尝试安装/更新ClientWorker';
-                navigator.serviceWorker.register(`/cw.js?time=${new Date().getTime()}`)
-                    .then(async reg => {
+    $('#info').innerHTML = '正在安装ClientWorker...';
+    navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
+        const conf = () => {
+            $('#info').innerHTML = 'ClientWorker已安装，等待配置中...';
+            fetch('/cw-cgi/api?type=config')
+                .then(res => res.text())
+                .then(text => {
+                    if (text === 'ok') {
                         changeType('success');
-
-                        const u = new URL(window.location.href)
-                        u.pathname = '/cw-cgi/page';
-                        u.searchParams.set('step', 'installed');
-                        u.searchParams.set('redirect', window.location.href);
-                        u.searchParams.set('type', 'install');
+                        $('#info').innerHTML = 'ClientWorker已安装并配置完成，正在无刷新启动...';
+                        fetch(window.location.href).then(res => res.text()).then(text => {
+                            document.open()
+                            document.write(text);
+                            document.close();
+                        });
+                    } else {
+                        $('#info').innerHTML = 'ClientWorker配置失败，可能还没有准备好，正在进行第二次...';
                         setTimeout(() => {
-                            window.location.href = u.href;
+                            conf()
                         }, 200);
-                    }).catch(async err => {
-                        changeType('error');
-                        $('#info').innerText = 'ClientWorker安装失败，错误信息：' + err;
-                    });
-            });
-            break;
-    }
+                    }
+                }).catch(err => {
+                    changeType('error');
+                    $('#info').innerHTML = 'ClientWorker配置失败，请检查您的配置！错误原因：' + err.message;
+                });
+        }
+        setTimeout(() => {
+            conf()
+        }, 50);
+    }).catch(err => {
+        changeType('error');
+        $('#info').innerHTML = 'ClientWorker安装失败，错误原因：' + err.message;
+    });
 </script>
 
 </html>
