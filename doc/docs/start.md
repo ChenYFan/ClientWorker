@@ -92,7 +92,6 @@ catch_rules: #转换规则
                     .then(res => res.text())
                     .then(text => {
                         if (text === 'ok') {
-                            changeType('success');
                             console.log('[CW] Installing Success,Configuring Success,Starting...');
                             localStorage.setItem('cw_installed', 'true');
                             fetch(window.location.href).then(res => res.text()).then(text => {
@@ -108,7 +107,6 @@ catch_rules: #转换规则
                             }, 200);
                         }
                     }).catch(err => {
-                        changeType('error');
                         console.log('[CW] Installing Success,Configuring Error,Exiting...');
                     });
             }
@@ -117,7 +115,6 @@ catch_rules: #转换规则
             }, 50);
         }
     }).catch(err => {
-        changeType('error');
         console.error('[CW] Installing Failed,Error: ' + err.message);
     });
 } else { console.error('[CW] Installing Failed,Error: Browser not support service worker'); }</script>
