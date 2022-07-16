@@ -13,6 +13,7 @@ ClientWorker能干什么？
 - 离线，可以迅速支撑普通离线应用，助力快速构建PWA。
 - Webp无缝，可以通过判断标头来判断是否支持Webp，并且自动替换图片请求，为网站加速助力。
 - 审核，通过内置的规则可以屏蔽并替换、拦截敏感词汇，实现网站内容安全。
+- 无刷新，你不需要刷新就可以激活ClientWorker
 - 高度自定义...更多玩法等你挖掘
 
 > 首屏加载不在ClientWorker捕捉范围内
@@ -27,12 +28,17 @@ ClientWorker能干什么？
 
 
 
-## PlanA - 全域安装
+## PlanA - 三文件全域安装
+
+> 一般来讲PlanA只要在网站目录下存放三个文件即可，其余文件可以不存；必须要求第一次必须命中404.html，不的存在index.html
+
+> 这对SEO影响很大（Google会提示额外的计算开销，而百度完全没办法爬取）如果你不想影响原来的网站，请查看PlanB
+
+> 但这也是最简单的接入方法，网站下只要存放关键的三个文件即可，此文档就是用PlanA接入的，其静态页面[在这里](https://github.com/ChenYFan/ClientWorker/tree/gh-pages)
 
 1. 进入[ClientWorker Github Release发布页](https://github.com/ChenYFan/ClientWorker/releases)，下载最新版本内容。
-2. 解压，将文件夹中`404.html`和`cw.js`拷出，放在网页服务器下
 
-> 你要确保当前路径下没有index.html，即用户无论访问哪个网页，第一次请求的一定是404.html。我们更建议将两个文件单独放在一个文件夹
+2. 解压，将文件夹中`404.html`和`cw.js`拷出，放在网页服务器下
 
 3. 在相同路径新建一个`config.yml`，里面写上:
 
@@ -62,7 +68,9 @@ catch_rules: #转换规则
 
 接下来你要[编写规则](/rule/)，让ClientWorker正确拦截你的请求，并且转换成你想要的响应。
 
-## PlanB - 自定义安装
+## PlanB - 自定义安装 - 无刷新安装
+
+> PlanB对SEO几乎没有影响，非常适合常规网站的接入
 
 1. 进入[ClientWorker Github Release发布页](https://github.com/ChenYFan/ClientWorker/releases)，下载最新版本内容。
 2. 解压，将文件夹中`cw.js`拷出，放在网页服务器下
@@ -70,34 +78,49 @@ catch_rules: #转换规则
 
 > 用户每次访问时都应该能运行接下来的脚本，如果你使用hexo等其他博客系统，可以在body或footer模板中添加这一段。
 
+> 我们强烈建议将这段代码加入在`<head>`标签中，越靠前越好，`navigator.serviceWorker.register`是异步函数不会阻塞页面加载。
+
+> 请不要使用`window.stop()`
+
 ```html
-<script>
-window.addEventListener('load', async () => {
-    if (window.localStorage.getItem('ClientWorkerInstall') === 'true' && window.localStorage.getItem('ClientWorkerConfig') !== 'true') {
-        await fetch('/cw-cgi/api?type=config').then(res => res.text())
-        .then(res=>{
-            if(res==='ok'){
-                window.localStorage.setItem('ClientWorkerConfig', 'true')
-                window.location.reload()
-            }else{
-                console.error(`ClientWorkerConfig Error:${res}`)
+<script>if (!!navigator.serviceWorker) {
+    navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
+        if (localStorage.getItem('cw_installed') !== 'true') {
+            const conf = () => {
+                console.log('[CW] Installing Success,Configuring...');
+                fetch('/cw-cgi/api?type=config')
+                    .then(res => res.text())
+                    .then(text => {
+                        if (text === 'ok') {
+                            changeType('success');
+                            console.log('[CW] Installing Success,Configuring Success,Starting...');
+                            localStorage.setItem('cw_installed', 'true');
+                            fetch(window.location.href).then(res => res.text()).then(text => {
+                                //如果你希望重载当前页面，请用/注释下面的三行
+                                document.open()
+                                document.write(text);
+                                document.close();
+                            });
+                        } else {
+                            console.log('[CW] Installing Success,Configuring Failed,Sleeping 200ms...');
+                            setTimeout(() => {
+                                conf()
+                            }, 200);
+                        }
+                    }).catch(err => {
+                        changeType('error');
+                        console.log('[CW] Installing Success,Configuring Error,Exiting...');
+                    });
             }
-        })
-    } else {
-        navigator.serviceWorker.register(`/cw.js?time=${new Date().getTime()}`)
-            .then(async reg => {
-                if(window.localStorage.getItem('ClientWorkerConfig') === 'true')return;
-                console.log('ClientWorker Installed,Need to reload page to Config!')
-                window.localStorage.setItem('ClientWorkerInstall', 'true');
-                setTimeout(() => {
-                    window.location.search = `?time=${new Date().getTime()}` //#1
-                }, 200)
-            }).catch(err => {
-                console.error(`ClientWorker Install Failed:${err}`)
-            })
-    }
-});
-</script>
+            setTimeout(() => {
+                conf()
+            }, 50);
+        }
+    }).catch(err => {
+        changeType('error');
+        console.error('[CW] Installing Failed,Error: ' + err.message);
+    });
+} else { console.error('[CW] Installing Failed,Error: Browser not support service worker'); }</script>
 ```
 
 4. 在网站`/`目录下新建一个`config.yml`，里面写上:
@@ -122,4 +145,14 @@ catch_rules: #转换规则
               status: 503
 ```
 
-4. 启动服务器，用[先进的浏览器访问](https://caniuse.com/?search=ServiceWorker)，如果页面跳转几下之后显示你原本的网页，安装就算成功了。如果返回`The GateWay is down!This Page is provided by ClientWorker!`，你需要检查原服务器有无出现故障。
+5. 启动服务器，用[先进的浏览器访问](https://caniuse.com/?search=ServiceWorker)，如果页面跳转几下之后显示你原本的网页，安装就算成功了。如果返回`The GateWay is down!This Page is provided by ClientWorker!`，你需要检查原服务器有无出现故障。
+
+> 如果你的应用无法通过`document.write`方式无刷新重载，请`window.location.reload()`直接重载页面
+
+接下来你要[编写规则](/rule/)，让ClientWorker正确拦截你的请求，并且转换成你想要的响应。
+
+## PlanC - 接入安装
+
+> 高级用户玩法，普通人勿入
+
+如果你的应用本来就存在`ServiceWorker`，请直接`import`ClientWorker的`/main/handle/main.js`即可，函数名为`clientworkerhandle`

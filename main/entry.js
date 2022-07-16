@@ -1,8 +1,8 @@
-import mainhandle from './handle/main.js'
+import clientworkerhandle from './handle/main.js'
 import pkgjson from '../package.json'
 import cons from './utils/cons.js'
 addEventListener('fetch', event => {
-    event.respondWith(mainhandle(event.request))
+    event.respondWith(clientworkerhandle(event.request))
 })
 addEventListener('install', function() {
     cons.s(`ClientWorker@${pkgjson.version} installed!`)

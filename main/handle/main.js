@@ -3,7 +3,7 @@ import CacheDB from '@chenyfan/cache-db'
 import cons from './../utils/cons.js'
 import FetchEngine from '../utils/engine.js'
 import rebuild from '../utils/rebuild.js'
-const mainhandle = async (request) => {
+const clientworkerhandle = async (request) => {
     //当前域 new Request('').url
     const domain = new URL(new Request('').url).host
     const db = new CacheDB()
@@ -239,4 +239,4 @@ const mainhandle = async (request) => {
     return tRes
 }
 
-export default mainhandle
+export default clientworkerhandle
