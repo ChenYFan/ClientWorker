@@ -19,6 +19,8 @@ hotpatch:
 
 api请求请见[热更新 - ClientWorker热补丁](/ext/api.html)。
 
+在触发时ClientWorker将会把自身临时性替换为最新的版本，重启失效。
+
 ## Config热更新
 
 > 持久生效，不会丢失
@@ -33,3 +35,5 @@ hotconfig:
 ```
 
 api请求请见[热更新 - Config热更新](/ext/api.html)。
+
+在触发时更新与[正常更新](/example/autoupdate.html)相同，会持久保留。
