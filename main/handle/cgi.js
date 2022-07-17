@@ -1,11 +1,13 @@
 import yaml from 'js-yaml'
 import CacheDB from '@chenyfan/cache-db'
+import FetchEngine from '../utils/engine.js'
 const router_cgi = async (request) => {
     const db = new CacheDB()
     const urlStr = request.url.toString()
     const urlObj = new URL(urlStr)
     const pathname = urlObj.pathname
     const q = (s) => { return urlObj.searchParams.get(s) }
+    let config
     switch (pathname.split('/')[2]) {
         case 'page':
             switch (q('type')) {
@@ -38,6 +40,21 @@ const router_cgi = async (request) => {
                             return new Response('ok')
                         })
                     })
+                case 'hotpatch':
+                    config =JSON.parse(await db.read('config'))
+                    if(typeof config.hotpatch !== 'object') return new Response('Error, config.hotpatch not found')
+                    const hotpatch = config.hotpatch
+                    eval(await FetchEngine.parallel(hotpatch).then(t=>t.text()))
+                    return new Response('ok')
+                case 'hotconfig':
+                    config = JSON.parse(await db.read('config'))
+                    if(typeof config.hotconfig !== 'object') return new Response('Error, config.hotconfig not found')
+                    const hotconfig = config.hotconfig
+                    const nConfig =  await FetchEngine.parallel(hotconfig).then(t=>t.text()).then(t=>yaml.load(t)).then(t=>JSON.stringify(t)).catch(t=>{return ''})
+                    if(nConfig)await db.write('hotconfig',nConfig)
+                    
+                    return new Response('ok')
+
                 default:
                     return new Response('Error, api type not found')
             }

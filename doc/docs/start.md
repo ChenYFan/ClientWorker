@@ -43,23 +43,23 @@ ClientWorker能干什么？
 3. 在相同路径新建一个`config.yml`，里面写上:
 
 ```yaml
-name: ClientWorker #自定义名称
-catch_rules: #转换规则
-    - rule: _ #ClientWorker语法糖，匹配当前域，返回一个域名带端口
-      transform_rules:
-          - search: \#.+ #在发送请求时匹配#后内容并移除
-            type: url #支持url status statusCode，默认url
-            replace: ''
-          - search: _ #ClientWorker语法糖，匹配与catchrule相同的规则
-            action: fetch #正常请求
-            fetch:
-              engine: fetch #单请求引擎，默认fetch
-          - search: (^4|^5) #匹配4XX/5XX状态码
-            type: status #在status中匹配
-            action: return #直接返回
-            return: #返回内容
-              body: The Full Installation is enabled!
-              status: 503
+name: ClientWorker 
+catch_rules: 
+  - rule: _ 
+    transform_rules:
+      - search: \#.+ 
+        searchin: url 
+        replace: ''
+      - search: _ 
+        action: fetch
+        fetch:
+          engine: fetch 
+      - search: (^4|^5) 
+        searchin: status 
+        action: return 
+        return: 
+          body: The Full Installation is enabled!
+          status: 503
 ```
 
 4. 启动服务器，用[先进的浏览器访问](https://caniuse.com/?search=ServiceWorker)，如果页面跳转几下之后显示`The Full Installation is enabled!`，则成功。
@@ -94,8 +94,8 @@ catch_rules: #转换规则
                         if (text === 'ok') {
                             console.log('[CW] Installing Success,Configuring Success,Starting...');
                             localStorage.setItem('cw_installed', 'true');
+                            //如果你不希望重载页面，请移除下面五行
                             fetch(window.location.href).then(res => res.text()).then(text => {
-                                //如果你希望重载当前页面，请用/注释下面的三行
                                 document.open()
                                 document.write(text);
                                 document.close();
@@ -123,23 +123,23 @@ catch_rules: #转换规则
 4. 在网站`/`目录下新建一个`config.yml`，里面写上:
 
 ```yaml
-name: ClientWorker #自定义名称
-catch_rules: #转换规则
-    - rule: _ #ClientWorker语法糖，匹配当前域，返回一个域名带端口
-      transform_rules:
-          - search: \#.+ #在发送请求时匹配#后内容并移除
-            type: url #支持url status statusCode，默认url
-            replace: ''
-          - search: _ #ClientWorker语法糖，匹配与catchrule相同的规则
-            action: fetch #正常请求
-            fetch:
-              engine: fetch #单请求引擎，默认fetch
-          - search: (^4|^5) #匹配4XX/5XX状态码
-            type: status #在status中匹配
-            action: return #直接返回
-            return: #返回内容
-              body: The GateWay is down!This Page is provided by ClientWorker!
-              status: 503
+name: ClientWorker 
+catch_rules:
+  - rule: _
+    transform_rules:
+      - search: \#.+
+        searchin: url
+        replace: ''
+      - search: _ 
+        action: fetch
+        fetch:
+          engine: fetch 
+      - search: (^4|^5) 
+        searchin: status 
+        action: return
+        return:
+          body: The GateWay is down!This Page is provided by ClientWorker!
+          status: 503
 ```
 
 5. 启动服务器，用[先进的浏览器访问](https://caniuse.com/?search=ServiceWorker)，如果页面跳转几下之后显示你原本的网页，安装就算成功了。如果返回`The GateWay is down!This Page is provided by ClientWorker!`，你需要检查原服务器有无出现故障。

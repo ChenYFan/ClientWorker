@@ -79,7 +79,7 @@ const FetchEngine = {
 
 
             setTimeout(() => {
-                resolve(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Classic', { status: 504, statusText: '504 All Gateways Timeout' }))
+                reject(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Classic', { status: 504, statusText: '504 All Gateways Timeout' }))
             }, config.timeout || 5000);
 
         })
@@ -124,7 +124,7 @@ const FetchEngine = {
             }))
                 
             setTimeout(() => {
-                resolve(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Parallel', { status: 504, statusText: '504 All Gateways Timeout' }))
+                reject(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Parallel', { status: 504, statusText: '504 All Gateways Timeout' }))
             }, config.timeout || 5000);
 
 

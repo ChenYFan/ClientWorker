@@ -15,3 +15,15 @@ ClientWorker默认会劫持`/cw-cgi/`作为前端控制台响应，也提供了�
 > 任何请求方式均可
 
 清除`ResponseCache`缓存，成功返回`ok`。（不会清除配置）
+
+## `hotpatch`
+
+> 任何请求方式均可
+
+热更新ClientWorker接口，请见[热更新 - ClientWorker热补丁](/ext/hotupdate.html#ClientWorker热补丁)。
+
+## `hotconfig`
+
+> 任何请求方式均可
+
+热更新ClientWorker接口，请见[热更新 - ClientWorker热补丁](/ext/hotupdate.html#Config热更新)。
