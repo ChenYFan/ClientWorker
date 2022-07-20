@@ -35,10 +35,10 @@ NPM的镜像相对较少，如果有更多的推荐可以点击右上角Github�
         - _
         - https://cdn.bootcdn.net/ajax/libs
         - https://lib.baomitu.com
-        - https://mirrors.cqupt.edu.cn/cdnjs/ajax/libs #重庆邮电
+        - https://mirrors.cqupt.edu.cn/cdnjs/ajax/libs # 重庆邮电
         - https://cdn.staticfile.org
-        - https://mirrors.sustech.edu.cn/cdnjs/ajax/libs #南大
-        - https://cdnjs.sourcegcdn.com/ajax/libs #滥用封仓库
+        - https://mirrors.sustech.edu.cn/cdnjs/ajax/libs # 南大
+        - https://cdnjs.sourcegcdn.com/ajax/libs # 全同步 https://cdnjs.cloudflare.com
 
 ```
 
