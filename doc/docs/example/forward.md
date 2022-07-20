@@ -59,7 +59,6 @@ catch_rules: #转换规则
             status: 200
             engine: classic
             preflight: false
-            timeout: 5000
             mode: cors
             redirect: follow
             credentials: include
