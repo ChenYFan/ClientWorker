@@ -41,7 +41,7 @@ ClientWorker能干什么？
 
 2. 解压，将文件夹中`404.html`和`cw.js`拷出，放在网页服务器下
 
-3. 在相同路径新建一个`config.yml`，里面写上:
+3. 在相同路径新建一个`config.yaml`，里面写上:
 
 ```yaml
 name: ClientWorker 
@@ -121,7 +121,7 @@ catch_rules:
 } else { console.error('[CW] Installing Failed,Error: Browser not support service worker'); }</script>
 ```
 
-4. 在网站`/`目录下新建一个`config.yml`，里面写上:
+4. 在网站`/`目录下新建一个`config.yaml`，里面写上:
 
 ```yaml
 name: ClientWorker 

@@ -58,7 +58,7 @@
 - `searchflags`: 搜索正则修饰，可以是`i`、`g`、`m`、`s，默认为空。**`search`的修饰**
 - `replace`: 重写规则，在`replacein`的范围内（默认是`url`）搜索匹配的内容，正则语法。
 - `replacein`: 重写范围，可以是`url`、`header`、`body`、`status`、`statusText`，默认是`url`。
-- `replacekey`: **优先重写`replacekey`作为待替换词，如果没有，则回退到`search`**，避免`search`无法替换不同范围内的内容，正则语法。
+- `replacekey`: **优先重写`replacekey`作为待替换词，如果没有，则回退到`search`，避免`search`无法替换不同范围内的内容，正则语法。**
 - `replaceflags`: 重写正则修饰，可以是`i`、`g`、`m`、`s`，默认为空。 **对`replacekey`或`search`的修饰**
 
 > 目前对于body的搜索仅支持文本搜索，请不要用于搜索二进制数据，否则将会导致返回数据异常。

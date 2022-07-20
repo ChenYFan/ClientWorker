@@ -8,15 +8,7 @@ self.clientworkerhandle = async (request) => {
     const domain = new URL(new Request('').url).host
     const db = new CacheDB()
 
-    let tReq = new Request(request.url, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
-        mode: request.mode === 'navigate' ? 'same-origin' : request.mode,
-        credentials: request.credentials,
-        redirect: request.redirect,
-        cache: request.cache
-    })
+    let tReq = request
     const urlStr = tReq.url.toString()
     const urlObj = new URL(urlStr)
     const pathname = urlObj.pathname
@@ -230,6 +222,7 @@ self.clientworkerhandle = async (request) => {
 
     }
     if (!tFetched) {
+        console.log(tReq)
         if (EngineFetch) {
             tRes = await FetchEngine.classic(EngineFetchList, fetchConfig || { status: 200 })
         } else {

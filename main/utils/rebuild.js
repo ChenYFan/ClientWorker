@@ -1,9 +1,14 @@
+import cons from "./cons.js"
 const rebuild = {
     request: (req, init) => {
+        req = req.clone()
+        if(req.mode === 'navigate') {
+            cons.e(`You can't rebuild a POST method with body when it is a navigate request.ClientWorker will ignore it's body`)
+        }
         let nReq =  new Request(init.body || req.body, {
             headers: rebuildheaders(req, init.headers),
             method: init.method || req.method,
-            mode: init.mode || req.mode,
+            mode: req.mode === 'navigate'?"same-origin":(init.mode || req.mode),
             credentials: init.credentials || req.credentials,
             redirect: init.redirect || req.redirect
         })
@@ -11,6 +16,7 @@ const rebuild = {
         return nReq
     },
     response: (res, init) => {
+        res = res.clone()
        let nRes = new Response(init.body || res.body, {
             headers: rebuildheaders(res, init.headers),
             status: init.status || res.status,
