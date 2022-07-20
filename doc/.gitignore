@@ -1,9 +1,3 @@
-### Node Dependencies
-node_modules
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-
 ### Node template
 # Logs
 logs
@@ -122,6 +116,3 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-### IDE
-/.vscode/
-/.idea/
