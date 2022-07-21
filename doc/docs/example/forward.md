@@ -63,7 +63,6 @@ catch_rules: #转换规则
             mode: cors
             redirect: follow
             credentials: include
-            timeout: 5000
 
         - search: _
           action: fetch
