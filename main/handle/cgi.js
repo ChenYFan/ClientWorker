@@ -1,6 +1,7 @@
 import yaml from 'js-yaml'
 import CacheDB from '@chenyfan/cache-db'
 import FetchEngine from '../utils/engine.js'
+import pkgjson from '../../package.json'
 const router_cgi = async (request) => {
     const db = new CacheDB()
     const urlStr = request.url.toString()
@@ -9,6 +10,14 @@ const router_cgi = async (request) => {
     const q = (s) => { return urlObj.searchParams.get(s) }
     let config
     switch (pathname.split('/')[2]) {
+        case 'info':
+            return new Response(JSON.stringify({
+                version: pkgjson.version
+            }),{
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
         case 'page':
             switch (q('type')) {
                 case 'install':
@@ -44,15 +53,19 @@ const router_cgi = async (request) => {
                     config =JSON.parse(await db.read('config'))
                     if(typeof config.hotpatch !== 'object') return new Response('Error, config.hotpatch not found')
                     const hotpatch = config.hotpatch
-                    eval(await FetchEngine.parallel(hotpatch).then(t=>t.text()))
+                    await FetchEngine.parallel(hotpatch)
+                    .then(t=>t.text())
+                    .then(async script=>{
+                        await db.write('hotpatch', script, { type: "text" })
+                        eval(script)
+                    })
                     return new Response('ok')
                 case 'hotconfig':
                     config = JSON.parse(await db.read('config'))
                     if(typeof config.hotconfig !== 'object') return new Response('Error, config.hotconfig not found')
                     const hotconfig = config.hotconfig
                     const nConfig =  await FetchEngine.parallel(hotconfig).then(t=>t.text()).then(t=>yaml.load(t)).then(t=>JSON.stringify(t)).catch(t=>{return ''})
-                    if(nConfig)await db.write('hotconfig',nConfig)
-                    
+                    if(nConfig)await db.write('config',nConfig)
                     return new Response('ok')
 
                 default:

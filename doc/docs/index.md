@@ -26,6 +26,6 @@ features:
     details: ~130kb的js文件，独特的配置流程，闪电般的安装，在区区300ms内用户的所有请求都将会掌握在你的手里。只要略作修改，你就可以将你的Vue网页迅速改造成拥有全球CDN加速的PWA应用。
   - icon: ✌️
     title: 最先进的两套并发引擎，满足你的需求
-    details: 自带Classic和Parallel两套并发引擎，完美解决前端请求故障，节省流量，提高体验。
+    details: 自带Classic、Parallel、Crazy三套并发引擎，完美解决前端请求故障，节省流量，提高体验。
 ---
 

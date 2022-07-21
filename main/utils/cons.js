@@ -3,7 +3,7 @@ const cons = {
         console.log(`%c[SUCCESS]%c ${m}`, 'color:white;background:green;', '')
     },
     w: (m) => {
-        console.log(`%c[WARNING]%c ${m}`, 'color:brown;background:yellow;', '')
+        //console.log(`%c[WARNING]%c ${m}`, 'color:brown;background:yellow;', '')
     },
     i: (m) => {
         console.log(`%c[INFO]%c ${m}`, 'color:white;background:blue;', '')

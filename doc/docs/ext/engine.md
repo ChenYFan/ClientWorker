@@ -1,8 +1,12 @@
 # Engine
 
-ClientWorker中拥有两款原理不同的并发引擎，但他们的核心都是`Promise.any`并发。
+ClientWorker中拥有四款原理不同的并发引擎，他们分别是`fetch` `Crazy` `Classic` `Parallel`。
 
-但是如果你直接用`Promise.any`并发，并在`fetch`后用`AbortController`打断会导致将当前进程也给打断，由于`fetch`在返回状态`status`时就对`Promise`进行`Resolve`，而此时响应主体还没开始下载。因此，引擎一代称实际上指的是不同的打断方式。
+在这其中，`fetch`（JS原始请求方式） 与 `Crazy`是单请求输入引擎，`Classic` 与 `Parallel`是多请求输入引擎。这意味着后面两个引擎可以同时对多个地址发起请求，而前面两个引擎只能对单个地址发起请求。请注意，除了`fetch` 之外，其他引擎都是**多线程的**，非多线程请求将会被降级。
+
+> **注意：**
+> `fetch` `Crazy`  只接受字符串形式的url
+> `Classic` `Parallel` 只接受数组形式的urls
 
 `Promise.any`的兼容性远低于`ServiceWorker`，ClientWorker会自动对其PolyFill，因此ClientWorker兼容性最低要求与ServiceWorker相同。
 
@@ -39,3 +43,23 @@ ClientWorker中拥有两款原理不同的并发引擎，但他们的核心都�
 `Parallel`支持流下载，下面是一张示例图，大约10M，此文档用的也是`Parallel`，你可以观察它是否是流式加载：
 
 ![](https://cdn.jsdelivr.net/npm/chenyfan-happypic@0.0.33/1.jpg)
+
+# `Crazy`
+
+`Crazy`会在刚开始发起一个只下载1个字节的请求`Range 0~1`，用于检查文件总大小。如果总大小不存在或者比线程还小，则会降级。
+
+此后`Crazy`将发起共{线程数}个大小为{总大小÷线程数}的请求，最后合并为一个响应。
+
+> 由于浏览器对于一个域名的请求限制，我们通常建议将线程数调小为4以下
+
+这种方式推荐请求字体、无法流式的图片、无法流式的音视频等等。
+
+> 对于较小的文件，加速效果并不显著，乃至可能会出现**减速**
+
+> （4线程）通常10M左右的字体可以显著提速1.5倍上下
+
+# `KFCThursdayVW50`
+
+~~V我五十以解锁KFC疯狂星期四引擎~~
+
+尚在测试，未开放。

@@ -36,7 +36,7 @@ catch_rules: #转换规则
             
             
             - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
-              replace: docroot/clientworker@2.3.1/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.4.0/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
@@ -84,7 +84,20 @@ catch_rules: #转换规则
           replace: .webp
           replacein: url
           replacekey: .jpg
-  
+    - rule: ^https\:\/\/cdn\.jsdelivr\.net\/npm\/chenyfan\-happypic\@0\.0\.33\/1\.jpg$
+      transform_rules:
+        - search: _
+          replace: https://cdn.jsdelivr.net/npm/chenyfan-happypic@0.0.33/2.jpg
+          action: fetch
+          fetch:
+            status: 200
+            engine: crazy
+            preflight: false
+            threads: 5
+            timeout: 30000
+            cache:
+              enable: true
+              expire: 1000*60
 
 
 

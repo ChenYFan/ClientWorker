@@ -20,11 +20,13 @@ self.clientworkerhandle = async (request) => {
 
     let tFetched = false
     let EngineFetch = false
+
+    let EngineFetchList = []
     let tRes = new Response()
     for (let catch_rule of config.catch_rules) {
         if (catch_rule.rule === '_') catch_rule.rule = domain
         if (!tReq.url.match(new RegExp(catch_rule.rule))) continue;
-        let EngineFetchList = []
+        
         for (let transform_rule of catch_rule.transform_rules) {
             let tSearched = false
 
@@ -103,7 +105,6 @@ self.clientworkerhandle = async (request) => {
             if (typeof transform_rule.header === 'object') {
                 for (var header in transform_rule.header) {
                     if (tFetched) {
-
                         tRes = rebuild.response(tRes, { headers: { [header]: transform_rule.header[header] } })
                     } else {
                         tReq = rebuild.request(tReq, { headers: { [header]: transform_rule.header[header] } })
@@ -122,7 +123,9 @@ self.clientworkerhandle = async (request) => {
                             mode: transform_rule.fetch.mode,
                             credentials: transform_rule.fetch.credentials,
                             redirect: transform_rule.fetch.redirect,
-                            timeout: transform_rule.fetch.timeout
+                            timeout: transform_rule.fetch.timeout,
+                            threads: transform_rule.fetch.threads,
+                            limit: transform_rule.fetch.limit
                         }
                         if (!transform_rule.fetch.preflight) {
                             tReq = new Request(tReq.url, {
@@ -145,15 +148,29 @@ self.clientworkerhandle = async (request) => {
                             new Promise(async (resolve, reject) => {
                                 let cRes
                                 if (!EngineFetch) {
-                                    cRes = await FetchEngine.fetch(tReq, fetchConfig)
+                                    switch (transform_rule.fetch.engine || 'fetch') {
+                                        case 'fetch':
+                                            cRes = await FetchEngine.fetch(tReq, fetchConfig)
+                                            break
+                                        case 'crazy':
+                                            cRes = await FetchEngine.crazy(tReq, fetchConfig)
+                                            break
+                                        default:
+                                            cons.e(`${tReq.url} the ${transform_rule.fetch.engine} engine are not supported`);
+                                            break
+                                    }
                                 } else {
-                                    switch (transform_rule.fetch.engine) {
+                                    switch (transform_rule.fetch.engine || 'parallel') {
                                         case 'classic':
                                             cRes = await FetchEngine.classic(EngineFetchList, fetchConfig)
                                             break;
                                         case 'parallel':
                                             cRes = await FetchEngine.parallel(EngineFetchList, fetchConfig)
                                             cRes = rebuild.response(cRes, { url: '' })
+                                            break;
+                                        case 'KFCThursdayVW50':
+                                            if (new Date().getDay() === 4) cons.e(`VW50! The Best Fetch Engine in the World Said!`)
+                                            cRes = await FetchEngine.KFCThursdayVW50(EngineFetchList, fetchConfig)
                                             break;
                                         default:
                                             cons.e(`Fetch Engine ${transform_rule.fetch.engine} is not supported`)

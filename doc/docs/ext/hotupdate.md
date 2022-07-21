@@ -6,7 +6,7 @@ ClientWorker支持从外部加载和更新ClientWorker及其配置，避免在�
 
 ## ClientWorker热补丁
 
-> **请注意，ClientWorker的热补丁是临时有效的**，用户关闭网页后ClientWorker会暂停，新的补丁会丢失，在下一次更新时才会重新生效
+> **请注意，ClientWorker的热补丁是临时有效的**，用户关闭网页后ClientWorker会暂停，新的补丁会丢失，在下一次重启并**刷新**后才会生效。重启后无需重新下载热补丁，自动生效。
 
 你需要对`hotpatch`进行配置，格式是数组：
 

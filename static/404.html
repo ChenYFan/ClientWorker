@@ -211,48 +211,48 @@
 </body>
 <script>
 
-    const $ = document.querySelector.bind(document);
+    const $$$ = document.querySelector.bind(document);
     const changeType = (type) => {
-        $('#ring').style.display = 'none';
-        $('#error').style.display = 'none';
-        $('#success').style.display = 'none';
+        $$$('#ring').style.display = 'none';
+        $$$('#error').style.display = 'none';
+        $$$('#success').style.display = 'none';
         switch (type) {
             case 'ring':
-                $('#ring').style["display"] = 'block';
+                $$$('#ring').style["display"] = 'block';
                 break;
             case 'error':
-                $('#error').style["display"] = 'block';
+                $$$('#error').style["display"] = 'block';
                 break;
             case 'success':
-                $('#success').style["display"] = 'block';
+                $$$('#success').style["display"] = 'block';
                 break;
         }
     }
     changeType('ring');
-    $('#info').innerHTML = '正在安装ClientWorker...';
+    $$$('#info').innerHTML = '正在安装ClientWorker...';
     navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
         const conf = () => {
-            $('#info').innerHTML = 'ClientWorker已安装，等待配置中...';
+            $$$('#info').innerHTML = 'ClientWorker已安装，等待配置中...';
             fetch('/cw-cgi/api?type=config')
                 .then(res => res.text())
                 .then(text => {
                     if (text === 'ok') {
                         changeType('success');
-                        $('#info').innerHTML = 'ClientWorker已安装并配置完成，正在无刷新启动...';
+                        $$$('#info').innerHTML = 'ClientWorker已安装并配置完成，正在无刷新启动...';
                         fetch(window.location.href).then(res => res.text()).then(text => {
                             document.open()
                             document.write(text);
                             document.close();
                         });
                     } else {
-                        $('#info').innerHTML = 'ClientWorker配置失败，可能还没有准备好，正在进行第二次...';
+                        $$$('#info').innerHTML = 'ClientWorker配置失败，可能还没有准备好，正在进行第二次...';
                         setTimeout(() => {
                             conf()
                         }, 200);
                     }
                 }).catch(err => {
                     changeType('error');
-                    $('#info').innerHTML = 'ClientWorker配置失败，请检查您的配置！错误原因：' + err.message;
+                    $$$('#info').innerHTML = 'ClientWorker配置失败，请检查您的配置！错误原因：' + err.message;
                 });
         }
         setTimeout(() => {
@@ -260,7 +260,7 @@
         }, 50);
     }).catch(err => {
         changeType('error');
-        $('#info').innerHTML = 'ClientWorker安装失败，错误原因：' + err.message;
+        $$$('#info').innerHTML = 'ClientWorker安装失败，错误原因：' + err.message;
     });
 </script>
 
