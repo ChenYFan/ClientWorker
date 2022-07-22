@@ -55,7 +55,7 @@
 - `search`: 搜索规则，在`searchin`的范围内（默认是`url`）搜索匹配的内容，正则语法。
 - `searchin`: 搜索范围，可以是`url`、`header`、`body`、`status`、`statusText`，默认是`url`。
 - `searchkey`: **在搜索`header`时，必须要指定`searchkey`为搜索键。**
-- `searchflags`: 搜索正则修饰，可以是`i`、`g`、`m`、`s，默认为空。**`search`的修饰**
+- `searchflags`: 搜索正则修饰，可以是`i`、`g`、`m`、`s`，默认为空。**对`search`的修饰**
 - `replace`: 重写规则，在`replacein`的范围内（默认是`url`）搜索匹配的内容，正则语法。
 - `replacein`: 重写范围，可以是`url`、`header`、`body`、`status`、`statusText`，默认是`url`。
 - `replacekey`: **优先重写`replacekey`作为待替换词，如果没有，则回退到`search`，避免`search`无法替换不同范围内的内容，正则语法。**

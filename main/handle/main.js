@@ -139,7 +139,7 @@ self.clientworkerhandle = async (request) => {
                                 })(tReq.body)
                             }) //https://segmentfault.com/a/1190000006095018
                             delete fetchConfig.credentials
-                            fetchConfig.mode = "cors"
+                            //fetchConfig.mode = "cors"
                             for (var eReq in EngineFetchList) {
                                 EngineFetchList[eReq] = new Request(EngineFetchList[eReq].url, tReq)
                             }

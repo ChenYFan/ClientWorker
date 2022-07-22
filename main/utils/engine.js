@@ -47,7 +47,8 @@ const FetchEngine = {
         config.trylimit = config.trylimit || 10
         const reqtype = Object.prototype.toString.call(req)
         if (reqtype !== '[object String]' && reqtype !== '[object Request]') {
-            reject(`FetchEngine.fetch: req must be a string or Request object,but got ${reqtype}`)
+            cons.e(`FetchEngine.fetch: req must be a string or Request object,but got ${reqtype}`)
+            return;
         }
         const controller = new AbortController();
         const PreFetch = await fetch(req, {
@@ -59,7 +60,7 @@ const FetchEngine = {
         const PreHeaders = PreFetch.headers
         const AllSize = PreHeaders.get('Content-Length')
         if (PreFetch.status !== (config.status || 200)) {
-            reject(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Crazy', { status: 504, statusText: '504 All Gateways Timeout' }))
+            return (new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Crazy', { status: 504, statusText: '504 All Gateways Timeout' }))
         }
         controller.abort();
         if (!AllSize || AllSize < config.threads) {
@@ -117,9 +118,6 @@ const FetchEngine = {
         })
     },
     KFCThursdayVW50: async (reqs, config) => {
-        cons.e(`V我五十以解锁KFC疯狂星期四引擎`)
-        return FetchEngine.parallel(reqs, config)
-       /*
         config = config || { status: 200 }
         config.threads = config.threads || 4
         config.trylimit = config.trylimit || 10
@@ -181,7 +179,8 @@ const FetchEngine = {
                                 mode: config.mode,
                                 credentials: config.credential,
                                 redirect: config.redirect || "follow",
-                                //timeout: config.timeout || 30000
+                                timeout: config.timeout || 30000,
+                                status: 206
                             })
                                 .then(res => res.arrayBuffer())
                                 .catch(async err => {
@@ -190,7 +189,7 @@ const FetchEngine = {
                                         reject()
                                         return;
                                     }
-                                    //return instance()
+                                    return instance()
                                 })
                         }
                         res(instance());
@@ -211,8 +210,8 @@ const FetchEngine = {
             })
             setTimeout(() => {
                 reject(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine KFCThursdayVW50', { status: 504, statusText: '504 All Gateways Timeout' }))
-            }, config.timeout || 5000);
-        })*/
+            }, config.timeout || 30000);
+        })
     },
     classic: async (reqs, config) => {
         return new Promise((resolve, reject) => {

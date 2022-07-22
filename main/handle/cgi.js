@@ -10,6 +10,8 @@ const router_cgi = async (request) => {
     const q = (s) => { return urlObj.searchParams.get(s) }
     let config
     switch (pathname.split('/')[2]) {
+        case 'hello':
+            return new Response('Hello ClientWorker!')
         case 'info':
             return new Response(JSON.stringify({
                 version: pkgjson.version

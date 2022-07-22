@@ -3,40 +3,38 @@ hotpatch:
     - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
 hotconfig:
     - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
-catch_rules: #转换规则
-    - rule: _ #ClientWorker语法糖，匹配当前域，返回一个域名带端口
-      transform_rules: #转换规则，最上面的优先最高
-            - search: \#.* #在发送请求时匹配#后内容并移除
-              searchin: url #支持url status statusCode，默认url
+catch_rules: 
+    - rule: _ 
+      transform_rules: 
+            - search: \
+              searchin: url 
               replace: ''
-            - search: \?.* #在发送请求时匹配?后内容并移除，仅限静态请求，动态最好不要移除?
+            - search: \?.* 
               replace: '' 
-
-
-            - search: ([^\/.]+)\/index(|\.html)$ #匹配/path/index.html或/path/index，跳为/path/
+            - search: ([^\/.]+)\/index(|\.html)$ 
               action: redirect
               redirect: 
                 to: $1/
             - search: \/google$
               action: redirect
               redirect: 
-                url: https://google.com #不替换直接跳转，默认优先级url > to
+                url: https://google.com 
                 status: 301
                 
-            - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
+            - search: \/([^\/.]+)$ 
               action: redirect
               redirect: 
                 to: /$1.html
                 status: 301
             
-            - search: ([^\/.]+)\/$ #匹配/path/，转为/path/index.html
+            - search: ([^\/.]+)\/$ 
               replace: $1/index.html
-              #search: /\/([^\/.]+)\/?$/g #匹配/path /path/，转为/path/index.html
-              #replace: /$1/index.html
+              
+              
             
             
-            - search: _ #ClientWorker语法糖，匹配捕捉规则的路由
-              replace: docroot/clientworker@2.4.2/doc/docs/.vitepress/dist
+            - search: _ 
+              replace: docroot/clientworker@2.5.0/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
@@ -48,14 +46,14 @@ catch_rules: #转换规则
                 - https://unpkg.com
                 - https://npm.sourcegcdn.com
 
-              # 关于引擎
-              # 仅出现多并发时有效，即上方replace为数组且大于1个时有效
-              # 1. classic
-              # 为传统重生成Response，同时并发直到任意一个下载完毕，并且状态码为2XX时才打断其他请求
-              # 可能会造成流量冗余，但可以极大幅度避免假快响应，达到一定会时最快的效果
-              # 2. parallel
-              # 基于响应StatusCode，使用Event函数避免打断自身，其只要满足任意一个请求返回2XX时才打断其他请求（无论是否下载完毕）
-              # 如果部分请求在较快的响应2XX，而提供下载速度很慢时，这会严重拖慢速度
+              
+              
+              
+              
+              
+              
+              
+              
               
 
               
@@ -71,8 +69,8 @@ catch_rules: #转换规则
                   delay: 200
                   expired_delay: 500
               
-            - search: \.html$ #匹配后缀为.html的请求，修复content-type为text/html
-              header: #只有在fetch之后才能修改Response的header，之前修改的均为Request
+            - search: \.html$ 
+              header: 
                 content-type: text/html;charset=utf-8
                 ServerProvide: ClientWorker
 
@@ -87,7 +85,6 @@ catch_rules: #转换规则
     - rule: ^https\:\/\/cdn\.jsdelivr\.net\/npm\/chenyfan\-happypic\@0\.0\.33\/1\.jpg$
       transform_rules:
         - search: _
-          replace: https://cdn.jsdelivr.net/npm/chenyfan-happypic@0.0.33/2.jpg
           action: fetch
           fetch:
             status: 200

@@ -29,3 +29,7 @@ ClientWorker默认会劫持`/cw-cgi/`作为前端控制台响应，也提供了�
 > 任何请求方式均可
 
 热更新ClientWorker接口，请见[热更新 - Config热配置](/ext/hotupdate.html#Config热更新)。
+
+## `version`
+
+返回版本号，这也是指示ClientWorker安装成功的表现。

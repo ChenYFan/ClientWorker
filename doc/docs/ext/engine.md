@@ -1,12 +1,16 @@
 # Engine
 
-ClientWorker中拥有四款原理不同的并发引擎，他们分别是`fetch` `Crazy` `Classic` `Parallel`。
+ClientWorker中拥有五款原理不同的并发引擎，他们分别是`fetch` `Crazy` `Classic` `Parallel` `KFCThursdayVW50`。
 
-在这其中，`fetch`（JS原始请求方式） 与 `Crazy`是单请求输入引擎，`Classic` 与 `Parallel`是多请求输入引擎。这意味着后面两个引擎可以同时对多个地址发起请求，而前面两个引擎只能对单个地址发起请求。请注意，除了`fetch` 之外，其他引擎都是**多线程的**，非多线程请求将会被降级。
+> ~~虚假的疯狂引擎 `Crazy` 真实的疯狂引擎`KFCThursdayVW50`~~
+
+> `KFCThursdayVW50`原名`Hysteria`（歇斯底里的），但再疯狂也比不过周四KFC吧:)
+
+在这其中，`fetch`（JS原始请求方式） 与 `Crazy`是单请求输入引擎，`Classic` 、 `Parallel` 与 `KFCThursdayVW50` 是多请求输入引擎。这意味着后面两个引擎可以同时对多个地址发起请求，而前面两个引擎只能对单个地址发起请求。请注意，除了`fetch` 之外，其他引擎都是**多线程的**，非多线程请求将会被降级。
 
 > **注意：**
 > `fetch` `Crazy`  只接受字符串形式的url
-> `Classic` `Parallel` 只接受数组形式的urls
+> `Classic` `Parallel` `KFCThursdayVW50` 只接受数组形式的urls
 
 `Promise.any`的兼容性远低于`ServiceWorker`，ClientWorker会自动对其PolyFill，因此ClientWorker兼容性最低要求与ServiceWorker相同。
 
@@ -40,15 +44,13 @@ ClientWorker中拥有四款原理不同的并发引擎，他们分别是`fetch` 
 
 > 在2.1.0及以上版本，ClientWorker修复了Parallel对相对路径错误处理，采用重构`Request`的方式但保留body，保持其性能不折损。
 
-`Parallel`支持流下载，下面是一张示例图，大约10M，此文档用的也是`Parallel`，你可以观察它是否是流式加载：
-
-![](https://cdn.jsdelivr.net/npm/chenyfan-happypic@0.0.33/1.jpg)
+`Parallel`支持流下载.
 
 # `Crazy`
 
-`Crazy`会在刚开始发起一个只下载1个字节的请求`Range 0~1`，用于检查文件总大小。如果总大小不存在或者比线程还小，则会降级。
+`Crazy`会在刚开始发起一个只下载1个字节的请求`Range 0~1`，用于检查文件总大小（这被称为`PreFetch`）。如果总大小不存在或者比线程还小，则会降级为`normal fetch`。
 
-此后`Crazy`将发起共{线程数}个大小为{总大小÷线程数}的请求，最后合并为一个响应。
+此后`Crazy`将发起共`线程数`个大小为`总大小÷线程数`的请求，并发下载，最后合并为一个响应主体，并将`PreFetch`中的标头与状态还原。
 
 > 由于浏览器对于一个域名的请求限制，我们通常建议将线程数调小为4以下
 
@@ -58,8 +60,24 @@ ClientWorker中拥有四款原理不同的并发引擎，他们分别是`fetch` 
 
 > （4线程）通常10M左右的字体可以显著提速1.5倍上下
 
+这是一张近7M的图片，你可以打开F12观察它的请求状况
+
+![](https://cdn.jsdelivr.net/npm/chenyfan-happypic@0.0.33/1.jpg)
+
 # `KFCThursdayVW50`
 
-~~V我五十以解锁KFC疯狂星期四引擎~~
+> <sub>一个疯狂的引擎...</sub>
 
-尚在测试，未开放。
+`KFCThursdayVW50`会在刚开始对**所有源**发起一个只下载1个字节的请求`Range 0~1`，用于检查文件总大小（这被称为`PreFetch`）。如果总大小不存在或者比线程还小，则会降级为`parallel`。
+
+此后`KFCThursdayVW50`将**对每一个源**发起共`线程数`个大小为`总大小÷线程数`的请求，并发下载，在任何一个源响应正确代码后打断当前组的其余请求，最后合并为一个响应主体，并将`PreFetch`中的标头与状态还原。
+
+> 并发的总请求为线程数*源个数
+
+这种方式可以叠加不同镜像的带宽，适合下载较大的文件。
+
+> 非常不建议对静态资源使用此引擎，过多的线程可能会导致用户浏览器意外崩溃。
+
+> 对于较小的文件会起到**减速的效果**
+
+> （4线程，4镜像）对于一个存储在Sharepoint的2GB文件，可以显著提速近7倍速度（30MB/s->200MB/s）

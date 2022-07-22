@@ -3,7 +3,7 @@
 你可以通过如下规则来实现前端Webp自动切换：
 
 ```yaml
-- rule: (?<=^https\:\/\/imagecdndomain/(.*))\.jpg$
+- rule: ^https\:\/\/imagecdndomain/(.*))\.jpg
   transform_rules:
     - search: image\/webp
       searchin: header
