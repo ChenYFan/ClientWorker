@@ -33,7 +33,6 @@ self.clientworkerhandle = async (request) => {
             if (transform_rule.search === '_') transform_rule.search = catch_rule.rule
             switch (transform_rule.searchin || "url") {
                 case 'url':
-                    console.log(transform_rule)
                     if (tReq.url.match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
                     break
                 case 'header':

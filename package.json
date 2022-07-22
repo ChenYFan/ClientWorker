@@ -1,6 +1,6 @@
 {
   "name": "clientworker",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
   "main": "./dist/cw.js",
   "scripts": {
