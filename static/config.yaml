@@ -6,7 +6,7 @@ hotconfig:
 catch_rules: 
     - rule: _ 
       transform_rules: 
-            - search: \
+            - search: \#.*
               searchin: url 
               replace: ''
             - search: \?.* 
