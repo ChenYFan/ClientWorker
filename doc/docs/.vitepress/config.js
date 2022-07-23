@@ -38,6 +38,10 @@ export default {
             {
                 text: 'Q群',
                 link: 'https://jq.qq.com/?_wv=1027&k=rAcnhzqK',
+            },
+            {
+                text: '优秀配置',
+                link: 'https://github.com/ChenYFan/ClientWorker/discussions/categories/awesome-example'
             }
         ],
         sidebar: [
@@ -70,6 +74,7 @@ export default {
             {
                 text: '拓展',
                 items: [
+                    { text: '自动清理过期缓存', link: '/ext/autoclean' },
                     { text: "热更新", link: "/ext/hotupdate" },
                     { text: '关于引擎', link: '/ext/engine' },
                     { text: "内置API接口", link: "/ext/api" }

@@ -20,13 +20,12 @@ const rebuild = {
             cons.e(`You can't rebuild a opaque response.ClientWorker will ignore this build`)
             return res
         }
-        res = res.clone()
-        let nRes = new Response(res, {
+        let nRes = new Response(res.body, {
             headers: rebuildheaders(res, init.headers),
             status: init.status || res.status,
             statusText: init.statusText || res.statusText
         })
-        if (!!init.url && init.url !== " ") nRes = new Response(init.url, nRes)
+        if (!!init.url) nRes = new Response(init.url, nRes)
         return nRes
     }
 }
