@@ -9,4 +9,4 @@ name: ClientWorker Docs Config
 cleaninterval: 1000*20 # 每20秒检测并清理一次
 ```
 
-> ClientWorker在以来的页面被关闭时会存活大约1分钟。被ClientWorker被杀死后过期的缓存不会被清理。直到下一次激活才会重新清理。
+> ClientWorker在依赖的页面被关闭时会存活大约1分钟。被ClientWorker被杀死后过期的缓存不会被清理。直到下一次激活才会重新清理。
