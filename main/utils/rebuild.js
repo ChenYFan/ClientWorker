@@ -5,7 +5,7 @@ const rebuild = {
         if (req.mode === 'navigate') {
             cons.e(`You can't rebuild a POST method with body when it is a navigate request.ClientWorker will ignore it's body`)
         }
-        let nReq = new Request(init.body || req.body, {
+        let nReq = new Request(req, {
             headers: rebuildheaders(req, init.headers),
             method: init.method || req.method,
             mode: req.mode === 'navigate' ? "same-origin" : (init.mode || req.mode),
@@ -16,8 +16,12 @@ const rebuild = {
         return nReq
     },
     response:(res, init) => {
+        if(res.type === 'opaque') {
+            cons.e(`You can't rebuild a opaque response.ClientWorker will ignore this build`)
+            return res
+        }
         res = res.clone()
-        let nRes = new Response(init.body || res.body, {
+        let nRes = new Response(res, {
             headers: rebuildheaders(res, init.headers),
             status: init.status || res.status,
             statusText: init.statusText || res.statusText
