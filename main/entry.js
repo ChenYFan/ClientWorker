@@ -13,6 +13,23 @@ db.read('hotpatch').then(script => {
         cons.w('Hotpatch Not Found!')
     }
 })
+db.read('config').then(config => {
+    config = JSON.parse(config) || {}
+    setInterval(() => {
+        cons.s(`ClientWorker@${pkgjson.version} Start to Clean Expired Cache!`)
+        caches.open("ClientWorker_ResponseCache").then(cache => {
+            cache.keys().then(keys => {
+                keys.forEach(key => {
+                    cache.match(key).then(res => {
+                        if (Number(res.headers.get('ClientWorker_ExpireTime')) <= new Date().getTime()) {
+                            cache.delete(key)
+                        }
+                    })
+                })
+            })
+        })
+    }, eval(config.cleaninterval) || 60*1000);
+})
 addEventListener('fetch', event => {
     event.respondWith(self.clientworkerhandle(event.request))
 })
@@ -24,5 +41,4 @@ addEventListener('activate', function () {
     cons.s(`ClientWorker@${pkgjson.version} Activated!`)
     self.clients.claim();
 })
-
 

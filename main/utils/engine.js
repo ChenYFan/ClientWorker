@@ -299,7 +299,7 @@ const FetchEngine = {
                     if (res.status == (config.status || 200)) {
                         tagged = true;
                         eventTarget.dispatchEvent(abortEvent)
-                        resolve(res)
+                        resolve(rebuild.response(res, {url:""}))
                     }
                 }).catch(err => {
                     if (err == 'DOMException: The user aborted a request.') console.log()//To disable the warning:DOMException: The user aborted a request.
