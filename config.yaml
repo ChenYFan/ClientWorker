@@ -3,6 +3,7 @@ hotpatch:
     - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
 hotconfig:
     - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
+cleaninterval: 1000*20
 catch_rules: 
     - rule: _ 
       transform_rules: 
@@ -34,7 +35,7 @@ catch_rules:
             
             
             - search: _ 
-              replace: docroot/clientworker@2.5.3/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.5.2/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
@@ -65,9 +66,8 @@ catch_rules:
                 preflight: false
                 timeout: 5000
                 cache:
-                  expire: 1000*60
-                  delay: 200
-                  expired_delay: 500
+                  expire: 1000*10
+                  delay: 3000
               
             - search: \.html$ 
               header: 
@@ -120,7 +120,6 @@ catch_rules:
             timeout: 5000
             cache:
               enable: true
-              expired_delay: 500
               expire: 1000*60*60*24*7
               delay: 150
 
