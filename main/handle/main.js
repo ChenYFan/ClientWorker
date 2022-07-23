@@ -36,7 +36,6 @@ self.clientworkerhandle = async (request) => {
                     if (tReq.url.match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
                     break
                 case 'header':
-                    cons.d(tReq.headers.get(transform_rule.searchkey))
                     if (tReq.headers.get(transform_rule.searchkey).match(new RegExp(transform_rule.search, transform_rule.searchflags))) tSearched = true;
                     break;
                 case 'status':
@@ -239,7 +238,6 @@ self.clientworkerhandle = async (request) => {
 
     }
     if (!tFetched) {
-        console.log(tReq)
         if (EngineFetch) {
             tRes = await FetchEngine.classic(EngineFetchList, fetchConfig || { status: 200 })
         } else {

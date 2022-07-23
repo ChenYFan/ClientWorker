@@ -183,6 +183,7 @@ if (!!navigator.serviceWorker) {
         if (localStorage.getItem('cw_installed') !== 'true') {
                 setInterval(() => {
                     fetch('/cw-cgi/info').then(res => res.json()).then(res => {
+                        localStorage.setItem('cw_installed', 'true');
                         console.log('[CW] Installation is completed.Reloading...');
                         location.reload()
                     }).catch(err => {
