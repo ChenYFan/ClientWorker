@@ -8,7 +8,7 @@
         },
     };
 
-    async function updateSW() {
+    const updateSW = async () => {
         if (navigator.serviceWorker) {
             navigator.serviceWorker
                 .getRegistrations()
@@ -29,9 +29,9 @@
                         });
                 });
         }
-    }
+    };
 
-    async function updateConfig() {
+    const updateConfig = async () => {
         await fetch("/cw-cgi/api?type=config")
             .then((res) => res.text())
             .then((res) => {
@@ -42,7 +42,7 @@
                     console.log(`Config update failed`);
                 }
             });
-    }
+    };
 
     if (
         Number(LSDB.read("cw_time_sw")) <
@@ -51,6 +51,7 @@
         await updateSW();
         await updateConfig();
     }
+
     if (
         Number(LSDB.read("cw_time_config")) <
         new Date().getTime() - updateConfigDelay
@@ -62,6 +63,7 @@
         await updateSW();
         await updateConfig();
     }, updateSWDelay);
+
     setInterval(async () => {
         await updateConfig();
     }, updateConfigDelay);

@@ -1,6 +1,6 @@
 import router_cgi from "./cgi.js";
 import CacheDB from "@chenyfan/cache-db";
-import cons from "./../utils/cons.js";
+import cons from "../utils/cons.js";
 import FetchEngine from "../utils/engine.js";
 import rebuild from "../utils/rebuild.js";
 
@@ -520,7 +520,7 @@ self.clientworkerhandle = async (request) => {
                         });
 
                         if (ScriptAns.fetched) {
-                            if (transform_rule.script.skip || false) {
+                            if (transform_rule.script.skip) {
                                 return ScriptAns.response;
                             }
                             tFetched = true;
