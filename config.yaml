@@ -21,6 +21,17 @@ catch_rules:
               redirect: 
                 url: https://google.com 
                 status: 301
+
+            - search: \/time$
+              action: script
+              script: 
+                name: gettime
+                skip: true
+            - search: \/timefunction$
+              action: script
+              script: 
+                function: ()=>{return {fetched:true,response:new Response(new Date().toString())}}
+                skip: true
                 
             - search: \/([^\/.]+)$ 
               action: redirect
@@ -35,7 +46,7 @@ catch_rules:
             
             
             - search: _ 
-              replace: docroot/clientworker@2.6.0/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.7.0-beta-1/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot
