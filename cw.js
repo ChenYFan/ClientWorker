@@ -4760,7 +4760,7 @@ var jsYaml = {
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"i8":"2.7.0-beta-1"}');
+module.exports = JSON.parse('{"i8":"2.7.0-beta-2"}');
 
 /***/ })
 
