@@ -28,6 +28,7 @@
     "vue": "^3.2.37"
   },
   "devDependencies": {
+    "prettier": "^2.7.1",
     "terser-webpack-plugin": "^5.3.3",
     "webpack-bundle-analyzer": "^4.5.0"
   }

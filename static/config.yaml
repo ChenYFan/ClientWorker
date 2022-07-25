@@ -1,120 +1,108 @@
 name: ClientWorker Docs Config
 hotpatch:
-    - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
+  - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
 hotconfig:
-    - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
+  - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
 cleaninterval: 1000*20
-catch_rules: 
-    - rule: _ 
-      transform_rules: 
-            - search: \#.*
-              searchin: url 
-              replace: ''
-            - search: \?.* 
-              replace: '' 
-            - search: ([^\/.]+)\/index(|\.html)$ 
-              action: redirect
-              redirect: 
-                to: $1/
-            - search: \/google$
-              action: redirect
-              redirect: 
-                url: https://google.com 
-                status: 301
+catch_rules:
+  - rule: _
+    transform_rules:
+      - search: \#.*
+        searchin: url
+        replace: ''
 
-            - search: \/time$
-              action: script
-              script: 
-                name: gettime
-                skip: true
-            - search: \/timefunction$
-              action: script
-              script: 
-                function: ()=>{return {fetched:true,response:new Response(new Date().toString())}}
-                skip: true
-                
-            - search: \/([^\/.]+)$ 
-              action: redirect
-              redirect: 
-                to: /$1.html
-                status: 301
-            
-            - search: ([^\/.]+)\/$ 
-              replace: $1/index.html
-              
-              
-            
-            
-            - search: _ 
-              replace: docroot/clientworker@2.7.0/doc/docs/.vitepress/dist
+      - search: \?.*
+        replace: ''
 
+      - search: ([^\/.]+)\/index(|\.html)$
+        action: redirect
+        redirect:
+          to: $1/
 
-            - search: ^https\:\/\/docroot
-              replace:
-                - https://cdn.jsdelivr.net/npm
-                - https://cdn1.tianli0.top/npm
-                - https://jsd.onmicrosoft.cn/npm
-                - https://unpkg.onmicrosoft.cn
-                - https://unpkg.com
-                - https://npm.sourcegcdn.com
+      - search: \/google$
+        action: redirect
+        redirect:
+          url: https://google.com
+          status: 301
 
-              
-              
-              
-              
-              
-              
-              
-              
-              
+      - search: \/time$
+        action: script
+        script:
+          name: gettime
+          skip: true
 
-              
-              action: fetch
-              
-              fetch:
-                status: 200
-                engine: parallel
-                preflight: false
-                timeout: 5000
-                cache:
-                  expire: 1000*10
-                  delay: 3000
-              
-            - search: \.html$ 
-              header: 
-                content-type: text/html;charset=utf-8
-                ServerProvide: ClientWorker
+      - search: \/timefunction$
+        action: script
+        script:
+          function: ()=>{return {fetched:true,response:new Response(new Date().toString())}}
+          skip: true
 
-    - rule: ^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*)\.jpg$
-      transform_rules:
-        - search: image\/webp
-          searchin: header
-          searchkey: Accept
-          replace: .webp
-          replacein: url
-          replacekey: .jpg
-    - rule: ^https\:\/\/cdn\.jsdelivr\.net\/npm\/chenyfan\-happypic\@0\.0\.33\/1\.jpg$
-      transform_rules:
-        - search: _
-          action: fetch
-          fetch:
-            status: 200
-            engine: crazy
-            preflight: false
-            threads: 5
-            timeout: 30000
-            cache:
-              enable: true
-              expire: 1000*60
+      - search: \/([^\/.]+)$
+        action: redirect
+        redirect:
+          to: /$1.html
+          status: 301
+
+      - search: ([^\/.]+)\/$
+        replace: $1/index.html
+
+      - search: _
+        replace: docroot/clientworker@2.7.0/doc/docs/.vitepress/dist
+
+      - search: ^https\:\/\/docroot
+        replace:
+          - https://cdn.jsdelivr.net/npm
+          - https://cdn1.tianli0.top/npm
+          - https://jsd.onmicrosoft.cn/npm
+          - https://unpkg.onmicrosoft.cn
+          - https://unpkg.com
+          - https://npm.sourcegcdn.com
+        action: fetch
+        fetch:
+          status: 200
+          engine: parallel
+          preflight: false
+          timeout: 5000
+          cache:
+            expire: 1000*10
+            delay: 3000
+
+      - search: \.html$
+        header:
+          content-type: text/html;charset=utf-8
+          ServerProvide: ClientWorker
+
+  - rule: ^https\:\/\/npmm\/chenyfan\-os\@0\.0\.0\-r24\/(.*)\.jpg$
+    transform_rules:
+      - search: image\/webp
+        searchin: header
+        searchkey: Accept
+        replace: .webp
+        replacein: url
+        replacekey: .jpg
+
+  - rule: ^https\:\/\/cdn\.jsdelivr\.net\/npm\/chenyfan\-happypic\@0\.0\.33\/1\.jpg$
+    transform_rules:
+      - search: _
+        action: fetch
+        fetch:
+          status: 200
+          engine: crazy
+          preflight: false
+          threads: 5
+          timeout: 30000
+          cache:
+            enable: true
+            expire: 1000*60
 
 
 
 
 
-    - rule: ^https\:\/\/npmm\/
-      transform_rules:
-        - search: _
-          replace:
+  - rule: ^https\:\/\/npmm\/
+    transform_rules:
+      - search: _
+        replace:
           - https://npm.elemecdn.com/
           - https://cdn.jsdelivr.net/npm/
           - https://unpkg.com/
@@ -122,43 +110,43 @@ catch_rules:
           - https://jsd.onmicrosoft.cn/npm/
           - https://unpkg.onmicrosoft.cn/
           - https://npm.sourcegcdn.com/
-        - search: _
-          action: fetch
-          fetch:
-            status: 200
-            engine: parallel
-            preflight: false
-            timeout: 5000
-            cache:
-              enable: true
-              expire: 1000*60*60*24*7
-              delay: 150
-
-    - rule: ^https\:\/\/npmm\/jquery\@3\.6\.0\/package\.json$
-      transform_rules:
-        - search: jquery
-          searchin: body
-          searchflags: g 
-          replace: fakejquery
-          replacein: body
-          replaceflags: g
-        
-          
-    - rule: .*
-      transform_rules:
-        - search: .*
-          action: fetch
-          fetch:
+      - search: _
+        action: fetch
+        fetch:
+          status: 200
+          engine: parallel
+          preflight: false
+          timeout: 5000
+          cache:
             enable: true
-            engine: fetch
-            preflight: false
-        
-        - search: (^4|^5)
-          searchin: status
-          action: return
-          return: 
-            body: Error!
-            header:
-              content-type: text/plain;charset=utf-8
-              ServerProvide: ClientWorker
-            status: 503
+            expire: 1000*60*60*24*7
+            delay: 150
+
+  - rule: ^https\:\/\/npmm\/jquery\@3\.6\.0\/package\.json$
+    transform_rules:
+      - search: jquery
+        searchin: body
+        searchflags: g
+        replace: fakejquery
+        replacein: body
+        replaceflags: g
+
+
+  - rule: .*
+    transform_rules:
+      - search: .*
+        action: fetch
+        fetch:
+          enable: true
+          engine: fetch
+          preflight: false
+
+      - search: (^4|^5)
+        searchin: status
+        action: return
+        return:
+          body: Error!
+          header:
+            content-type: text/plain;charset=utf-8
+            ServerProvide: ClientWorker
+          status: 503
