@@ -272,7 +272,7 @@ self.clientworkerhandle = async (request) => {
 
     }
     if (!tFetched) {
-        if (new URL(tReq.url).host === domain) {
+        if (new URL(tReq.url).host !== domain) {
             tRes = await fetch(tReq)
         }
         if (EngineFetch) {
