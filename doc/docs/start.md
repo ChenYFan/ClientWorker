@@ -185,10 +185,12 @@ if (!!navigator.serviceWorker) {
     navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
         if (localStorage.getItem('cw_installed') !== 'true') {
                 setInterval(() => {
-                    fetch('/cw-cgi/api?type=config').then(res => res.json()).then(res => {
-                        localStorage.setItem('cw_installed', 'true');
-                        console.log('[CW] Installation is completed.Reloading...');
-                        location.reload()
+                    fetch('/cw-cgi/api?type=config').then(res => res.text()).then(res => {
+                        if(res === 'ok') {
+                            localStorage.setItem('cw_installed', 'true');
+                            console.log('[CW] Installation is completed.Reloading...');
+                            location.reload()
+                        }
                     }).catch(err => {
                         console.warn('[CW] Installation may not be complete, try again later.')
                     })
