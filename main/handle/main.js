@@ -20,7 +20,7 @@ self.clientworkerhandle = async (request) => {
 
     let tFetched = false
     let EngineFetch = false
-
+    let fetchConfig = {}
     let EngineFetchList = []
     let tRes = new Response()
     for (let catch_rule of config.catch_rules) {
@@ -117,7 +117,7 @@ self.clientworkerhandle = async (request) => {
                         if (tFetched) { cons.w(`${tReq.url} is already fetched,the fetch action are ignored`); break }
                         if (typeof transform_rule.fetch === 'undefined') { cons.e(`Fetch Config is not defined for ${tReq.url}`); break }
 
-                        let fetchConfig = {
+                        fetchConfig = {
                             status: transform_rule.fetch.status,
                             mode: transform_rule.fetch.mode,
                             credentials: transform_rule.fetch.credentials,
