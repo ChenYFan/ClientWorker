@@ -59,7 +59,8 @@ export default {
                     { text: '重定向 | redirect', link: '/rule/redirect' },
                     { text: '返回响应 | return', link: '/rule/return' },
                     { text: '重写标头 | header', link: '/rule/header' },
-                    { text: '发起请求 | fetch', link: '/rule/fetch' }
+                    { text: '发起请求 | fetch', link: '/rule/fetch' },
+                    { text: '自定义脚本 | script', link: '/rule/script' }
                 ]
             },
             {

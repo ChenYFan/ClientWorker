@@ -1,5 +1,10 @@
 # URL重写 `replace`
 
+```yaml
+- search: _ #搜索参数
+  replace: '' #替换参数
+```
+
 ## 在开始之前
 
 `ClientWorker`作为浏览器中间件，将会在`Request`发送到服务器之前对`url`进行转换。这种转换是存在于`ServiceWorker`层面，对于用户来说处于黑盒。url的重写在用户层面观察是不会发生变动的。

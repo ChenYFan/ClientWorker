@@ -145,7 +145,7 @@ self.clientworkerhandle = async (request) => {
                         }
 
                         tRes = await new Promise(async (res, rej) => {
-                            const EngineFetcher = async() => {
+                            const EngineFetcher = async () => {
                                 let cRes
                                 return new Promise(async (resolve, reject) => {
                                     if (!EngineFetch) {
@@ -216,12 +216,15 @@ self.clientworkerhandle = async (request) => {
                                         }
                                     })
                                 })
-                            }else{res(EngineFetcher())}
+                            } else { res(EngineFetcher()) }
                         })
                         tFetched = true
                         break
                     case 'redirect':
-                        if (typeof transform_rule.redirect === 'undefined') continue
+                        if (typeof transform_rule.redirect === 'undefined') {
+                            cons.e(`Redirect Config is not defined for ${tReq.url}`);
+                            break;
+                        }
                         if (typeof transform_rule.redirect.url === 'string') return Response.redirect(transform_rule.redirect.url, transform_rule.redirect.status || 301)
                         return Response.redirect(
                             tReq.url.replace(new RegExp(transform_rule.search), transform_rule.redirect.to),
@@ -233,6 +236,32 @@ self.clientworkerhandle = async (request) => {
                             status: transform_rule.return.status || 503,
                             headers: transform_rule.return.headers || {}
                         })
+                    case 'script':
+                        if (typeof transform_rule.script === 'undefined') {
+                            cons.e(`Script Config is not defined for ${tReq.url}`);
+                            break;
+                        }
+                        if (typeof transform_rule.script.function === 'string') {
+                            const ClientWorkerAnonymousFunctionName = `ClientWorker_AnonymousFunction_${new Date().getTime()}`
+                            self[ClientWorkerAnonymousFunctionName] = eval(transform_rule.script.function)
+                            transform_rule.script.name = ClientWorkerAnonymousFunctionName
+                        }
+                        const ScriptAns = await (Function('return (' + transform_rule.script.name + ')')())({
+                            fetched: tFetched,
+                            request: tReq,
+                            response: tRes
+                        })
+
+                        if (ScriptAns.fetched) {
+                            if (transform_rule.script.skip || false) {
+                                return ScriptAns.response
+                            }
+                            tFetched = true
+                            tRes = ScriptAns.response
+                        } else {
+                            tReq = ScriptAns.request
+                        }
+                        break;
                     default:
                         cons.w(`This Action:${transform_rule.action} is not supported yet`)
                         break
@@ -243,12 +272,19 @@ self.clientworkerhandle = async (request) => {
 
     }
     if (!tFetched) {
-        if (EngineFetch) {
-            tRes = await FetchEngine.classic(EngineFetchList, fetchConfig || { status: 200 })
-        } else {
+        if (new URL(tReq.url).host === domain) {
             tRes = await fetch(tReq)
         }
+        if (EngineFetch) {
+            tRes = await FetchEngine.parallel(EngineFetchList, fetchConfig || {})
+        } else {
+            tRes = await fetch(tReq.url, {
+                method: tReq.method.match(/^(GET|HEAD|POST)$/g) ? tReq.method : 'GET',
+                body: tReq.method.match(/^(POST)$/g) ? tReq.body : undefined
+            })
+        }
     }
+
     return tRes
 }
 export default {}

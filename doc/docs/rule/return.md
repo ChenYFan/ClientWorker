@@ -1,5 +1,13 @@
 # 返回响应 `return`
 
+```yaml
+- search: _
+  action: return
+  redirect: 
+    #返回参数
+```
+
+
 `return`可以直接返回一个响应，无视`fetch`状态，对接下来的规则也将不执行。
 
 ## `body`

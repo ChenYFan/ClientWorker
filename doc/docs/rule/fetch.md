@@ -1,5 +1,12 @@
 # 发起请求 `fetch`
 
+```yaml
+- search: _ 
+  action: fetch
+  fetch:
+    #fetch参数
+```
+
 `fetch`这一操作在ClientWorker中至关重要，它意味着：
 
 - 之后所有的修改都将作用于Response，而非Request。

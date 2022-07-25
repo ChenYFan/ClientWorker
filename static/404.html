@@ -238,7 +238,7 @@
                 location.reload();
             }, 3000);
         }, 5000);
-        navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
+        navigator.serviceWorker.register('/cwown.js?t=' + new Date().getTime()).then(async (registration) => {
             let trycount = 0;
             changeType('ring')
             const conf = () => {

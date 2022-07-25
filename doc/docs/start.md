@@ -31,11 +31,13 @@ ClientWorker能干什么？
 
 我们明确一下我们的目的，首先，我们要放置好ClientWorker原始代码；然后，我们要在用户需要安装cw的位置填入ClientWorker安装代码，将其安装到用户浏览器中；最后，我们要写入想要达到目的的配置，完成ClientWorker的接入。
 
-# Step 1 放置ClientWorker
+## Step 1 放置ClientWorker
 
 你有两种选择：`CDN接入`和`本地托管接入`，任选其一即可，推荐CDN接入。
 
-## CDN接入 - 一行代码的事儿
+### CDN接入 - 一行代码的事儿
+
+> 我们~~墙裂~~建议用此方式安装，这样你就可以很方便使用自定义函数控制cw的行为了。
 
 在你的网站**根目录**下新建一个名为`cw.js`的文件，里面写上：
 
@@ -55,14 +57,14 @@ importScripts('https://npm.sourcegcdn.com/clientworker@2.4.0/dist/cw.js') //请�
 
 > ClientWorker将会直接托管`fetch`事件，不过你可以在底下写其他事件监听，比如`message`等
 
-## 本地托管接入
+### 本地托管接入
 
 1. 进入[ClientWorker Github Release发布页](https://github.com/ChenYFan/ClientWorker/releases)，下载最新版本内容。
 
 2. 解压，将文件夹中`cw.js`拷出，放在网页服务器**根目录**下
 
 
-# Step 2 写入配置 - 最简单，也是最难的一步
+## Step 2 写入配置 - 最简单，也是最难的一步
 
 在**根目录**下新建一个`config.yaml`，填入配置。
 
@@ -90,13 +92,13 @@ catch_rules:
 ```
 
 
-# 配置安装代码 - 最后一步了，加油！
+## Step 3 配置安装代码 - 最后一步了，加油！
 
 你有三种方式接入： `三文件全域安装` 、 `自定义无刷新安装` 、 `自定义刷新安装`
 
 其中，`全域安装`最简单，对SEO支持也最恶劣（Google会提示额外的计算开销，而百度完全没办法爬取）。比较适用于自用的、只追求速度的。`自定义无刷新安装`则对你的HTML和JS水平有所要求，对于部分不遵守标准的浏览器兼容性较差，但是这种方法对SEO没有影响，比较适合于对seo注重的网站。`自定义刷新安装`对seo略有影响，会在载入后阻断未经CW的请求并刷新一次，以便于CW及时托管，比较适合于网站提速
 
-## 三文件全域安装
+### 三文件全域安装
 
 一般来讲PlanA只要在网站目录下存放三个文件即可，其余文件可以不存；**必须要求第一次必须命中404.html，不得存在`index.html`**
 
@@ -108,7 +110,7 @@ catch_rules:
 
 4. 接下来，修改`config.yaml`配置，你可以阅读这篇文档，自己填写配置，也可以在[社区的Awesome Exapmle](https://github.com/ChenYFan/ClientWorker/discussions/categories/awesome-example)寻找你感兴趣的配置。如果你有好的配置，我们也乐于见到你将你的配置分享到社区。
 
-## 自定义无刷新安装
+### 自定义无刷新安装
 
 > 这种方式有一个重载的动作，即在无刷新的情况下将当前页面重新获取并填充。这可能会出现意外的兼容性错误，请慎行。
 > 如果你不需要重载，请将下方重载标识框内的代码删除。不重载的后果就是用户首屏的大部分请求无法被CW拦截。如果你希望用户首屏进入就被托管，请使用`自定义刷新安装`
@@ -166,7 +168,7 @@ if (!!navigator.serviceWorker) {
 
 2. 接下来，修改`config.yaml`配置，你可以阅读这篇文档，自己填写配置，也可以在[社区的Awesome Exapmle](https://github.com/ChenYFan/ClientWorker/discussions/categories/awesome-example)寻找你感兴趣的配置。如果你有好的配置，我们也乐于见到你将你的配置分享到社区。
 
-## 自定义刷新安装
+### 自定义刷新安装
 
 `window.stop()`将会阻断当前所有的请求，在安装结束后`window.reload()`将刷新并激活页面，确保除了首屏的`html`之外，其余的请求均被cw捕获。
 
@@ -179,10 +181,11 @@ if (!!navigator.serviceWorker) {
 ```html
 <script>
 if (!!navigator.serviceWorker) {
+    if (localStorage.getItem('cw_installed') !== 'true') {window.stop();}
     navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
         if (localStorage.getItem('cw_installed') !== 'true') {
                 setInterval(() => {
-                    fetch('/cw-cgi/info').then(res => res.json()).then(res => {
+                    fetch('/cw-cgi/api?type=config').then(res => res.json()).then(res => {
                         localStorage.setItem('cw_installed', 'true');
                         console.log('[CW] Installation is completed.Reloading...');
                         location.reload()

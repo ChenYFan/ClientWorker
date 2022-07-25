@@ -3,7 +3,7 @@ const rebuild = {
     request:(req, init) => {
         req = req.clone()
         if (req.mode === 'navigate') {
-            cons.e(`You can't rebuild a POST method with body when it is a navigate request.ClientWorker will ignore it's body`)
+            cons.w(`You can't rebuild a POST method with body when it is a navigate request.ClientWorker will ignore it's body`)
         }
         let nReq = new Request(req, {
             headers: rebuildheaders(req, init.headers),
@@ -25,7 +25,6 @@ const rebuild = {
             status: init.status || res.status,
             statusText: init.statusText || res.statusText
         })
-        if (!!init.url) nRes = new Response(init.url, nRes)
         return nRes
     }
 }
