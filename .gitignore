@@ -1,4 +1,12 @@
 node_modules
-package-lock.json
 doc/node_modules
 dist/
+
+# lock file
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE
+/.vscode/
+/.idea/
