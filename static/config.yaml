@@ -46,7 +46,7 @@ catch_rules:
             
             
             - search: _ 
-              replace: docroot/clientworker@2.7.0/doc/docs/.vitepress/dist
+              replace: docroot/clientworker@2.8.0/doc/docs/.vitepress/dist
 
 
             - search: ^https\:\/\/docroot

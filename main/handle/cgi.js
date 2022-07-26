@@ -31,7 +31,7 @@ const router_cgi = async (request) => {
 
             switch (q('type')) {
                 case 'config':
-                    return fetch('/config.yaml')
+                    return fetch(q('url') || '/config.yaml')
                         .then(res => res.text())
                         .then(text => yaml.load(text))
                         .then(async config => {
