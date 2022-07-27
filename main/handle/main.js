@@ -113,6 +113,8 @@ self.clientworkerhandle = async (request) => {
 
             if (typeof transform_rule.action !== 'undefined') {
                 switch (transform_rule.action) {
+                    case 'skip':
+                        return fetch(request)
                     case 'fetch':
                         if (tFetched) { cons.w(`${tReq.url} is already fetched,the fetch action are ignored`); break }
                         if (typeof transform_rule.fetch === 'undefined') { cons.e(`Fetch Config is not defined for ${tReq.url}`); break }
