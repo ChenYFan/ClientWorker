@@ -1,0 +1,287 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/ClientWorker",
+  "definitions": {
+    "ClientWorker": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "hotpatch": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "qt-uri-protocols": [
+              "https"
+            ],
+            "qt-uri-extensions": [
+              ".js"
+            ]
+          }
+        },
+        "hotconfig": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "qt-uri-protocols": [
+              "https"
+            ],
+            "qt-uri-extensions": [
+              ".yaml"
+            ]
+          }
+        },
+        "cleaninterval": {
+          "type": "string"
+        },
+        "catch_rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CatchRule"
+          }
+        }
+      },
+      "required": [
+        "catch_rules",
+        "name"
+      ],
+      "title": "Clientworker"
+    },
+    "CatchRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "transform_rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransformRule"
+          }
+        }
+      },
+      "required": [
+        "rule",
+        "transform_rules"
+      ],
+      "title": "CatchRule"
+    },
+    "TransformRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "search": {
+          "type": "string"
+        },
+        "searchin": {
+          "type": "string"
+        },
+        "replace": {
+          "$ref": "#/definitions/Replace"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "redirect",
+            "return",
+            "fetch",
+            "script"
+          ]
+        },
+        "redirect": {
+          "$ref": "#/definitions/Redirect"
+        },
+        "script": {
+          "$ref": "#/definitions/Script"
+        },
+        "fetch": {
+          "$ref": "#/definitions/Fetch"
+        },
+        "header": {
+          "$ref": "#/definitions/Header"
+        },
+        "searchkey": {
+          "type": "string"
+        },
+        "replacein": {
+          "type": "string"
+        },
+        "replacekey": {
+          "type": "string"
+        },
+        "searchflags": {
+          "type": "string"
+        },
+        "replaceflags": {
+          "type": "string"
+        },
+        "return": {
+          "$ref": "#/definitions/Return"
+        }
+      },
+      "required": [
+        "search"
+      ],
+      "title": "TransformRule"
+    },
+    "Fetch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "integer"
+        },
+        "engine": {
+          "type": "string",
+          "enum": [
+            "fetch",
+            "Crazy",
+            "Classic",
+            "Parallel",
+            "KFCThursdayVW50"
+          ]
+        },
+        "preflight": {
+          "type": "boolean"
+        },
+        "timeout": {
+          "type": "integer"
+        },
+        "cache": {
+          "$ref": "#/definitions/Cache"
+        },
+        "threads": {
+          "type": "integer"
+        },
+        "enable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "engine",
+        "preflight"
+      ],
+      "title": "Fetch"
+    },
+    "Cache": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "expire": {
+          "type": "string"
+        },
+        "delay": {
+          "type": "integer"
+        },
+        "enable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expire"
+      ],
+      "title": "Cache"
+    },
+    "Header": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "content-type": {
+          "type": "string"
+        },
+        "ServerProvide": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ServerProvide",
+        "content-type"
+      ],
+      "title": "Header"
+    },
+    "Redirect": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "qt-uri-protocols": [
+            "https"
+          ]
+        },
+        "status": {
+          "type": "integer"
+        }
+      },
+      "required": [],
+      "title": "Redirect"
+    },
+    "Return": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "header": {
+          "$ref": "#/definitions/Header"
+        },
+        "status": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "body",
+        "header",
+        "status"
+      ],
+      "title": "Return"
+    },
+    "Script": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "skip": {
+          "type": "boolean"
+        },
+        "function": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "skip"
+      ],
+      "title": "Script"
+    },
+    "Replace": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri",
+            "qt-uri-protocols": [
+              "https"
+            ]
+          }
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "title": "Replace"
+    }
+  }
+}
