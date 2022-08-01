@@ -60,6 +60,7 @@ export default {
                     { text: '返回响应 | return', link: '/rule/return' },
                     { text: '重写标头 | header', link: '/rule/header' },
                     { text: '发起请求 | fetch', link: '/rule/fetch' },
+                    { text: '跳过处理 | skip', link: '/rule/skip' },
                     { text: '自定义脚本 | script', link: '/rule/script' }
                 ]
             },
