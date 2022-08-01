@@ -57,20 +57,7 @@ catch_rules:
                 - https://unpkg.onmicrosoft.cn
                 - https://unpkg.com
                 - https://npm.sourcegcdn.com
-
-              
-              
-              
-              
-              
-              
-              
-              
-              
-
-              
               action: fetch
-              
               fetch:
                 status: 200
                 engine: parallel

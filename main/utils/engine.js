@@ -59,7 +59,7 @@ const FetchEngine = {
         })
         const PreHeaders = PreFetch.headers
         const AllSize = PreHeaders.get('Content-Length')
-        if (!PreFetch.status.match(config.status)) {
+        if (PreFetch.status.toString().match(config.status)) {
             return (new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine Crazy', { status: 504, statusText: '504 All Gateways Timeout' }))
         }
         controller.abort();
@@ -149,7 +149,7 @@ const FetchEngine = {
 
         const PreHeaders = PreFetch.headers
         const AllSize = PreHeaders.get('Content-Length')
-        if (!PreFetch.status.match(config.status)) {
+        if (PreFetch.status.toString().match(config.status)) {
             reject(new Response('504 All GateWays Failed,ClientWorker Show This Page,Engine KFCThursdayVW50', { status: 504, statusText: '504 All Gateways Timeout' }))
         }
         controller.abort();
@@ -247,7 +247,7 @@ const FetchEngine = {
                 })
                     .then(PauseProgress)
                     .then(res => {
-                        if (!res.status.match(config.status)) {
+                        if (res.status.toString().match(config.status)) {
                             controller.abort();
                             resolve(res)
                         }
@@ -296,7 +296,7 @@ const FetchEngine = {
                     credentials: config.credential,
                     redirect: config.redirect || "follow"
                 }).then(res => {
-                    if (!res.status.match(config.status)) {
+                    if (res.status.toString().match(config.status)) {
                         tagged = true;
                         eventTarget.dispatchEvent(abortEvent)
                         resolve(rebuild.response(res,{}))
