@@ -5,6 +5,9 @@
 在ClientWorker中，规则被分为`catch_rules`和`transform_rules`。
 `catch_rules`是匹配规则，只能匹配路由。
 `transform_rules`只会在`catch_rules`起作用时才会捕获，可以捕获`url` `statusText` `statusCode`，未来将支持`header` 和 `body`.
+
+如果[action为skip](/rule/skip)，或者没有任何规则执行[fetch action](/rule/fetch)，则会跳过对此请求的所有修改，即透传（在用户看来是不经过ClientWorker的）。
+
 # `catch_rules` 
 ## `rule`
 

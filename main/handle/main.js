@@ -274,17 +274,8 @@ self.clientworkerhandle = async (request) => {
 
     }
     if (!tFetched) {
-        if (new URL(tReq.url).host !== domain) {
-            tRes = await fetch(tReq)
-        }
-        if (EngineFetch) {
-            tRes = await FetchEngine.parallel(EngineFetchList, fetchConfig || {})
-        } else {
-            tRes = await fetch(tReq.url, {
-                method: tReq.method.match(/^(GET|HEAD|POST)$/g) ? tReq.method : 'GET',
-                body: tReq.method.match(/^(POST)$/g) ? tReq.body : undefined
-            })
-        }
+        //3.0.0 默认改为skip
+        return fetch(request)
     }
 
     return tRes

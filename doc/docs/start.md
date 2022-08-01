@@ -42,20 +42,29 @@ ClientWorker能干什么？
 在你的网站**根目录**下新建一个名为`cw.js`的文件，里面写上：
 
 ```js
-importScripts('https://cdn.jsdelivr.net/npm/clientworker')
+importScripts('https://lib.baomitu.com/clientworker/latest/dist/cw.js')
 ```
 
-> 我们非常、非常强烈建议在引入脚本时要指定clientworker的版本，最新版本可以到[Release](https://github.com/ChenYFan/ClientWorker/releases)查看，然后引入代码改为：
+> 我们非常、非常强烈建议在引入脚本时要指定clientworker的版本(而不是latest)，最新版本可以到[Release](https://github.com/ChenYFan/ClientWorker/releases)查看，然后引入代码改为：
+>
 > ```js
-> importScripts('https://cdn.jsdelivr.net/npm/clientworker@xxx.xxx.xxx') //xxx.xxx.xxx为最新版本号，如0.0.1
+> importScripts('https://lib.baomitu.com/clientworker/2.8.1/dist/cw.js') //请及时替换2.8.1为最新版本号
 > ```
 
-如果在国内，你可以使用SourceG提供的npm镜像引入：
+如果在国外，你可以使用CloudFlare提供的CDNJS镜像接入：
+
 ```js
-importScripts('https://npm.sourcegcdn.com/clientworker@2.4.0/dist/cw.js') //请及时替换2.4.0为最新版本号
+importScripts('https://cdnjs.cloudflare.com/ajax/libs/clientworker/2.8.1/dist/cw.js') //请及时替换2.4.0为最新版本号
 ```
 
-> ClientWorker将会直接托管`fetch`事件，不过你可以在底下写其他事件监听，比如`message`等
+你也可以使用其他cdnjs镜像。
+
+> 如果有必要，你也可以用npm镜像或者github镜像接入，比如：
+> ```js
+> importScripts('https://cdnjsdelivr.net/npm/clientworker@latest') //最好指定版本
+> importScripts('https://cdn.jsdelivr.net/gh/chenyfan/clientworker@gh-pages/cw.js') ////最好指定版本
+
+> ClientWorker将会直接托管`fetch`事件，不过你可以在底下写其他事件监听，比如`message`等。同时你可以书写其他自定义函数，在配置中引入。
 
 ### 本地托管接入
 

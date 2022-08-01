@@ -14,7 +14,9 @@
 - 这意味着`header`将修改于Request
 - 这意味着对于url路由的修改将失效，之后对于路由可以再捕获，但`replace`无效
 
-ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将会自动执行`fetch`，单线程为`fetch`引擎，多线程为`classic`
+**在3.0.0及之后版本后**，ClientWorker遍历完所有规则后如果发现没有任何`fetch`操作，将会视为[skip](/rule/skip)，跳过所有的路由修改。
+
+
 
 > 动态网站如果对多个服务器并发，需要做好防重放准备
 
