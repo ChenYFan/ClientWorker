@@ -61,7 +61,7 @@ importScripts('https://cdnjs.cloudflare.com/ajax/libs/clientworker/2.8.1/dist/cw
 
 > 如果有必要，你也可以用npm镜像或者github镜像接入，比如：
 > ```js
-> importScripts('https://cdnjsdelivr.net/npm/clientworker@latest') //最好指定版本
+> importScripts('https://cdn.jsdelivr.net/npm/clientworker@latest') //最好指定版本
 > importScripts('https://cdn.jsdelivr.net/gh/chenyfan/clientworker@gh-pages/cw.js') ////最好指定版本
 
 > ClientWorker将会直接托管`fetch`事件，不过你可以在底下写其他事件监听，比如`message`等。同时你可以书写其他自定义函数，在配置中引入。
