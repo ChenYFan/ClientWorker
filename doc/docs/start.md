@@ -193,17 +193,28 @@ if (!!navigator.serviceWorker) {
     if (localStorage.getItem('cw_installed') !== 'true') {window.stop();}
     navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
         if (localStorage.getItem('cw_installed') !== 'true') {
-                setInterval(() => {
-                    fetch('/cw-cgi/api?type=config').then(res => res.text()).then(res => {
-                        if(res === 'ok') {
+            const conf = () => {
+                console.log('[CW] Installing Success,Configuring...');
+                fetch('/cw-cgi/api?type=config')
+                    .then(res => res.text())
+                    .then(text => {
+                        if (text === 'ok') {
+                            console.log('[CW] Installing Success,Configuring Success,Starting...');
                             localStorage.setItem('cw_installed', 'true');
-                            console.log('[CW] Installation is completed.Reloading...');
-                            location.reload()
+                            window.location.reload();
+                        } else {
+                            console.warn('[CW] Installing Success,Configuring Failed,Sleeping 200ms...');
+                            setTimeout(() => {
+                                conf()
+                            }, 200);
                         }
                     }).catch(err => {
-                        console.warn('[CW] Installation may not be complete, try again later.')
-                    })
-                }, 100);
+                        console.log('[CW] Installing Success,Configuring Error,Exiting...');
+                    });
+            }
+            setTimeout(() => {
+                conf()
+            }, 50);
         }
     }).catch(err => {
         console.error('[CW] Installing Failed,Error: ' + err.message);
