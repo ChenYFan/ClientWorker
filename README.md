@@ -1,6 +1,3 @@
-
-<img align='right' src='https://i.imgur.com/bEVN4Qm.png' width="480px">
-
 # ClientWorker
 
 文档地址：[ClientWorker](https://clientworker.js.org)
