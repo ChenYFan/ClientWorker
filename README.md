@@ -1,8 +1,6 @@
-<p align="center">
-<img src="https://unpkg.com/chenyfan-os@0.0.0-r22/ClientWorker.png" alt="ClientWorker" width="20%"></img>
-</p>
 
-![](https://anya.215213344.xyz/?repo=ChenYFan/ClientWorker&cache=1) ![](https://anya.215213344.xyz/?text=%E8%87%AA%E5%B8%A6%E6%B7%B7%E6%B7%86%E5%99%A8%EF%BC%9A%E5%85%B3) [![](https://anya.215213344.xyz/?text=KFC%20V%E6%88%9150%EF%BC%9A%E5%BC%80&img=https://i.imgur.com/rrIHcGx.png&bgcolor1=a3080c&bgcolor2=a3080cc7)](https://donate.cyfan.top) ![](https://anya.215213344.xyz/?text=GPL%E5%BC%80%E6%BA%90)
+<img align='right' src='https://i.imgur.com/bEVN4Qm.png' width="480px">
+
 # ClientWorker
 
 文档地址：[ClientWorker](https://clientworker.js.org)
