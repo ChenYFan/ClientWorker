@@ -25,7 +25,7 @@ jobs:
         run: pnpm install --prefer-offline
 
       - name: Install & Build
-        run: >
+        run: |
           pnpm run build
           echo "clientworker.js.org" > ./dist/CNAME
           pnpm docs:build
