@@ -9,22 +9,27 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 7.16.1
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: "18"
           cache: "pnpm"
+
       - name: Install dependencies
         run: pnpm install --prefer-offline
+
       - name: Install & Build
         run: >
           pnpm run build
           echo "clientworker.js.org" > ./dist/CNAME
           pnpm docs:build
+
       - name: Deploy to GithubPage
         uses: peaceiris/actions-gh-pages@v3
         with:
