@@ -4,7 +4,8 @@
   "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
   "main": "./dist/cw.js",
   "scripts": {
-    "build": "rimraf dist && node --loader esbuild-register/loader -r esbuild-register build.ts "
+    "build": "rimraf dist && node --loader esbuild-register/loader -r esbuild-register build.ts",
+    "docs:build": "pnpm --filter clientworker-doc docs:build"
   },
   "type": "module",
   "repository": {
@@ -23,9 +24,7 @@
   "homepage": "https://github.com/ChenYFan/ClientWorker#readme",
   "dependencies": {
     "@chenyfan/cache-db": "^0.0.4",
-    "js-yaml": "^4.1.0",
-    "vitepress": "^1.0.0-alpha.4",
-    "vue": "^3.2.37"
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.5",
@@ -35,9 +34,6 @@
     "json-schema-to-ts": "^2.6.0",
     "rimraf": "^3.0.2",
     "terser-webpack-plugin": "^5.3.3",
-    "typescript": "^4.9.3",
-    "webpack": "^5.75.0",
-    "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^5.0.0"
+    "typescript": "^4.9.3"
   }
 }
