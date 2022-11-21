@@ -107,7 +107,7 @@ export const configSchema = {
           $ref: "#/definitions/Return",
         },
       },
-      required: ["search", "fetch", "return"],
+      required: ["search"],
       title: "TransformRule",
     },
     Fetch: {

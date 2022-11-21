@@ -293,7 +293,7 @@ const clientworkerhandle = async (request: Request) => {
                 let cRes: Response;
                 return new Promise(async (resolve, reject) => {
                   if (!EngineFetch) {
-                    switch (transform_rule.fetch.engine || "fetch") {
+                    switch (transform_rule.fetch?.engine || "fetch") {
                       case "fetch":
                         cRes = await FetchEngine.fetch(tReq, fetchConfig!);
                         break;
@@ -302,12 +302,12 @@ const clientworkerhandle = async (request: Request) => {
                         break;
                       default:
                         cons.e(
-                          `${tReq.url} the ${transform_rule.fetch.engine} engine are not supported`
+                          `${tReq.url} the ${transform_rule.fetch?.engine} engine are not supported`
                         );
                         break;
                     }
                   } else {
-                    switch (transform_rule.fetch.engine || "parallel") {
+                    switch (transform_rule.fetch?.engine || "parallel") {
                       case "classic":
                         cRes = await FetchEngine.classic(
                           EngineFetchList,
@@ -332,14 +332,14 @@ const clientworkerhandle = async (request: Request) => {
                         break;
                       default:
                         cons.e(
-                          `Fetch Engine ${transform_rule.fetch.engine} is not supported`
+                          `Fetch Engine ${transform_rule.fetch?.engine} is not supported`
                         );
                         break;
                     }
                   }
                   if (
-                    typeof transform_rule.fetch.cache === "object" &&
-                    cRes.status === (transform_rule.fetch.status || 200)
+                    typeof transform_rule.fetch?.cache === "object" &&
+                    cRes.status === (transform_rule.fetch?.status || 200)
                   ) {
                     cRes = rebuild.response(cRes, {
                       headers: {
@@ -359,7 +359,7 @@ const clientworkerhandle = async (request: Request) => {
                   }
                 });
               };
-              if (typeof transform_rule.fetch.cache === "object") {
+              if (typeof transform_rule.fetch?.cache === "object") {
                 caches.open("ClientWorker_ResponseCache").then((cache) => {
                   cache.match(tReq).then((cRes) => {
                     if (!!cRes) {
@@ -382,7 +382,7 @@ const clientworkerhandle = async (request: Request) => {
                                 );
                                 resolve(cRes);
                                 return;
-                              }, transform_rule.fetch.cache?.delay || 3000);
+                              }, transform_rule.fetch?.cache?.delay || 3000);
                             }),
                           ])
                         );

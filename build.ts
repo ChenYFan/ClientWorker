@@ -4,6 +4,10 @@ import { writeFile } from "fs/promises";
 import { configSchema } from "./types/configType";
 
 (async () => {
+  await writeFile(
+    "static/config.schema.json",
+    JSON.stringify(configSchema, null, 2)
+  );
   await build({
     entryPoints: ["./main/entry.js"],
     entryNames: "[dir]/cw",
@@ -14,10 +18,6 @@ import { configSchema } from "./types/configType";
     target: ["es2015"],
     plugins: [copyStaticFiles({ src: "static", dest: "dist" })],
   });
-  await writeFile(
-    "dist/config.schema.json",
-    JSON.stringify(configSchema, null, 2)
-  );
 })();
 
 export {};
