@@ -25,11 +25,7 @@ const clientworkerhandle = async (request: Request) => {
   let tFetched = false;
   let EngineFetch = false;
   let fetchConfig:
-    | (ConfigType["catch_rules"][number]["transform_rules"][number]["fetch"] & {
-        mode: RequestMode | undefined;
-        credentials: RequestCredentials | undefined;
-        redirect: RequestRedirect | undefined;
-      })
+    | ConfigType["catch_rules"][number]["transform_rules"][number]["fetch"]
     | undefined = undefined;
   let EngineFetchList: Request[] = [];
   let tRes = new Response();

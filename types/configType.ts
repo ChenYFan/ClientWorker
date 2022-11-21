@@ -124,10 +124,16 @@ export const configSchema = {
         preflight: {
           type: "boolean",
         },
-        credentials: { type: "string" },
+        credentials: {
+          type: "string",
+          enum: ["same-origin", "include", "omit"],
+        },
         trylimit: { type: "number" },
-        redirect: { type: "string" },
-        mode: { type: "string" },
+        redirect: { type: "string", enum: ["error", "follow", "manual"] },
+        mode: {
+          type: "string",
+          enum: ["same-origin", "cors", "navigate", "no-cors"],
+        },
         timeout: {
           type: "integer",
         },
