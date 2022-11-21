@@ -1,5 +1,5 @@
-import cons from "./cons.js";
-import rebuild from "./rebuild.js";
+import cons from "./cons";
+import rebuild from "./rebuild";
 
 if (!Promise.any) {
   Promise.any = function (promises: Promise<unknown>[]) {

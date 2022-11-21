@@ -1,7 +1,7 @@
-import clientworkerhandle from "./handle/main.js";
-import pkgjson from "../package.json";
-import cons from "./utils/cons.js";
 import CacheDB from "@chenyfan/cache-db";
+import pkgjson from "../package.json";
+import clientworkerhandle from "./handle/main";
+import cons from "./utils/cons";
 
 // For compatibility
 

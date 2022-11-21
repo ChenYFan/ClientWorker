@@ -1,4 +1,4 @@
-import cons from "./cons.js";
+import cons from "./cons";
 
 const rebuild = {
   request: (req: Request, init: Partial<RequestInit & { url: string }>) => {

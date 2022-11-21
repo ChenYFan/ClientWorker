@@ -1,9 +1,9 @@
 import CacheDB from "@chenyfan/cache-db";
-import FetchEngine, { FetchEngineConfig } from "../utils/engine.js";
-import rebuild from "../utils/rebuild.js";
-import cons from "../utils/cons.js";
-import router_cgi from "./cgi.js";
-import { ConfigType } from "../../types/configType.js";
+import { ConfigType } from "../../types/configType";
+import cons from "../utils/cons";
+import FetchEngine from "../utils/engine";
+import rebuild from "../utils/rebuild";
+import router_cgi from "./cgi";
 
 const clientworkerhandle = async (request: Request) => {
   //当前域 new Request('').url
