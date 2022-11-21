@@ -1,7 +1,11 @@
-import {} from "./handle/main.js";
+import clientworkerhandle from "./handle/main.js";
 import pkgjson from "../package.json";
 import cons from "./utils/cons.js";
 import CacheDB from "@chenyfan/cache-db";
+
+// For compatibility
+
+self.clientworkerhandle = clientworkerhandle;
 
 cons.s(`ClientWorker${pkgjson.version} Started!`);
 const db = new CacheDB();

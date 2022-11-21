@@ -2,6 +2,7 @@ import yaml from "js-yaml";
 import CacheDB from "@chenyfan/cache-db";
 import FetchEngine from "../utils/engine.js";
 import pkgjson from "../../package.json";
+import { ConfigType } from "../../types/configType.js";
 
 const router_cgi = async (request: Request) => {
   const db = new CacheDB();
@@ -11,7 +12,7 @@ const router_cgi = async (request: Request) => {
   const q = (s: string) => {
     return urlObj.searchParams.get(s);
   };
-  let config;
+  let config: ConfigType;
   switch (pathname.split("/")[2]) {
     case "hello":
       return new Response("Hello ClientWorker!");
@@ -67,7 +68,10 @@ const router_cgi = async (request: Request) => {
           if (typeof config.hotpatch !== "object")
             return new Response("Error, config.hotpatch not found");
           const hotpatch = config.hotpatch;
-          await FetchEngine.parallel(hotpatch)
+          await FetchEngine.parallel(
+            hotpatch.map((hpc) => new Request(hpc)),
+            {}
+          )
             .then((t) => t.text())
             .then(async (script) => {
               await db.write("hotpatch", script, { type: "text" });
@@ -79,7 +83,10 @@ const router_cgi = async (request: Request) => {
           if (typeof config.hotconfig !== "object")
             return new Response("Error, config.hotconfig not found");
           const hotconfig = config.hotconfig;
-          const nConfig = await FetchEngine.parallel(hotconfig)
+          const nConfig = await FetchEngine.parallel(
+            hotconfig.map((cfg) => new Request(cfg)),
+            {}
+          )
             .then((t) => t.text())
             .then((t) => yaml.load(t))
             .then((t) => JSON.stringify(t))

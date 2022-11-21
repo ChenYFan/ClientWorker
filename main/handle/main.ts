@@ -5,7 +5,7 @@ import cons from "../utils/cons.js";
 import router_cgi from "./cgi.js";
 import { ConfigType } from "../../types/configType.js";
 
-self.clientworkerhandle = async (request) => {
+const clientworkerhandle = async (request: Request) => {
   //当前域 new Request('').url
   const domain = new URL(new Request("").url).host;
   const db = new CacheDB();
@@ -478,4 +478,4 @@ self.clientworkerhandle = async (request) => {
 
   return tRes;
 };
-export default {};
+export default clientworkerhandle;

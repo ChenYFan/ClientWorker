@@ -45,7 +45,7 @@ catch_rules:
       - search: _
         replace: docroot/clientworker@3.0.0-beta-4/doc/docs/.vitepress/dist
 
-      - search: ^https\:\/\/docroot
+      - search: ^https?\:\/\/docroot
         replace:
           - https://cdn.jsdelivr.net/npm
           - https://cdn1.tianli0.top/npm
