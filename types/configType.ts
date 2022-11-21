@@ -182,18 +182,23 @@ export const configSchema = {
       title: "Header",
     },
     Redirect: {
+      description:
+        "你要找的是在外部观察 url 不跳转的 URL 重写吗？redirect 可以直接返回一个跳转，无视 fetch 状态，对接下来的规则也将不执行。",
       type: "object",
       additionalProperties: false,
       properties: {
         to: {
+          description: "表示重定向的替换规则",
           type: "string",
         },
         url: {
+          description: "表示重定向的目标url",
           type: "string",
           format: "uri",
           "qt-uri-protocols": ["https"],
         },
         status: {
+          description: "你可以选择 301/302，不过这其实没有太大用处。",
           type: "integer",
         },
       },

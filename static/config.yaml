@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=./config.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.schema.json
 name: ClientWorker Docs Config
 hotpatch:
   - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
