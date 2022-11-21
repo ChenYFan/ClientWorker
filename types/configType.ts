@@ -1,6 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 
-const configSchema = {
+export const configSchema = {
   $schema: "http://json-schema.org/draft-06/schema#",
   $ref: "#/definitions/ClientWorker",
   definitions: {

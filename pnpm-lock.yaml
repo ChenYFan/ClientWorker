@@ -6,6 +6,7 @@ importers:
     specifiers:
       '@chenyfan/cache-db': ^0.0.4
       '@types/js-yaml': ^4.0.5
+      '@types/node': ^18.11.9
       esbuild: ^0.15.14
       esbuild-copy-static-files: ^0.1.0
       esbuild-register: ^3.4.1
@@ -19,6 +20,7 @@ importers:
       js-yaml: 4.1.0
     devDependencies:
       '@types/js-yaml': 4.0.5
+      '@types/node': 18.11.9
       esbuild: 0.15.14
       esbuild-copy-static-files: 0.1.0
       esbuild-register: 3.4.1_esbuild@0.15.14
