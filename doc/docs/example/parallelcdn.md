@@ -18,7 +18,7 @@ NPM的镜像相对较少，如果有更多的推荐可以点击右上角Github�
         - https://npm.elemecdn.com #2022/7/12 确认关闭回源，缓存有效
         - https://code.bdstatic.com/npm #确认关闭回源，缓存有效
         - https://npm.sourcegcdn.com #滥用封仓库，强制数字版本号
-        - https://cdn.bilicdn.tk/npm # 由GamerNoTitle提供的反代，滥用封仓库
+        - https://cdn.bilicdn.tk/npm # https://bilicdn.tk
 ```
 
 作者也知道其它私人性质的公益cdn，但为了避免纠纷，非公开公益性质的cdn暂不收录。如果需要提交私人性质cdn，请征询cdn主人许可。
