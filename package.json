@@ -1,17 +1,23 @@
 {
 	"name": "pkg-name",
-	"version": "0.0.0",
+	"version": "4.0.0",
 	"packageManager": "pnpm@8.15.4",
-	"author": "Ray <i@mk1.io> (@so1ve)",
-	"description": "",
-	"keywords": [],
-	"homepage": "https://github.com/so1ve/pkg-name#readme",
+	"author": "ChenYFan",
+	"contributors": [
+		"Ray <i@mk1.io> (@so1ve)"
+	],
+	"description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker.",
+	"keywords": [
+		"ClientWorker",
+		"ServiceWorker"
+	],
+	"homepage": "https://github.com/ChenYFan/ClientWorker#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/so1ve/pkg-name.git"
+		"url": "git+https://github.com/ChenYFan/ClientWorker.git"
 	},
 	"bugs": {
-		"url": "https://github.com/so1ve/pkg-name/issues"
+		"url": "https://github.com/ChenYFan/ClientWorker/issues"
 	},
 	"license": "MIT",
 	"sideEffects": false,
