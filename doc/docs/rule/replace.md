@@ -2,7 +2,7 @@
 
 ```yaml
 - search: _ #搜索参数
-  replace: '' #替换参数
+  replace: "" #替换参数
 ```
 
 ## 在开始之前
@@ -17,7 +17,7 @@
 
 ```yaml
 - search: \?.*
-  replace: ''
+  replace: ""
 ```
 
 - `https://example.com` 无匹配
@@ -40,7 +40,7 @@
 
 ```yaml
 - search: ^https:\/\/(cdn|fastly|test1|gcore)\.jsdelivr\.net\/npm\/
-  replace: 
+  replace:
     - https://npm.elemecdn.com/
     - https://unpkg.com/
     - https://unpkg.zhimg.com/
@@ -52,8 +52,6 @@
 `replace`只会将`url`重写，对于其它内容将不会修改。
 
 > 需要注意的是，如果你已经将url重写为并发，那么接下来重写功能将失效；如果上述规则已经`fetch`过，那么`tReq`将会转化为`tRes`，之后重写功能也会失效。但是重写依旧会对原url（尽管不在用于请求）造成影响，可能会被接下来的规则捕捉。
-
-
 
 # 参数
 

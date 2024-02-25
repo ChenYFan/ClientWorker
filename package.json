@@ -1,34 +1,67 @@
 {
-  "name": "clientworker",
-  "version": "3.0.0-beta-4",
-  "description": "A simple, globally hijacked, easily customizable, Service Worker-based front-end worker",
-  "main": "./dist/cw.js",
-  "scripts": {
-    "build": "webpack ./main/entry.js -c ./cw.config.js && cp -r static/* dist "
-  },
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ChenYFan/ClientWorker.git"
-  },
-  "keywords": [
-    "ServiceWorker",
-    "ClientWorker"
-  ],
-  "author": "ChenYFan",
-  "license": "GPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/ChenYFan/ClientWorker/issues"
-  },
-  "homepage": "https://github.com/ChenYFan/ClientWorker#readme",
-  "dependencies": {
-    "@chenyfan/cache-db": "^0.0.4",
-    "js-yaml": "^4.1.0",
-    "vitepress": "^1.0.0-alpha.4",
-    "vue": "^3.2.37"
-  },
-  "devDependencies": {
-    "terser-webpack-plugin": "^5.3.3",
-    "webpack-bundle-analyzer": "^4.5.0"
-  }
+	"name": "pkg-name",
+	"version": "0.0.0",
+	"packageManager": "pnpm@8.15.4",
+	"author": "Ray <i@mk1.io> (@so1ve)",
+	"description": "",
+	"keywords": [],
+	"homepage": "https://github.com/so1ve/pkg-name#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/so1ve/pkg-name.git"
+	},
+	"bugs": {
+		"url": "https://github.com/so1ve/pkg-name/issues"
+	},
+	"license": "MIT",
+	"sideEffects": false,
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.mjs"
+		}
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"./dist/*",
+				"./dist/index.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "pkgroll",
+		"lint": "eslint . && prettier . --check",
+		"lint:fix": "eslint . --fix && prettier . --write",
+		"prepublishOnly": "nr build",
+		"release": "bumpp --commit --push --tag && pnpm publish",
+		"start": "tsx src/index.ts",
+		"test": "vitest",
+		"typecheck": "tsc --noEmit",
+		"watch": "pkgroll --watch"
+	},
+	"devDependencies": {
+		"@antfu/ni": "^0.21.8",
+		"@so1ve/eslint-config": "^1.1.1",
+		"@so1ve/prettier-config": "^1.1.1",
+		"@types/node": "^20.8.3",
+		"bumpp": "^9.2.0",
+		"eslint": "^8.51.0",
+		"pkgroll": "^2.0.1",
+		"prettier": "^3.0.3",
+		"tsx": "^3.13.0",
+		"typescript": "^5.2.2",
+		"vite": "^4.4.11",
+		"vitest": "^0.34.6"
+	}
 }

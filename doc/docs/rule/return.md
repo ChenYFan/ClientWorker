@@ -3,10 +3,9 @@
 ```yaml
 - search: _
   action: return
-  redirect: 
+  redirect:
     #返回参数
 ```
-
 
 `return`可以直接返回一个响应，无视`fetch`状态，对接下来的规则也将不执行。
 
@@ -14,11 +13,10 @@
 
 返回的响应的body是一个字符串：
 
-
 ```yaml
 - search: \/error$
   action: return
-  redirect: 
+  redirect:
     body: error
 ```
 
@@ -29,7 +27,7 @@
 ```yaml
 - search: \/error599$
   action: return
-  redirect: 
+  redirect:
     body: error599
     status: 599
 ```
@@ -41,9 +39,9 @@
 ```yaml
 - search: \/error$
   action: return
-  redirect: 
+  redirect:
     body: <h1>error</h1>
-    header: 
+    header:
       Content-Type: text/html
       X-Custom-Header: custom
 ```

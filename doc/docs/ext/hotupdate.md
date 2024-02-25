@@ -13,8 +13,8 @@ ClientWorker支持从外部加载和更新ClientWorker及其配置，避免在�
 ```yaml
 name: ClientWorker
 hotpatch:
-    - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
-    - https://cdn.jsdelivr.net/gh/ChenYFan/ClientWorker/cw.js
+  - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/cw.js
+  - https://cdn.jsdelivr.net/gh/ChenYFan/ClientWorker/cw.js
 ```
 
 api请求请见[热更新 - ClientWorker热补丁](/ext/api.html)。
@@ -30,8 +30,8 @@ api请求请见[热更新 - ClientWorker热补丁](/ext/api.html)。
 ```yaml
 name: ClientWorker
 hotconfig:
-    - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
-    - https://cdn.jsdelivr.net/gh/ChenYFan/ClientWorker/config.yaml
+  - https://raw.githubusercontent.com/ChenYFan/ClientWorker/gh-pages/config.yaml
+  - https://cdn.jsdelivr.net/gh/ChenYFan/ClientWorker/config.yaml
 ```
 
 api请求请见[热更新 - Config热更新](/ext/api.html)。

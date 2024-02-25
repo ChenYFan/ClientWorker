@@ -3,12 +3,12 @@
 ```yaml
 - search: ——
   action: redirect
-  redirect: 
+  redirect:
     #跳转参数
 ```
 
 > 你要找的是在外部观察url不跳转的[URL重写](/rule/replace)吗？
-`redirect`可以直接返回一个跳转，无视`fetch`状态，对接下来的规则也将不执行。
+> `redirect`可以直接返回一个跳转，无视`fetch`状态，对接下来的规则也将不执行。
 
 ## `to`
 
@@ -19,12 +19,10 @@
 ```yaml
 - search: \/([^\/.]+)$ #匹配/path，跳为/path.html
   action: redirect
-  redirect: 
+  redirect:
     to: /$1.html
     status: 301
 ```
-
-
 
 ## `url`
 
@@ -35,7 +33,7 @@
 ```yaml
 - search: \/google$
   action: redirect
-  redirect: 
+  redirect:
     url: https://google.com #不替换直接跳转，默认优先级url > to
     status: 301
 ```

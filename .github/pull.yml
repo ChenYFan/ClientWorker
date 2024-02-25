@@ -1,0 +1,11 @@
+version: "1"
+rules:
+  - base: main
+    upstream: so1ve:main
+    mergeMethod: hardreset
+    assignees:
+      - so1ve
+    reviewers:
+      - so1ve
+    conflictReviewers:
+      - so1ve

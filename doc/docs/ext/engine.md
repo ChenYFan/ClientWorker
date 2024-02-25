@@ -8,8 +8,7 @@ ClientWorker中拥有五款原理不同的并发引擎，他们分别是`fetch` 
 
 在这其中，`fetch`（JS原始请求方式） 与 `Crazy`是单请求输入引擎，`Classic` 、 `Parallel` 与 `KFCThursdayVW50` 是多请求输入引擎。这意味着后面两个引擎可以同时对多个地址发起请求，而前面两个引擎只能对单个地址发起请求。请注意，除了`fetch` 之外，其他引擎都是**多线程的**，非多线程请求将会被降级。
 
-> **注意：**
-> `fetch` `Crazy`  只接受字符串形式的url
+> **注意：** > `fetch` `Crazy` 只接受字符串形式的url
 > `Classic` `Parallel` `KFCThursdayVW50` 只接受数组形式的urls
 
 `Promise.any`的兼容性远低于`ServiceWorker`，ClientWorker会自动对其PolyFill，因此ClientWorker兼容性最低要求与ServiceWorker相同。
@@ -72,7 +71,7 @@ ClientWorker中拥有五款原理不同的并发引擎，他们分别是`fetch` 
 
 此后`KFCThursdayVW50`将**对每一个源**发起共`线程数`个大小为`总大小÷线程数`的请求，并发下载，在任何一个源响应正确代码后打断当前组的其余请求，最后合并为一个响应主体，并将`PreFetch`中的标头与状态还原。
 
-> 并发的总请求为线程数*源个数
+> 并发的总请求为线程数\*源个数
 
 这种方式可以叠加不同镜像的带宽，适合下载较大的文件。
 

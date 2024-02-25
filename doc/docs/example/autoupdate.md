@@ -4,14 +4,16 @@ ClientWorker外暴露了一个接口`/cw-cgi/api?type=config`，对其作任何�
 
 ```js
 async function updateConfig() {
-        await fetch('/cw-cgi/api?type=config').then(res => res.text()).then(res => {
-            if (res === 'ok') {
-                console.log(`Config updated`);
-            } else {
-                console.log(`Config update failed`);
-            }
-        })
-    }
+	await fetch("/cw-cgi/api?type=config")
+		.then((res) => res.text())
+		.then((res) => {
+			if (res === "ok") {
+				console.log("Config updated");
+			} else {
+				console.log("Config update failed");
+			}
+		});
+}
 ```
 
 你也可以使用ClientWorker的`autoupdate.js`来实现更新。
@@ -22,20 +24,25 @@ async function updateConfig() {
 
 ```js
 async function updateSW() {
-        if (navigator.serviceWorker) {
-            navigator.serviceWorker.getRegistrations().then(async registrations => {
-                for (let registration of registrations) {
-                    await registration.update();
-                }
-                console.log(`Unregistered service workers`);
-            }).then(() => {
-                navigator.serviceWorker.register('/cw.js').then(async registration => {
-                    console.log(`Registered service worker`);
-                    await registration.update();
-                })
-            })
-        }
-    };
+	if (navigator.serviceWorker) {
+		navigator.serviceWorker
+			.getRegistrations()
+			.then(async (registrations) => {
+				for (const registration of registrations) {
+					await registration.update();
+				}
+				console.log("Unregistered service workers");
+			})
+			.then(() => {
+				navigator.serviceWorker
+					.register("/cw.js")
+					.then(async (registration) => {
+						console.log("Registered service worker");
+						await registration.update();
+					});
+			});
+	}
+}
 ```
 
 你也可以使用ClientWorker的`autoupdate.js`来实现更新。

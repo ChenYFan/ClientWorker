@@ -6,7 +6,7 @@ ClientWorker默认会劫持`/cw-cgi/`作为前端控制台响应，也提供了�
 
 这是API类型:
 
-## `config` 
+## `config`
 
 > 任何请求方式均可
 

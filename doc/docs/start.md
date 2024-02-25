@@ -42,27 +42,33 @@ ClientWorker能干什么？
 在你的网站**根目录**下新建一个名为`cw.js`的文件，里面写上：
 
 ```js
-importScripts('https://lib.baomitu.com/clientworker/latest/dist/cw.js')
+importScripts("https://lib.baomitu.com/clientworker/latest/dist/cw.js");
 ```
 
 > 我们非常、非常强烈建议在引入脚本时要指定clientworker的版本(而不是latest)，最新版本可以到[Release](https://github.com/ChenYFan/ClientWorker/releases)查看，然后引入代码改为：
 >
 > ```js
-> importScripts('https://lib.baomitu.com/clientworker/2.8.1/dist/cw.js') //请及时替换2.8.1为最新版本号
+> importScripts("https://lib.baomitu.com/clientworker/2.8.1/dist/cw.js"); // 请及时替换2.8.1为最新版本号
 > ```
 
 如果在国外，你可以使用CloudFlare提供的CDNJS镜像接入：
 
 ```js
-importScripts('https://cdnjs.cloudflare.com/ajax/libs/clientworker/2.8.1/dist/cw.js') //请及时替换2.4.0为最新版本号
+importScripts(
+	"https://cdnjs.cloudflare.com/ajax/libs/clientworker/2.8.1/dist/cw.js",
+); // 请及时替换2.4.0为最新版本号
 ```
 
 你也可以使用其他cdnjs镜像。
 
 > 如果有必要，你也可以用npm镜像或者github镜像接入，比如：
+>
 > ```js
-> importScripts('https://cdn.jsdelivr.net/npm/clientworker@latest') //最好指定版本
-> importScripts('https://cdn.jsdelivr.net/gh/chenyfan/clientworker@gh-pages/cw.js') ////最好指定版本
+> importScripts("https://cdn.jsdelivr.net/npm/clientworker@latest"); // 最好指定版本
+> importScripts(
+> 	"https://cdn.jsdelivr.net/gh/chenyfan/clientworker@gh-pages/cw.js",
+> ); /// /最好指定版本
+> ```
 
 > ClientWorker将会直接托管`fetch`事件，不过你可以在底下写其他事件监听，比如`message`等。同时你可以书写其他自定义函数，在配置中引入。
 
@@ -72,34 +78,33 @@ importScripts('https://cdnjs.cloudflare.com/ajax/libs/clientworker/2.8.1/dist/cw
 
 2. 解压，将文件夹中`cw.js`拷出，放在网页服务器**根目录**下
 
-
 ## Step 2 写入配置 - 最简单，也是最难的一步
 
 在**根目录**下新建一个`config.yaml`，填入配置。
 
 > # 配置哪儿来
+>
 > 你可以阅读这篇文档，自己填写配置，也可以在[社区的Awesome Exapmle](https://github.com/ChenYFan/ClientWorker/discussions/categories/awesome-example)寻找你感兴趣的配置。不过如果你是刚来的，请暂时将下面的配置填入其中。
 
 ```yaml
-name: ClientWorker 
+name: ClientWorker
 catch_rules:
   - rule: _
     transform_rules:
       - search: \#.+
         searchin: url
-        replace: ''
-      - search: _ 
+        replace: ""
+      - search: _
         action: fetch
         fetch:
-          engine: fetch 
-      - search: (^4|^5) 
-        searchin: status 
+          engine: fetch
+      - search: (^4|^5)
+        searchin: status
         action: return
         return:
           body: The GateWay is down!This Page is provided by ClientWorker!
           status: 503
 ```
-
 
 ## Step 3 配置安装代码 - 最后一步了，加油！
 
@@ -134,46 +139,61 @@ catch_rules:
 
 ```html
 <script>
-if (!!navigator.serviceWorker) {
-    navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
-        if (localStorage.getItem('cw_installed') !== 'true') {
-            const conf = () => {
-                console.log('[CW] Installing Success,Configuring...');
-                fetch('/cw-cgi/api?type=config')
-                    .then(res => res.text())
-                    .then(text => {
-                        if (text === 'ok') {
-                            console.log('[CW] Installing Success,Configuring Success,Starting...');
-                            localStorage.setItem('cw_installed', 'true');
-                            //如果你不希望重载页面，请移除下面七行
-                            //重载标识 - 开始
-                            fetch(window.location.href).then(res => res.text()).then(text => {
-                                document.open()
-                                document.write(text);
-                                document.close();
-                            });
-                            //重载标识 - 结束
-                        } else {
-                            console.warn('[CW] Installing Success,Configuring Failed,Sleeping 200ms...');
-                            setTimeout(() => {
-                                conf()
-                            }, 200);
-                        }
-                    }).catch(err => {
-                        console.log('[CW] Installing Success,Configuring Error,Exiting...');
-                    });
-            }
-            setTimeout(() => {
-                conf()
-            }, 50);
-        }
-    }).catch(err => {
-        console.error('[CW] Installing Failed,Error: ' + err.message);
-    });
-} else { console.error('[CW] Installing Failed,Error: Browser not support service worker'); }
+	if (!!navigator.serviceWorker) {
+		navigator.serviceWorker
+			.register("/cw.js?t=" + new Date().getTime())
+			.then(async (registration) => {
+				if (localStorage.getItem("cw_installed") !== "true") {
+					const conf = () => {
+						console.log("[CW] Installing Success,Configuring...");
+						fetch("/cw-cgi/api?type=config")
+							.then((res) => res.text())
+							.then((text) => {
+								if (text === "ok") {
+									console.log(
+										"[CW] Installing Success,Configuring Success,Starting...",
+									);
+									localStorage.setItem("cw_installed", "true");
+									//如果你不希望重载页面，请移除下面七行
+									//重载标识 - 开始
+									fetch(window.location.href)
+										.then((res) => res.text())
+										.then((text) => {
+											document.open();
+											document.write(text);
+											document.close();
+										});
+									//重载标识 - 结束
+								} else {
+									console.warn(
+										"[CW] Installing Success,Configuring Failed,Sleeping 200ms...",
+									);
+									setTimeout(() => {
+										conf();
+									}, 200);
+								}
+							})
+							.catch((err) => {
+								console.log(
+									"[CW] Installing Success,Configuring Error,Exiting...",
+								);
+							});
+					};
+					setTimeout(() => {
+						conf();
+					}, 50);
+				}
+			})
+			.catch((err) => {
+				console.error("[CW] Installing Failed,Error: " + err.message);
+			});
+	} else {
+		console.error(
+			"[CW] Installing Failed,Error: Browser not support service worker",
+		);
+	}
 </script>
 ```
-
 
 2. 接下来，修改`config.yaml`配置，你可以阅读这篇文档，自己填写配置，也可以在[社区的Awesome Exapmle](https://github.com/ChenYFan/ClientWorker/discussions/categories/awesome-example)寻找你感兴趣的配置。如果你有好的配置，我们也乐于见到你将你的配置分享到社区。
 
@@ -189,37 +209,53 @@ if (!!navigator.serviceWorker) {
 
 ```html
 <script>
-if (!!navigator.serviceWorker) {
-    if (localStorage.getItem('cw_installed') !== 'true') {window.stop();}
-    navigator.serviceWorker.register('/cw.js?t=' + new Date().getTime()).then(async (registration) => {
-        if (localStorage.getItem('cw_installed') !== 'true') {
-            const conf = () => {
-                console.log('[CW] Installing Success,Configuring...');
-                fetch('/cw-cgi/api?type=config')
-                    .then(res => res.text())
-                    .then(text => {
-                        if (text === 'ok') {
-                            console.log('[CW] Installing Success,Configuring Success,Starting...');
-                            localStorage.setItem('cw_installed', 'true');
-                            window.location.reload();
-                        } else {
-                            console.warn('[CW] Installing Success,Configuring Failed,Sleeping 200ms...');
-                            setTimeout(() => {
-                                conf()
-                            }, 200);
-                        }
-                    }).catch(err => {
-                        console.log('[CW] Installing Success,Configuring Error,Exiting...');
-                    });
-            }
-            setTimeout(() => {
-                conf()
-            }, 50);
-        }
-    }).catch(err => {
-        console.error('[CW] Installing Failed,Error: ' + err.message);
-    })
-} else { console.error('[CW] Installing Failed,Error: Browser not support service worker'); }
+	if (!!navigator.serviceWorker) {
+		if (localStorage.getItem("cw_installed") !== "true") {
+			window.stop();
+		}
+		navigator.serviceWorker
+			.register("/cw.js?t=" + new Date().getTime())
+			.then(async (registration) => {
+				if (localStorage.getItem("cw_installed") !== "true") {
+					const conf = () => {
+						console.log("[CW] Installing Success,Configuring...");
+						fetch("/cw-cgi/api?type=config")
+							.then((res) => res.text())
+							.then((text) => {
+								if (text === "ok") {
+									console.log(
+										"[CW] Installing Success,Configuring Success,Starting...",
+									);
+									localStorage.setItem("cw_installed", "true");
+									window.location.reload();
+								} else {
+									console.warn(
+										"[CW] Installing Success,Configuring Failed,Sleeping 200ms...",
+									);
+									setTimeout(() => {
+										conf();
+									}, 200);
+								}
+							})
+							.catch((err) => {
+								console.log(
+									"[CW] Installing Success,Configuring Error,Exiting...",
+								);
+							});
+					};
+					setTimeout(() => {
+						conf();
+					}, 50);
+				}
+			})
+			.catch((err) => {
+				console.error("[CW] Installing Failed,Error: " + err.message);
+			});
+	} else {
+		console.error(
+			"[CW] Installing Failed,Error: Browser not support service worker",
+		);
+	}
 </script>
 ```
 

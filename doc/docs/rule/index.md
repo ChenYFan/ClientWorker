@@ -8,25 +8,26 @@
 
 如果[action为skip](/rule/skip)，或者没有任何规则执行[fetch action](/rule/fetch)，则会跳过对此请求的所有修改，即透传（在用户看来是不经过ClientWorker的）。
 
-# `catch_rules` 
+# `catch_rules`
+
 ## `rule`
 
 作为路由匹配入口，`catch_rule`在匹配`rule`成功后才会将整个`Request`移交给`transform_rules`。
 
 ```yaml
 catch_rules:
-    - rule: #捕获规则1
-      transform_rules:
-        - search: #转换规则1
-          #转换操作1
-        - search: #转换规则2
-          #转换操作2
-    - rule: #捕获规则2
-      transform_rules:
-        - search: #转换规则3
-        #转换操作3
-        - search: #转换规则4
-        #转换操作4
+  - rule: #捕获规则1
+    transform_rules:
+      - search: #转换规则1
+        #转换操作1
+      - search: #转换规则2
+        #转换操作2
+  - rule: #捕获规则2
+    transform_rules:
+      - search: #转换规则3
+      #转换操作3
+      - search: #转换规则4
+      #转换操作4
 ```
 
 `catch_rule`是一个数组，`ClientWorker`会从上到下依次匹配，即越靠前的优先级越高。除非遇到`return`、`redirect`操作，否则不会结束匹配。
@@ -35,7 +36,7 @@ catch_rules:
 
 ### 语法糖
 
-#### _
+#### \_
 
 在`catch_rule`中 `_` 将会匹配当前网站的主域名(包括端口)，例如：
 
@@ -48,17 +49,19 @@ catch_rules:
 > 如果你要捕获所有请求，请使用`.*`。
 
 # `transform_rules`
+
 ## `search`
+
 作为转换入口，`transform_rules`在匹配`search`成功后才会进行处理，格式如下：
 
 ```yaml
 - rule: #捕获规则
   transform_rules:
-  - search: #转换规则1
-    action: #转换操作1
-    {{action option}}: #转换操作1的参数
-  - search: #转换规则2
-    replace: #转换操作 - 重写路由
+    - search: #转换规则1
+      action: #转换操作1
+      { { action option } }:#转换操作1的参数
+    - search: #转换规则2
+      replace: #转换操作 - 重写路由
 ```
 
 每一个路由分为`search`和`action`两个部分，`search`是匹配规则，`action`是转换操作。如果`search`匹配成功，`action`就会被执行。当`action`执行完毕后，`transform_rules`会继续匹配下一个规则。
@@ -71,7 +74,7 @@ catch_rules:
 
 ### 语法糖
 
-#### _
+#### \_
 
 在`transform_rules`中`_`的作用是使用与`catch_rule`相同的规则，而不是匹配当前域名。
 
@@ -82,6 +85,7 @@ catch_rules:
 ## `searchin`
 
 指定`search`的搜索内容，可以为：
+
 - `url`：匹配当前请求的url[默认]
 - `status`：匹配当前请求的状态码
 - `statusText`：匹配当前请求的状态文本
