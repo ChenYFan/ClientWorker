@@ -67,9 +67,7 @@ function inferContentType(type: string) {
 		case "json": {
 			return "application/json";
 		}
-		case "arrayBuffer": {
-			return "application/octet-stream";
-		}
+		case "arrayBuffer":
 		case "blob": {
 			return "application/octet-stream";
 		}
