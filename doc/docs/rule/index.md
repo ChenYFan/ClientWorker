@@ -59,7 +59,7 @@ catch_rules:
   transform_rules:
     - search: #转换规则1
       action: #转换操作1
-      { { action option } }:#转换操作1的参数
+      # {{ action option }}: #转换操作1的参数
     - search: #转换规则2
       replace: #转换操作 - 重写路由
 ```
