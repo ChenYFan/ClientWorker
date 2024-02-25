@@ -19,7 +19,7 @@
 	"bugs": {
 		"url": "https://github.com/ChenYFan/ClientWorker/issues"
 	},
-	"license": "MIT",
+	"license": "LGPL-3.0",
 	"sideEffects": false,
 	"exports": {
 		".": {
