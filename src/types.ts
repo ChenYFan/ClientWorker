@@ -27,3 +27,5 @@ export type ListFetchEngineFunction = (
 	request: Request[],
 	config?: FetchEngineConfig,
 ) => Promise<Response>;
+
+export type ConfigLoader = (source: string) => any;
