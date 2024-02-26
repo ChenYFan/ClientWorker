@@ -22,3 +22,8 @@ export type FetchEngineFunction = (
 	request: Request,
 	config?: FetchEngineConfig,
 ) => Promise<Response>;
+
+export type ListFetchEngineFunction = (
+	request: Request[],
+	config?: FetchEngineConfig,
+) => Promise<Response>;

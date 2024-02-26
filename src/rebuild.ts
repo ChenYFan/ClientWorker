@@ -26,7 +26,7 @@ export function rebuildRequest(request: Request, init: CwRequestInit) {
 	return newRequest;
 }
 
-export function rebuildResponse(response: Response, init: CwResponseInit) {
+export function rebuildResponse(response: Response, init: CwResponseInit = {}) {
 	if (response.type === "opaque") {
 		logger.error(
 			`You can't rebuild a opaque response.ClientWorker will ignore this build`,

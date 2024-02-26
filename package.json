@@ -65,6 +65,7 @@
 		"eslint": "^8.51.0",
 		"pkgroll": "^2.0.1",
 		"prettier": "^3.0.3",
+		"tiny-request-router": "^1.2.2",
 		"tsx": "^3.13.0",
 		"typescript": "^5.2.2",
 		"vite": "^4.4.11",
