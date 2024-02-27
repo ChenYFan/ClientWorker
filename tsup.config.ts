@@ -5,14 +5,6 @@ import { defineConfig } from "tsup";
 
 const CONFIG_LOADER_RE = /^virtual:config-loader$/;
 
-const outExtension: Options["outExtension"] = ({ options }) => {
-	const formatExtension = options.minify ? ".min" : "";
-
-	return {
-		js: `${formatExtension}.js`,
-	};
-};
-
 const buildEntry = (name: string, loaderFilePath: string): Options => ({
 	entry: {
 		[name]: "src/index.ts",
@@ -20,7 +12,13 @@ const buildEntry = (name: string, loaderFilePath: string): Options => ({
 	target: "esnext",
 	format: "esm",
 	dts: true,
-	outExtension,
+	outExtension: ({ options }) => {
+		const formatExtension = options.minify ? ".min" : "";
+
+		return {
+			js: `${formatExtension}.js`,
+		};
+	},
 	esbuildPlugins: [
 		{
 			name: "replace-config-loader",
