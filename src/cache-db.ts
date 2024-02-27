@@ -1,21 +1,40 @@
+type ConfigType =
+	| "json"
+	| "arrayBuffer"
+	| "blob"
+	| "text"
+	| (string & Record<never, never>); // For autocompletion
+
+interface Config {
+	type: ConfigType;
+}
+
 export class CacheDB {
-	constructor(
-		private namespace: string = "CacheDBDefaultNameSpace",
-		private prefix: string = "CacheDBDefaultPrefix",
+	private constructor(
+		private prefix: string,
+		public cache: Cache,
 	) {}
 
-	private generateUrl(key: string) {
-		return `https://${this.prefix}/${encodeURIComponent(key)}`;
+	public static async create(
+		namespace = "CacheDBDefaultNameSpace",
+		prefix = "CacheDBDefaultPrefix",
+	): Promise<CacheDB> {
+		const cache = await caches.open(namespace);
+
+		return new CacheDB(prefix, cache);
+	}
+
+	private generateRequestKey(key: string) {
+		return new Request(`https://${this.prefix}/${encodeURIComponent(key)}`);
 	}
 
 	public async read(
 		key: string,
-		config: { type: string } = {
+		config: Config = {
 			type: "text",
 		},
-	) {
-		const cache = await caches.open(this.namespace);
-		const response = await cache.match(new Request(this.generateUrl(key)));
+	): Promise<any> {
+		const response = await this.cache.match(this.generateRequestKey(key));
 
 		if (!response) {
 			return null;
@@ -39,13 +58,18 @@ export class CacheDB {
 
 	public async write(
 		key: string,
-		value: any,
-		config: { type: string } = { type: "text" },
+		value:
+			| ReadableStream
+			| Blob
+			| ArrayBufferView
+			| ArrayBuffer
+			| FormData
+			| URLSearchParams
+			| string,
+		config: Config = { type: "text" },
 	) {
-		const cache = await caches.open(this.namespace);
-
-		await cache.put(
-			new Request(this.generateUrl(key)),
+		await this.cache.put(
+			this.generateRequestKey(key),
 			new Response(value, {
 				headers: {
 					"Content-Type": inferContentType(config.type),
@@ -55,14 +79,13 @@ export class CacheDB {
 	}
 
 	public async delete(key: string): Promise<boolean> {
-		const cache = await caches.open(this.namespace);
-		const response = await cache.delete(new Request(this.generateUrl(key)));
+		const response = await this.cache.delete(this.generateRequestKey(key));
 
 		return response;
 	}
 }
 
-function inferContentType(type: string) {
+function inferContentType(type: ConfigType) {
 	switch (type) {
 		case "json": {
 			return "application/json";
