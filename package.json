@@ -51,11 +51,11 @@
 	"scripts": {
 		"build": "rimraf dist && tsup && nr build:minify",
 		"build:minify": "tsup --minify",
+		"build:schema": "tsx scripts/build-schema.ts",
 		"lint": "eslint . && prettier . --check",
 		"lint:fix": "eslint . --fix && prettier . --write",
 		"prepublishOnly": "nr build",
 		"release": "bumpp --commit --push --tag && pnpm publish",
-		"start": "tsx src/index.ts",
 		"test": "vitest",
 		"typecheck": "tsc --noEmit",
 		"watch": "nr build --watch"
@@ -72,6 +72,7 @@
 		"prettier": "^3.0.3",
 		"rimraf": "^5.0.5",
 		"tiny-request-router": "^1.2.2",
+		"ts-json-schema-generator": "^1.5.0",
 		"tsup": "^8.0.2",
 		"tsx": "^3.13.0",
 		"type-fest": "^4.10.3",
