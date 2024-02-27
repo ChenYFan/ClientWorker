@@ -3,8 +3,8 @@ import { Router } from "tiny-request-router";
 import { configFile, loadConfig } from "virtual:config-loader";
 
 import { version } from "../package.json";
-import { CacheDB } from "./cache-db";
 import { CW_CGI_PREFIX } from "./constants";
+import { CacheDB } from "./utils/cache-db";
 
 async function createRouter() {
 	const router = new Router<

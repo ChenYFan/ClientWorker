@@ -1,11 +1,11 @@
 /* eslint-disable ts/no-throw-literal */
-import * as logger from "./logger";
-import { rebuildRequest, rebuildResponse } from "./rebuild";
 import type {
 	FetchEngineConfig,
 	FetchEngineFunction,
 	ListFetchEngineFunction,
 } from "./types";
+import * as logger from "./utils/logger";
+import { rebuildRequest, rebuildResponse } from "./utils/rebuild";
 
 const create504Response = (engine: string) =>
 	new Response(

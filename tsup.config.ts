@@ -1,8 +1,9 @@
+import { readFile } from "node:fs/promises";
+
 import type { Options } from "tsup";
 import { defineConfig } from "tsup";
 
 const CONFIG_LOADER_RE = /^virtual:config-loader$/;
-const js = String.raw;
 
 const outExtension: Options["outExtension"] = ({ options }) => {
 	const formatExtension = options.minify ? ".min" : "";
@@ -12,69 +13,41 @@ const outExtension: Options["outExtension"] = ({ options }) => {
 	};
 };
 
-export default defineConfig([
-	{
-		entry: {
-			index: "src/index.ts",
-		},
-		target: "esnext",
-		format: "esm",
-		dts: true,
-		outExtension,
-		esbuildPlugins: [
-			{
-				name: "replace-config-loader",
-				setup(build) {
-					build.onResolve({ filter: CONFIG_LOADER_RE }, (args) => ({
-						path: args.path,
-						namespace: "config-loader",
-					}));
-
-					build.onLoad(
-						{ filter: CONFIG_LOADER_RE, namespace: "config-loader" },
-						() => ({
-							contents: js`
-export const loadConfig = JSON.parse;
-export const configFile = "/config.json";`,
-							loader: "js",
-						}),
-					);
-				},
-			},
-		],
+const buildEntry = (name: string, loaderFilePath: string): Options => ({
+	entry: {
+		[name]: "src/index.ts",
 	},
-	{
-		entry: {
-			"with-yaml": "src/index.ts",
-		},
-		target: "esnext",
-		format: "esm",
-		dts: true,
-		outExtension,
-		esbuildPlugins: [
-			{
-				name: "replace-config-loader",
-				setup(build) {
-					build.onResolve({ filter: CONFIG_LOADER_RE }, (args) => ({
-						path: args.path,
-						namespace: "config-loader",
-					}));
+	target: "esnext",
+	format: "esm",
+	dts: true,
+	outExtension,
+	esbuildPlugins: [
+		{
+			name: "replace-config-loader",
+			setup(build) {
+				build.onResolve({ filter: CONFIG_LOADER_RE }, (args) => ({
+					path: args.path,
+					namespace: "config-loader",
+				}));
 
-					build.onLoad(
-						{ filter: CONFIG_LOADER_RE, namespace: "config-loader" },
-						() => ({
-							contents: js`
-import { load } from "js-yaml";
+				build.onLoad(
+					{ filter: CONFIG_LOADER_RE, namespace: "config-loader" },
+					async () => {
+						const contents = await readFile(loaderFilePath);
 
-export const loadConfig = load;
-export const configFile = "/config.yaml";
-`,
+						return {
+							contents,
+							loader: "js",
 							resolveDir: "node_modules",
-							loader: "js",
-						}),
-					);
-				},
+						};
+					},
+				);
 			},
-		],
-	},
+		},
+	],
+});
+
+export default defineConfig([
+	buildEntry("index", "./src/loaders/json.ts"),
+	buildEntry("with-yaml", "./src/loaders/yaml.ts"),
 ]);

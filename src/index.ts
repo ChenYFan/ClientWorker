@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-globals */
 import { version } from "../package.json";
-import { CacheDB } from "./cache-db";
-import * as logger from "./logger";
 import { handleRoutes } from "./routes";
+import { CacheDB } from "./utils/cache-db";
+import * as logger from "./utils/logger";
 
 const sw = self as ServiceWorkerGlobalScope &
 	typeof globalThis & {

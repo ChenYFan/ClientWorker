@@ -1,5 +1,5 @@
 import * as logger from "./logger";
-import type { CwRequestInit, CwResponseInit } from "./types";
+import type { CwRequestInit, CwResponseInit } from "../types";
 
 export function rebuildRequest(request: Request, init: CwRequestInit) {
 	request = request.clone();

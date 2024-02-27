@@ -64,6 +64,7 @@
 		"@antfu/ni": "^0.21.8",
 		"@so1ve/eslint-config": "^1.4.0",
 		"@so1ve/prettier-config": "^1.4.0",
+		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^20.8.3",
 		"bumpp": "^9.2.0",
 		"eslint": "^8.51.0",
