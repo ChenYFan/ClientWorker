@@ -32,9 +32,9 @@ export const engineFetch: FetchEngineFunction = async (request, config) => {
 		...config,
 	};
 
-	setTimeout(() => {
-		throw create504Response("Fetch");
-	}, config.timeout);
+	// setTimeout(() => {
+	// 	throw create504Response("Fetch");
+	// }, config.timeout);
 
 	return await fetch(request, {
 		mode: config.mode,
@@ -281,9 +281,10 @@ export const engineKFCThursdayVW50: ListFetchEngineFunction = async (
 
 	if (!contentLength || contentLength < config.threads!) {
 		logger.warning(
-			`Engine KFCThursdayVW50: The Origin does not support KFCThursdayVW50 Mode, or the size of the file is less than ${config.threads} bytes, downgrade to parallel.`,
+			`Engine KFCThursdayVW50: The Origin does not support KFCThursdayVW50 mode, or the size of the file is less than ${config.threads} bytes, downgrade to parallel.`,
 		);
 
+		// FIXME: Used to be `engineFetch`, am I wrong
 		return engineParallel(requests, config);
 	}
 

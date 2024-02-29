@@ -2,9 +2,9 @@ import type { Method, Params } from "tiny-request-router";
 import { Router } from "tiny-request-router";
 import { configFile, loadConfig } from "virtual:config-loader";
 
-import { version } from "../package.json";
-import { CW_CGI_PREFIX } from "./constants";
-import { CacheDB } from "./utils/cache-db";
+import { version } from "../../package.json";
+import { CW_CGI_PREFIX } from "../constants";
+import { CacheDB } from "../utils/cache-db";
 
 async function createRouter() {
 	const router = new Router<
@@ -66,8 +66,11 @@ async function createRouter() {
 
 export async function handleRoutes(request: Request): Promise<Response> {
 	const router = await createRouter();
-	const url = new URL(request.url.slice(CW_CGI_PREFIX.length));
-	const match = router.match(request.method as Method, url.pathname);
+	const url = new URL(request.url);
+	const match = router.match(
+		request.method as Method,
+		url.pathname.slice(CW_CGI_PREFIX.length),
+	);
 
 	if (match) {
 		const response = await match.handler({

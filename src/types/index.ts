@@ -5,6 +5,7 @@ export type CwRequestInit = RequestInit & {
 export type CwResponseInit = ResponseInit & {
 	url?: string;
 	headers?: Record<string, string>;
+	body?: BodyInit;
 };
 
 export interface FetchEngineConfig {

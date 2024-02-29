@@ -29,7 +29,7 @@
 		}
 	}
 	async function updateConfig() {
-		await fetch("/cw-cgi/api?type=config")
+		await fetch("/cw-cgi/api/config")
 			.then((res) => res.text())
 			.then((res) => {
 				if (res === "ok") {

@@ -1,4 +1,4 @@
-export type RuntimeConfig = {
+export interface RuntimeConfig {
 	hotpatch?: string[];
 	hotconfig?: string[];
 	cleaninterval?: string;
@@ -13,7 +13,7 @@ export type RuntimeConfig = {
 			return?: {
 				body: string;
 				header: {
-					ServerProvide: string;
+					"ServerProvide": string;
 					"content-type": string;
 				};
 				status: number;
@@ -41,7 +41,7 @@ export type RuntimeConfig = {
 				skip: boolean;
 			};
 			header?: {
-				ServerProvide: string;
+				"ServerProvide": string;
 				"content-type": string;
 			};
 			searchin?: string;
@@ -56,4 +56,4 @@ export type RuntimeConfig = {
 		}[];
 	}[];
 	name: string;
-};
+}

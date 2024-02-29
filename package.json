@@ -49,9 +49,13 @@
 		"access": "public"
 	},
 	"scripts": {
-		"build": "rimraf dist && tsup && nr build:minify",
+		"build": "rimraf dist && tsup && nr build:minify && nr copy-cw",
 		"build:minify": "tsup --minify",
 		"build:schema": "tsx scripts/build-schema.ts",
+		"copy-cw": "rm ./docs/public/cw.js && cp ./dist/with-yaml.min.js ./docs/public/cw.js",
+		"docs:build": "vitepress build docs",
+		"docs:dev": "vitepress dev docs --host 0.0.0.0",
+		"docs:serve": "vitepress serve docs",
 		"lint": "eslint . && prettier . --check",
 		"lint:fix": "eslint . --fix && prettier . --write",
 		"prepublishOnly": "nr build",
@@ -62,8 +66,8 @@
 	},
 	"devDependencies": {
 		"@antfu/ni": "^0.21.8",
-		"@so1ve/eslint-config": "^1.4.0",
-		"@so1ve/prettier-config": "^1.4.0",
+		"@so1ve/eslint-config": "^1.5.2",
+		"@so1ve/prettier-config": "^1.5.2",
 		"@types/js-yaml": "^4.0.9",
 		"@types/node": "^20.8.3",
 		"bumpp": "^9.2.0",
@@ -75,9 +79,9 @@
 		"ts-json-schema-generator": "^1.5.0",
 		"tsup": "^8.0.2",
 		"tsx": "^3.13.0",
-		"type-fest": "^4.10.3",
 		"typescript": "^5.2.2",
 		"vite": "^4.4.11",
+		"vitepress": "1.0.0-rc.44",
 		"vitest": "^0.34.6"
 	}
 }

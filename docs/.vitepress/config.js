@@ -1,5 +1,3 @@
-import cwpkgjson from "../../../package.json";
-
 export default {
 	title: "ClientWorker",
 	description: "一个基于规则的前端路由拦截器",
@@ -26,7 +24,7 @@ export default {
 		[
 			"script",
 			{
-				src: `https://npmm/clientworker@${cwpkgjson.version}/dist/autoupdate.js`,
+				src: "/autoupdate.js",
 			},
 		],
 	],
