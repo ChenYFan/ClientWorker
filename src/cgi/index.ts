@@ -48,7 +48,7 @@ export async function handler(request: Request) {
 			if (transformRule.search === "_") {
 				transformRule.search = catch_rule.rule;
 			}
-			switch (transformRule.searchin || "url") {
+			switch (transformRule.searchin ?? "url") {
 				case "url": {
 					if (
 						new RegExp(transformRule.search, transformRule.searchflags).test(
@@ -125,7 +125,7 @@ export async function handler(request: Request) {
 				}
 			}
 
-			switch (transformRule.replacein || "url") {
+			switch (transformRule.replacein ?? "url") {
 				case "url": {
 					if (tFetched && tSearched) {
 						logger.warning(
@@ -143,7 +143,7 @@ export async function handler(request: Request) {
 							tReq = rebuildRequest(tReq, {
 								url: tReq.url.replace(
 									new RegExp(
-										transformRule.replacekey || transformRule.search,
+										transformRule.replacekey ?? transformRule.search,
 										transformRule.replaceflags,
 									),
 									transformRule.replace,
@@ -166,7 +166,7 @@ export async function handler(request: Request) {
 									rebuildRequest(tReq, {
 										url: tReq.url.replace(
 											new RegExp(
-												transformRule.replacekey || transformRule.search,
+												transformRule.replacekey ?? transformRule.search,
 												transformRule.replaceflags,
 											),
 											replacement,
@@ -186,7 +186,7 @@ export async function handler(request: Request) {
 							tRes = rebuildResponse(tRes, {
 								body: (await tRes.clone().text()).replace(
 									new RegExp(
-										transformRule.replacekey || transformRule.search,
+										transformRule.replacekey ?? transformRule.search,
 										transformRule.replaceflags,
 									),
 									transformRule.replace,
@@ -196,7 +196,7 @@ export async function handler(request: Request) {
 							tReq = rebuildRequest(tReq, {
 								body: (await tReq.clone().text()).replace(
 									new RegExp(
-										transformRule.replacekey || transformRule.search,
+										transformRule.replacekey ?? transformRule.search,
 										transformRule.replaceflags,
 									),
 									transformRule.replace,
@@ -212,7 +212,7 @@ export async function handler(request: Request) {
 						tRes = rebuildResponse(tRes, {
 							status: tRes.status.replace(
 								new RegExp(
-									transformRule.replacekey || transformRule.search,
+									transformRule.replacekey ?? transformRule.search,
 									transformRule.replaceflags,
 								),
 								transformRule.replace,
@@ -226,7 +226,7 @@ export async function handler(request: Request) {
 						tRes = rebuildResponse(tRes, {
 							statusText: tRes.statusText.replace(
 								new RegExp(
-									transformRule.replacekey || transformRule.search,
+									transformRule.replacekey ?? transformRule.search,
 									transformRule.replaceflags,
 								),
 								transformRule.replace,
@@ -307,7 +307,7 @@ export async function handler(request: Request) {
 							}); // https://segmentfault.com/a/1190000006095018
 							delete fetchConfig.credentials;
 							// fetchConfig.mode = "cors"
-							for (const eReq in EngineFetchList) {
+							for (let eReq = 0; eReq < EngineFetchList.length; eReq++) {
 								EngineFetchList[eReq] = new Request(
 									EngineFetchList[eReq].url,
 									tReq,
@@ -315,11 +315,12 @@ export async function handler(request: Request) {
 							}
 						}
 
-						tRes = await new Promise(async (res, rej) => {
+						tRes = await new Promise((resolve) => {
 							async function EngineFetcher() {
 								let cRes;
 
-								return new Promise(async (resolve, reject) => {
+								// eslint-disable-next-line no-async-promise-executor
+								return new Promise(async (resolve) => {
 									if (EngineFetch) {
 										switch (transformRule.fetch.engine || "parallel") {
 											case "classic": {
@@ -375,13 +376,14 @@ export async function handler(request: Request) {
 									}
 									if (
 										typeof transformRule.fetch.cache === "object" &&
-										cRes.status === (transformRule.fetch.status || 200)
+										cRes.status === (transformRule.fetch.status ?? 200)
 									) {
 										cRes = rebuildResponse(cRes, {
 											headers: {
 												ClientWorker_ExpireTime:
 													Date.now() +
 													Number(
+														// eslint-disable-next-line no-eval
 														(0, eval)(transformRule.fetch.cache.expire || "0"),
 													),
 											},
@@ -405,33 +407,34 @@ export async function handler(request: Request) {
 												Date.now()
 											) {
 												logger.success(`${tReq.url} is fetched from cache`);
-												res(cRes);
+												resolve(cRes);
 											} else {
 												logger.warning(`${tReq.url} is expired.`);
-												res(
+												resolve(
 													Promise.any([
 														EngineFetcher(),
-														new Promise(async (resolve, reject) => {
+														new Promise((resolve) => {
 															setTimeout(() => {
 																logger.error(
 																	`${tReq.url} is too late to fetch,even though the cache has expired,so return by cache`,
 																);
 																resolve(cRes);
-															}, transformRule.fetch.cache.delay || 3000);
+															}, transformRule.fetch.cache.delay ?? 3000);
 														}),
-													]),
+														// TODO: Refactor
+													]) as Promise<Response>,
 												);
 											}
 										} else {
 											logger.warning(
 												`${tReq.url} is not cached!And it is too late to fetch!`,
 											);
-											res(EngineFetcher());
+											resolve(EngineFetcher());
 										}
 									});
 								});
 							} else {
-								res(EngineFetcher());
+								resolve(EngineFetcher());
 							}
 						});
 						tFetched = true;
@@ -445,7 +448,7 @@ export async function handler(request: Request) {
 						if (typeof transformRule.redirect.url === "string") {
 							return Response.redirect(
 								transformRule.redirect.url,
-								transformRule.redirect.status || 301,
+								transformRule.redirect.status ?? 301,
 							);
 						}
 
@@ -454,7 +457,7 @@ export async function handler(request: Request) {
 								new RegExp(transformRule.search),
 								transformRule.redirect.to,
 							),
-							transformRule.redirect.status || 301,
+							transformRule.redirect.status ?? 301,
 						);
 					}
 					case "return": {
@@ -474,12 +477,13 @@ export async function handler(request: Request) {
 						}
 						if (typeof transformRule.script.function === "string") {
 							const ClientWorkerAnonymousFunctionName = `ClientWorker_AnonymousFunction_${Date.now()}`;
-							// eslint-disable-next-line no-eval
+							// eslint-disable-next-line no-eval, no-restricted-globals
 							self[ClientWorkerAnonymousFunctionName] = (0, eval)(
 								transformRule.script.function,
 							);
 							transformRule.script.name = ClientWorkerAnonymousFunctionName;
 						}
+						// eslint-disable-next-line ts/no-implied-eval, no-new-func
 						const ScriptAns = await new Function(
 							`return (${transformRule.script.name})`,
 						)()({
@@ -501,7 +505,7 @@ export async function handler(request: Request) {
 					}
 					default: {
 						logger.warning(
-							`This Action:${transformRule.action} is not supported yet`,
+							`This action: ${transformRule.action as string} is not supported yet.`,
 						);
 						break;
 					}

@@ -63,54 +63,34 @@
 															"type": "string"
 														}
 													},
-													"required": [
-														"ServerProvide",
-														"content-type"
-													]
+													"required": ["ServerProvide", "content-type"]
 												},
 												"status": {
 													"type": "number"
 												}
 											},
-											"required": [
-												"body",
-												"header",
-												"status"
-											]
+											"required": ["body", "header", "status"]
 										},
 										"fetch": {
 											"type": "object",
 											"properties": {
 												"redirect": {
 													"type": "string",
-													"enum": [
-														"error",
-														"follow",
-														"manual"
-													]
+													"enum": ["error", "follow", "manual"]
 												},
 												"status": {
 													"type": "number"
 												},
 												"credentials": {
 													"type": "string",
-													"enum": [
-														"same-origin",
-														"include",
-														"omit"
-													]
+													"enum": ["same-origin", "include", "omit"]
 												},
 												"trylimit": {
 													"type": "number"
 												},
 												"mode": {
 													"type": "string",
-													"enum": [
-														"same-origin",
-														"cors",
-														"navigate",
-														"no-cors"
-													]
+													"enum": ["same-origin", "cors", "navigate", "no-cors"]
 												},
 												"timeout": {
 													"type": "number"
@@ -128,9 +108,7 @@
 															"type": "string"
 														}
 													},
-													"required": [
-														"expire"
-													]
+													"required": ["expire"]
 												},
 												"threads": {
 													"type": "number"
@@ -152,10 +130,7 @@
 													"type": "boolean"
 												}
 											},
-											"required": [
-												"engine",
-												"preflight"
-											]
+											"required": ["engine", "preflight"]
 										},
 										"script": {
 											"type": "object",
@@ -170,9 +145,7 @@
 													"type": "boolean"
 												}
 											},
-											"required": [
-												"skip"
-											]
+											"required": ["skip"]
 										},
 										"header": {
 											"type": "object",
@@ -184,10 +157,7 @@
 													"type": "string"
 												}
 											},
-											"required": [
-												"ServerProvide",
-												"content-type"
-											]
+											"required": ["ServerProvide", "content-type"]
 										},
 										"searchin": {
 											"type": "string"
@@ -207,13 +177,7 @@
 										},
 										"action": {
 											"type": "string",
-											"enum": [
-												"fetch",
-												"redirect",
-												"return",
-												"script",
-												"skip"
-											]
+											"enum": ["fetch", "redirect", "return", "script", "skip"]
 										},
 										"searchkey": {
 											"type": "string"
@@ -234,26 +198,18 @@
 											"type": "string"
 										}
 									},
-									"required": [
-										"search"
-									]
+									"required": ["search"]
 								}
 							}
 						},
-						"required": [
-							"rule",
-							"transform_rules"
-						]
+						"required": ["rule", "transform_rules"]
 					}
 				},
 				"name": {
 					"type": "string"
 				}
 			},
-			"required": [
-				"catch_rules",
-				"name"
-			]
+			"required": ["catch_rules", "name"]
 		}
 	}
 }
