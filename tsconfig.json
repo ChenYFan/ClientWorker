@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "ES2018",
+		"lib": [
+			"ESNext",
+			"WebWorker",
+			"WebWorker.ImportScripts",
+			"Webworker.Iterable"
+		],
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"noEmit": true,
+		"esModuleInterop": true,
+		"skipDefaultLibCheck": true,
+		"skipLibCheck": true
+	}
+}

@@ -1,0 +1,215 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$ref": "#/definitions/RuntimeConfig",
+	"definitions": {
+		"RuntimeConfig": {
+			"type": "object",
+			"properties": {
+				"hotpatch": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"hotconfig": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				},
+				"cleaninterval": {
+					"type": "string"
+				},
+				"catch_rules": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"rule": {
+								"type": "string"
+							},
+							"transform_rules": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"redirect": {
+											"type": "object",
+											"properties": {
+												"status": {
+													"type": "number"
+												},
+												"to": {
+													"type": "string"
+												},
+												"url": {
+													"type": "string"
+												}
+											}
+										},
+										"return": {
+											"type": "object",
+											"properties": {
+												"body": {
+													"type": "string"
+												},
+												"header": {
+													"type": "object",
+													"properties": {
+														"ServerProvide": {
+															"type": "string"
+														},
+														"content-type": {
+															"type": "string"
+														}
+													},
+													"required": ["ServerProvide", "content-type"]
+												},
+												"status": {
+													"type": "number"
+												}
+											},
+											"required": ["body", "header", "status"]
+										},
+										"fetch": {
+											"type": "object",
+											"properties": {
+												"redirect": {
+													"type": "string",
+													"enum": ["error", "follow", "manual"]
+												},
+												"status": {
+													"type": "number"
+												},
+												"credentials": {
+													"type": "string",
+													"enum": ["same-origin", "include", "omit"]
+												},
+												"trylimit": {
+													"type": "number"
+												},
+												"mode": {
+													"type": "string",
+													"enum": ["same-origin", "cors", "navigate", "no-cors"]
+												},
+												"timeout": {
+													"type": "number"
+												},
+												"cache": {
+													"type": "object",
+													"properties": {
+														"enable": {
+															"type": "boolean"
+														},
+														"delay": {
+															"type": "number"
+														},
+														"expire": {
+															"type": "string"
+														}
+													},
+													"required": ["expire"]
+												},
+												"threads": {
+													"type": "number"
+												},
+												"enable": {
+													"type": "boolean"
+												},
+												"engine": {
+													"type": "string",
+													"enum": [
+														"fetch",
+														"crazy",
+														"classic",
+														"parallel",
+														"KFCThursdayVW50"
+													]
+												},
+												"preflight": {
+													"type": "boolean"
+												}
+											},
+											"required": ["engine", "preflight"]
+										},
+										"script": {
+											"type": "object",
+											"properties": {
+												"function": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												},
+												"skip": {
+													"type": "boolean"
+												}
+											},
+											"required": ["skip"]
+										},
+										"header": {
+											"type": "object",
+											"properties": {
+												"ServerProvide": {
+													"type": "string"
+												},
+												"content-type": {
+													"type": "string"
+												}
+											},
+											"required": ["ServerProvide", "content-type"]
+										},
+										"searchin": {
+											"type": "string"
+										},
+										"replace": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "array",
+													"items": {
+														"type": "string"
+													}
+												}
+											]
+										},
+										"action": {
+											"type": "string",
+											"enum": ["fetch", "redirect", "return", "script", "skip"]
+										},
+										"searchkey": {
+											"type": "string"
+										},
+										"replacein": {
+											"type": "string"
+										},
+										"replacekey": {
+											"type": "string"
+										},
+										"searchflags": {
+											"type": "string"
+										},
+										"replaceflags": {
+											"type": "string"
+										},
+										"search": {
+											"type": "string"
+										}
+									},
+									"required": ["search"]
+								}
+							}
+						},
+						"required": ["rule", "transform_rules"]
+					}
+				},
+				"name": {
+					"type": "string"
+				}
+			},
+			"required": ["catch_rules", "name"]
+		}
+	}
+}

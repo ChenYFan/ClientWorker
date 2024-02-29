@@ -1,0 +1,27 @@
+name: Lock Threads
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: lock
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/lock-threads@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-inactive-days: "14"
+          issue-comment: |
+            This issue has been locked since it has been closed for more than 14 days.
+
+            If you have found a concrete bug or regression related to it, please open a new [issue](./new/choose). If you have any other comments you should create a new [discussion](../discussions/new/choose).
+          process-only: issues
