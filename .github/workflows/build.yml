@@ -6,39 +6,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup node
-        uses: actions/setup-node@v1
+        uses: actions/checkout@v3
         with:
-          node-version: 16.x
-      - name: Cache node modules
-        uses: actions/cache@v1
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          version: 7.16.1
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --prefer-offline
+
       - name: Install & Build
-        run: >
-          rm -rf .gitignore
-          
-          echo "node_modules" >> .gitignore
-          
-          echo "doc/node_modules" >> .gitignore
-
-          npm i -D
-
-          npm install -D webpack-cli webpack
-
-          npm run build
-
+        run: |
+          pnpm run build
           echo "clientworker.js.org" > ./dist/CNAME
-
-          cd doc
-
-          npm add --dev vitepress vue
-
-          npm run "docs:build"
-
-
+          pnpm docs:build
 
       - name: Deploy to GithubPage
         uses: peaceiris/actions-gh-pages@v3
